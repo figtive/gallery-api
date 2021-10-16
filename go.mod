@@ -1,6 +1,6 @@
 module gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api
 
-go 1.17
+go 1.16
 
 require (
 	github.com/gin-gonic/gin v1.7.4
