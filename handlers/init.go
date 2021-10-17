@@ -8,14 +8,16 @@ import (
 	"gorm.io/gorm"
 
 	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/configs"
+	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/models"
 )
+
+type dbEntity struct {
+	conn      *gorm.DB
+	userOrmer models.UserOrmer
+}
 
 type module struct {
 	db *dbEntity
-}
-
-type dbEntity struct {
-	conn *gorm.DB
 }
 
 type HandlerFunc interface {
@@ -37,7 +39,8 @@ func InitializeHandler() (err error) {
 		log.Println("[INIT] connected to PostgreSQL")
 		Handler = &module{
 			db: &dbEntity{
-				conn: db,
+				conn:      db,
+				userOrmer: models.NewUserOrmer(db),
 			},
 		}
 		return
