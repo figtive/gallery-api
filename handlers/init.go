@@ -8,6 +8,7 @@ import (
 	"gorm.io/gorm"
 
 	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/configs"
+	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/dtos"
 	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/models"
 )
 
@@ -21,6 +22,11 @@ type module struct {
 }
 
 type HandlerFunc interface {
+	AuthParseGoogleJWT(jwtString string) (claims dtos.GoogleJWTClaim, err error)
+	AuthGenerateJWT(userInfo dtos.User) (token string, err error)
+
+	UserGetOneByEmail(email string) (userInfo dtos.User, err error)
+	UserInsert(userInfo dtos.User) (id string, err error)
 }
 
 var Handler HandlerFunc

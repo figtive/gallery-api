@@ -5,8 +5,9 @@ import "github.com/spf13/viper"
 var AppConfig Config
 
 type Config struct {
-	Port  int
-	Debug bool
+	Port   int
+	Debug  bool
+	Secret string
 
 	DbHost     string
 	DbPort     int
@@ -27,6 +28,7 @@ func InitializeConfig() {
 
 	AppConfig.Port = viper.GetInt("PORT")
 	AppConfig.Debug = viper.GetBool("DEBUG")
+	AppConfig.Secret = viper.GetString("SECRET")
 	AppConfig.DbHost = viper.GetString("DB_HOST")
 	AppConfig.DbPort = viper.GetInt("DB_PORT")
 	AppConfig.DbUser = viper.GetString("DB_USER")
