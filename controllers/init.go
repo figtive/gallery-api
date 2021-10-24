@@ -15,7 +15,10 @@ func InitializeRouter() *gin.Engine {
 		api.GET("/ping", func(c *gin.Context) { c.JSON(http.StatusOK, map[string]string{"ping": "pong"}) })
 		apiV1 := api.Group("/v1")
 		{
-			apiV1.POST("/login", v1.POSTLogin)
+			auth := apiV1.Group("/auth")
+			{
+				auth.POST("/login", v1.POSTLogin)
+			}
 		}
 
 	}
