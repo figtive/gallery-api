@@ -13,8 +13,10 @@ import (
 )
 
 type dbEntity struct {
-	conn      *gorm.DB
-	userOrmer models.UserOrmer
+	conn            *gorm.DB
+	courseworkOrmer models.CourseworkOrmer
+	projectOrmer    models.ProjectOrmer
+	userOrmer       models.UserOrmer
 }
 
 type module struct {
@@ -45,8 +47,10 @@ func InitializeHandler() (err error) {
 		log.Println("[INIT] connected to PostgreSQL")
 		Handler = &module{
 			db: &dbEntity{
-				conn:      db,
-				userOrmer: models.NewUserOrmer(db),
+				conn:            db,
+				courseworkOrmer: models.NewCourseworkOrmer(db),
+				projectOrmer:    models.NewProjectOrmer(db),
+				userOrmer:       models.NewUserOrmer(db),
 			},
 		}
 		return
