@@ -14,6 +14,8 @@ type Config struct {
 	DbUser     string
 	DbPassword string
 	DbName     string
+
+	GoogleClientID string
 }
 
 func InitializeConfig() {
@@ -34,4 +36,5 @@ func InitializeConfig() {
 	AppConfig.DbUser = viper.GetString("DB_USER")
 	AppConfig.DbPassword = viper.GetString("DB_PASSWORD")
 	AppConfig.DbName = viper.GetString("DB_NAME")
+	AppConfig.GoogleClientID = viper.GetString("GOOGLE_CLIENT_ID")
 }
