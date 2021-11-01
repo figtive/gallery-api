@@ -1,6 +1,7 @@
 package middlewares
 
 import (
+	"log"
 	"net/http"
 	"strings"
 
@@ -12,11 +13,13 @@ import (
 
 func GoogleOAuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		jwtString := strings.TrimLeft(c.GetHeader("Authorization"), "Bearer ")
+		jwtString := strings.TrimPrefix(c.GetHeader("Authorization"), "Bearer ")
 		if jwtString == "" {
-			c.AbortWithStatus(http.StatusUnauthorized)
+			c.Set(constants.ContextIsAuthenticatedKey, false)
+			c.Next()
 			return
 		}
+
 		if valid, claims, err := utils.ValidateGoogleJWT(jwtString); err == nil {
 			if valid {
 				c.Set(constants.ContextIsAuthenticatedKey, true)
@@ -27,7 +30,8 @@ func GoogleOAuthMiddleware() gin.HandlerFunc {
 			}
 			c.Next()
 		} else {
-			c.AbortWithStatus(http.StatusInternalServerError)
+			log.Println(err)
+			c.AbortWithStatus(http.StatusUnauthorized)
 		}
 	}
 }

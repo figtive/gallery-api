@@ -11,15 +11,10 @@ import (
 )
 
 func ValidateGoogleJWT(jwtString string) (valid bool, claims dtos.GoogleJWTClaim, err error) {
-	var validator *idtoken.Validator
-	if validator, err = idtoken.NewValidator(context.Background()); err != nil {
-		return false, dtos.GoogleJWTClaim{}, err
-	}
-
 	var token *idtoken.Payload
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
-	if token, err = validator.Validate(ctx, jwtString, configs.AppConfig.GoogleClientID); err != nil {
+	if token, err = idtoken.Validate(ctx, jwtString, configs.AppConfig.GoogleClientID); err != nil {
 		return false, dtos.GoogleJWTClaim{}, err
 	}
 
@@ -31,5 +26,5 @@ func ValidateGoogleJWT(jwtString string) (valid bool, claims dtos.GoogleJWTClaim
 		IssuedAt: token.IssuedAt,
 	}
 
-	return true, claims, err
+	return true, claims, nil
 }
