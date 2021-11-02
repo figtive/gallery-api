@@ -32,6 +32,10 @@ func InitializeRouter() *gin.Engine {
 					project.POST("/", v1.POSTProject)
 				}
 			}
+			team := apiV1.Group("/team")
+			{
+				team.POST("/", v1.POSTTeam)
+			}
 		}
 
 	}

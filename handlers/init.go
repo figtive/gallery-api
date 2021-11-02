@@ -17,6 +17,7 @@ type dbEntity struct {
 	classOrmer      models.ClassOrmer
 	courseworkOrmer models.CourseworkOrmer
 	projectOrmer    models.ProjectOrmer
+	teamOrmer       models.TeamOrmer
 	userOrmer       models.UserOrmer
 }
 
@@ -34,6 +35,8 @@ type HandlerFunc interface {
 	CourseworkInsert(classID string) (id string, err error)
 
 	ProjectInsert(projectInfo dtos.ProjectInsert, classID string, thumbnailPath string) (id string, err error)
+
+	TeamInsert(teamInfo dtos.TeamInsert) (id string, err error)
 
 	UserGetOneByEmail(email string) (userInfo dtos.User, err error)
 	UserInsert(userInfo dtos.User) (id string, err error)
@@ -59,6 +62,7 @@ func InitializeHandler() (err error) {
 				classOrmer:      models.NewClassOrmer(db),
 				courseworkOrmer: models.NewCourseworkOrmer(db),
 				projectOrmer:    models.NewProjectOrmer(db),
+				teamOrmer:       models.NewTeamOrmer(db),
 				userOrmer:       models.NewUserOrmer(db),
 			},
 		}
