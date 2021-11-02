@@ -28,7 +28,12 @@ type HandlerFunc interface {
 	AuthParseGoogleJWT(jwtString string) (claims dtos.GoogleJWTClaim, err error)
 	AuthGenerateJWT(userInfo dtos.User) (token string, err error)
 
+	ClassGetOneByID(id string) (classInfo dtos.Class, err error)
 	ClassInsert(classInfo dtos.Class) (id string, err error)
+
+	CourseworkInsert(classID string) (id string, err error)
+
+	ProjectInsert(projectInfo dtos.ProjectInsert, classID string, thumbnailPath string) (id string, err error)
 
 	UserGetOneByEmail(email string) (userInfo dtos.User, err error)
 	UserInsert(userInfo dtos.User) (id string, err error)

@@ -16,6 +16,7 @@ type Class struct {
 
 type ClassOrmer interface {
 	Insert(class Class) (id string, err error)
+	GetOneByID(id string) (class Class, err error)
 }
 
 type classOrm struct {
@@ -30,4 +31,9 @@ func NewClassOrmer(db *gorm.DB) ClassOrmer {
 func (o *classOrm) Insert(class Class) (id string, err error) {
 	result := o.db.Model(&Class{}).Create(&class)
 	return class.ID, result.Error
+}
+
+func (o *classOrm) GetOneByID(id string) (class Class, err error) {
+	result := o.db.Model(&Class{}).Where("id = ?", id).First(&class)
+	return class, result.Error
 }

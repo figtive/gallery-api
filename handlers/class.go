@@ -15,3 +15,16 @@ func (m *module) ClassInsert(classInfo dtos.Class) (id string, err error) {
 	}
 	return
 }
+
+func (m *module) ClassGetOneByID(id string) (classInfo dtos.Class, err error) {
+	var class models.Class
+	if class, err = m.db.classOrmer.GetOneByID(id); err != nil {
+		return dtos.Class{}, err
+	}
+	classInfo = dtos.Class{
+		ID:          class.ID,
+		Name:        class.Name,
+		Description: class.Description,
+	}
+	return
+}

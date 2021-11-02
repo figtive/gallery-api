@@ -6,11 +6,16 @@ import (
 	"gorm.io/gorm"
 )
 
+// TODO: ACTIVE and YEAR DESCRIPTION TAG THUMBNAIL
 type Project struct {
 	CourseworkID string     `gorm:"primaryKey"`
 	Coursework   Coursework `gorm:"foreignKey:CourseworkID"`
 	Name         string     `gorm:"type:varchar(32);not null"`
-	CreatedAt    time.Time  `gorm:"autoCreateTime" json:"-"`
+	Active       bool       `gorm:"not null"`
+	Description  string     `gorm:"not null"`
+	Field        string     `gorm:"type:varchar(32);not null"`
+	Thumbnail    string     `gorm:"not null"`
+	CreatedAt    time.Time  `gorm:"autoCreateTime"`
 	UpdatedAt    time.Time  `gorm:"autoUpdateTime" json:"-"`
 }
 

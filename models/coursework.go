@@ -8,11 +8,13 @@ import (
 
 type Coursework struct {
 	ID        string    `gorm:"primaryKey;type:uuid;default:uuid_generate_v4()"`
+	ClassID   string    `gorm:"not null"`
+	Class     Class     `gorm:"foreignKey:ClassID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 	CreatedAt time.Time `gorm:"autoCreateTime" json:"-"`
 }
 
 type CourseworkOrmer interface {
-	Insert() (id string, err error)
+	Insert(coursework Coursework) (id string, err error)
 }
 
 type courseworkOrm struct {
@@ -24,8 +26,7 @@ func NewCourseworkOrmer(db *gorm.DB) CourseworkOrmer {
 	return &courseworkOrm{db}
 }
 
-func (o *courseworkOrm) Insert() (id string, err error) {
-	var coursework Coursework
+func (o *courseworkOrm) Insert(coursework Coursework) (id string, err error) {
 	result := o.db.Model(&Coursework{}).Create(&coursework)
 	return coursework.ID, result.Error
 }

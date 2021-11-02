@@ -21,6 +21,7 @@ func POSTClass(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, dtos.Response{Error: err})
 		return
 	}
+
 	c.JSON(http.StatusOK, dtos.Response{
 		Code: http.StatusOK,
 		Data: classInfo,
