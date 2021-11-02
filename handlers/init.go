@@ -14,6 +14,7 @@ import (
 
 type dbEntity struct {
 	conn            *gorm.DB
+	blogOrmer       models.BlogOrmer
 	classOrmer      models.ClassOrmer
 	courseworkOrmer models.CourseworkOrmer
 	projectOrmer    models.ProjectOrmer
@@ -28,6 +29,8 @@ type module struct {
 type HandlerFunc interface {
 	AuthParseGoogleJWT(jwtString string) (claims dtos.GoogleJWTClaim, err error)
 	AuthGenerateJWT(userInfo dtos.User) (token string, err error)
+
+	BlogInsert(blogInsert dtos.BlogInsert, classID string) (id string, err error)
 
 	ClassGetOneByID(id string) (classInfo dtos.Class, err error)
 	ClassInsert(classInfo dtos.Class) (id string, err error)
@@ -59,6 +62,7 @@ func InitializeHandler() (err error) {
 		Handler = &module{
 			db: &dbEntity{
 				conn:            db,
+				blogOrmer:       models.NewBlogOrmer(db),
 				classOrmer:      models.NewClassOrmer(db),
 				courseworkOrmer: models.NewCourseworkOrmer(db),
 				projectOrmer:    models.NewProjectOrmer(db),
