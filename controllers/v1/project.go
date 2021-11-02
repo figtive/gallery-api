@@ -1,7 +1,6 @@
 package v1
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -23,7 +22,6 @@ func POSTProject(c *gin.Context) {
 		c.JSON(http.StatusNotFound, dtos.Response{Error: "class not found"})
 		return
 	}
-	fmt.Printf("id: %s", classInfo.ID)
 
 	var projectID string
 	if projectID, err = handlers.Handler.ProjectInsert(projectInsert, classInfo.ID, ""); err != nil {
