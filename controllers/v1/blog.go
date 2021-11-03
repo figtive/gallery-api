@@ -41,3 +41,41 @@ func POSTBlog(c *gin.Context) {
 		},
 	})
 }
+
+func GETBlog(c *gin.Context) {
+	var err error
+
+	blogID := c.Param("id")
+	var blog dtos.Blog
+	if blog, err = handlers.Handler.BlogGetOne(blogID); err != nil {
+		c.JSON(http.StatusNotFound, dtos.Response{Error: "blog not found", Code: http.StatusNotFound})
+		return
+	}
+
+	c.JSON(http.StatusOK, dtos.Response{
+		Code: http.StatusOK,
+		Data: blog,
+	})
+}
+
+func GETBlogs(c *gin.Context) {
+	var err error
+
+	var query dtos.Query
+	if err = c.ShouldBindQuery(&query); err != nil {
+		c.JSON(http.StatusBadRequest, dtos.Response{Error: err})
+		return
+	}
+
+	// TODO: pagination
+	var blogs []dtos.Blog
+	if blogs, err = handlers.Handler.BlogGetMany(query.Limit, 0); err != nil {
+		c.JSON(http.StatusInternalServerError, dtos.Response{Error: err})
+		return
+	}
+
+	c.JSON(http.StatusOK, dtos.Response{
+		Code: http.StatusOK,
+		Data: blogs,
+	})
+}

@@ -48,7 +48,7 @@ func POSTProject(c *gin.Context) {
 func GETProjects(c *gin.Context) {
 	var err error
 
-	var query dtos.ProjectQuery
+	var query dtos.Query
 	if err = c.ShouldBindQuery(&query); err != nil {
 		c.JSON(http.StatusBadRequest, dtos.Response{Error: err})
 		return

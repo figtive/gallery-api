@@ -23,9 +23,3 @@ type ProjectInsert struct {
 	Team        string `json:"team"`
 	Metadata    string `json:"metadata"`
 }
-
-type ProjectQuery struct {
-	ID    string `form:"id"`
-	Skip  int    `form:"skip"`
-	Limit int    `form:"limit"`
-}

@@ -30,6 +30,8 @@ type HandlerFunc interface {
 	AuthParseGoogleJWT(jwtString string) (claims dtos.GoogleJWTClaim, err error)
 	AuthGenerateJWT(userInfo dtos.User) (token string, err error)
 
+	BlogGetMany(skip int, limit int) (blogs []dtos.Blog, err error)
+	BlogGetOne(id string) (blog dtos.Blog, err error)
 	BlogInsert(blogInsert dtos.BlogInsert, classID string) (id string, err error)
 
 	ClassGetOneByID(id string) (classInfo dtos.Class, err error)
