@@ -45,3 +45,22 @@ func (m *module) ProjectGetMany(skip int, limit int) (projects []dtos.Project, e
 	}
 	return
 }
+
+func (m *module) ProjectGetOne(id string) (project dtos.Project, err error) {
+	var projectRaw models.Project
+	if projectRaw, err = m.db.projectOrmer.GetOneByCourseworkID(id); err != nil {
+		return
+	}
+	project = dtos.Project{
+		ID:          projectRaw.CourseworkID,
+		Name:        projectRaw.Name,
+		Active:      projectRaw.Active,
+		Description: projectRaw.Description,
+		Field:       projectRaw.Field,
+		Thumbnail:   projectRaw.Thumbnail,
+		CreatedAt:   projectRaw.CreatedAt,
+		Team:        projectRaw.Team,
+		Metadata:    projectRaw.Metadata,
+	}
+	return
+}

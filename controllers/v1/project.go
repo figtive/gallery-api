@@ -66,3 +66,19 @@ func GETProjects(c *gin.Context) {
 		Data: projects,
 	})
 }
+
+func GETProject(c *gin.Context) {
+	var err error
+
+	projectID := c.Param("id")
+	var projectInfo dtos.Project
+	if projectInfo, err = handlers.Handler.ProjectGetOne(projectID); err != nil {
+		c.JSON(http.StatusNotFound, dtos.Response{Code: http.StatusNotFound, Error: "project not found"})
+		return
+	}
+
+	c.JSON(http.StatusOK, dtos.Response{
+		Code: http.StatusOK,
+		Data: projectInfo,
+	})
+}
