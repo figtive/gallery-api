@@ -8,17 +8,25 @@ import (
 	"gorm.io/gorm"
 
 	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/configs"
+	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/dtos"
+	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/models"
 )
+
+type dbEntity struct {
+	conn      *gorm.DB
+	userOrmer models.UserOrmer
+}
 
 type module struct {
 	db *dbEntity
 }
 
-type dbEntity struct {
-	conn *gorm.DB
-}
-
 type HandlerFunc interface {
+	AuthParseGoogleJWT(jwtString string) (claims dtos.GoogleJWTClaim, err error)
+	AuthGenerateJWT(userInfo dtos.User) (token string, err error)
+
+	UserGetOneByEmail(email string) (userInfo dtos.User, err error)
+	UserInsert(userInfo dtos.User) (id string, err error)
 }
 
 var Handler HandlerFunc
@@ -37,7 +45,8 @@ func InitializeHandler() (err error) {
 		log.Println("[INIT] connected to PostgreSQL")
 		Handler = &module{
 			db: &dbEntity{
-				conn: db,
+				conn:      db,
+				userOrmer: models.NewUserOrmer(db),
 			},
 		}
 		return
