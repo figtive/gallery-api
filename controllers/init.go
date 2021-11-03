@@ -38,10 +38,10 @@ func InitializeRouter() *gin.Engine {
 					blog.POST("/", v1.POSTBlog)
 				}
 			}
-			team := apiV1.Group("/team")
-			{
-				team.POST("/", v1.POSTTeam)
-			}
+			// team := apiV1.Group("/team")
+			// {
+			// 	team.POST("/", v1.POSTTeam)
+			// }
 		}
 
 	}
