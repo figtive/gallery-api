@@ -36,6 +36,8 @@ func InitializeRouter() *gin.Engine {
 				blog := coursework.Group("/blog")
 				{
 					blog.POST("/", v1.POSTBlog)
+					blog.GET("/", v1.GETBlogs)
+					blog.GET("/:id", v1.GETBlog)
 				}
 			}
 			// team := apiV1.Group("/team")
