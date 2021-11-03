@@ -10,6 +10,7 @@ type Project struct {
 	Field       string    `json:"field"`
 	Thumbnail   string    `json:"thumbnail"`
 	CreatedAt   time.Time `json:"createdAt"`
+	Metadata    string    `json:"metadata"`
 	Team        string    `json:"team"`
 }
 
@@ -20,6 +21,7 @@ type ProjectInsert struct {
 	Field       string `json:"field"`
 	ClassID     string `json:"classId"`
 	Team        string `json:"team"`
+	Metadata    string `json:"metadata"`
 }
 
 type ProjectQuery struct {

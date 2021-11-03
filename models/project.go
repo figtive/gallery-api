@@ -16,6 +16,7 @@ type Project struct {
 	Field        string     `gorm:"type:varchar(32);not null"`
 	Thumbnail    string     `gorm:"not null"`
 	Team         string     `gorm:"not null"`
+	Metadata     string     `gorm:"not null"`
 	CreatedAt    time.Time  `gorm:"autoCreateTime"`
 	UpdatedAt    time.Time  `gorm:"autoUpdateTime" json:"-"`
 }

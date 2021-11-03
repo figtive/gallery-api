@@ -18,6 +18,7 @@ func (m *module) ProjectInsert(projectInfo dtos.ProjectInsert, classID string, t
 		Field:        projectInfo.Field,
 		Thumbnail:    thumbnailPath,
 		Team:         projectInfo.Team,
+		Metadata:     projectInfo.Metadata,
 	}); err != nil {
 		return
 	}
@@ -39,6 +40,7 @@ func (m *module) ProjectGetMany(skip int, limit int) (projects []dtos.Project, e
 			Thumbnail:   project.Thumbnail,
 			CreatedAt:   project.CreatedAt,
 			Team:        project.Team,
+			Metadata:    project.Metadata,
 		})
 	}
 	return
