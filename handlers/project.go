@@ -64,3 +64,11 @@ func (m *module) ProjectGetOne(id string) (project dtos.Project, err error) {
 	}
 	return
 }
+
+func (m *module) ProjectUpdateThumbnail(id string, thumbnailPath string) error {
+	var err error
+	if err = m.db.projectOrmer.UpdateThumbnail(id, thumbnailPath); err != nil {
+		return err
+	}
+	return nil
+}

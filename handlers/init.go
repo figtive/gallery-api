@@ -42,6 +42,7 @@ type HandlerFunc interface {
 	ProjectGetOne(id string) (project dtos.Project, err error)
 	ProjectGetMany(skip int, limit int) (projects []dtos.Project, err error)
 	ProjectInsert(projectInfo dtos.ProjectInsert, classID string, thumbnailPath string) (id string, err error)
+	ProjectUpdateThumbnail(id string, thumbnailPath string) error
 
 	// TeamInsert(teamInfo dtos.TeamInsert) (id string, err error)
 

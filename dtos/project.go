@@ -23,3 +23,7 @@ type ProjectInsert struct {
 	Team        string `json:"team"`
 	Metadata    string `json:"metadata"`
 }
+
+type ProjectThumbnail struct {
+	ID string `form:"id"`
+}

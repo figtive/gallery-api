@@ -22,9 +22,10 @@ type Project struct {
 }
 
 type ProjectOrmer interface {
-	Insert(project Project) (courseworkID string, err error)
 	GetOneByCourseworkID(courseworkID string) (project Project, err error)
 	GetMany(skip int, limit int) (projects []Project, err error)
+	Insert(project Project) (courseworkID string, err error)
+	UpdateThumbnail(courseworkID string, path string) (err error)
 }
 
 type projectOrm struct {
@@ -54,4 +55,9 @@ func (o *projectOrm) GetMany(skip int, limit int) (projects []Project, err error
 	}
 	result = result.Find(&projects)
 	return projects, result.Error
+}
+
+func (o *projectOrm) UpdateThumbnail(courseworkID string, path string) (err error) {
+	result := o.db.Model(&Project{}).Where("coursework_id = ?", courseworkID).Update("thumbnail", path)
+	return result.Error
 }
