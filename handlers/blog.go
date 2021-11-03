@@ -15,7 +15,8 @@ func (m *module) BlogInsert(blogInsert dtos.BlogInsert, classID string) (id stri
 		CourseworkID: courseworkID,
 		Title:        blogInsert.Title,
 		Link:         blogInsert.Link,
-		Category:     blogInsert.Link,
+		Category:     blogInsert.Category,
+		Author:       blogInsert.Author,
 	}); err != nil {
 		return
 	}
