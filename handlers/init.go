@@ -37,6 +37,7 @@ type HandlerFunc interface {
 
 	CourseworkInsert(classID string) (id string, err error)
 
+	ProjectGetMany(skip int, limit int) (projects []dtos.Project, err error)
 	ProjectInsert(projectInfo dtos.ProjectInsert, classID string, thumbnailPath string) (id string, err error)
 
 	TeamInsert(teamInfo dtos.TeamInsert) (id string, err error)

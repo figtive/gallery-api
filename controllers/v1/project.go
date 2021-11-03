@@ -44,3 +44,25 @@ func POSTProject(c *gin.Context) {
 		Data: projectInfo,
 	})
 }
+
+func GETProjects(c *gin.Context) {
+	var err error
+
+	var query dtos.ProjectQuery
+	if err = c.ShouldBindQuery(&query); err != nil {
+		c.JSON(http.StatusBadRequest, dtos.Response{Error: err})
+		return
+	}
+	// TODO: pagination
+
+	var projects []dtos.Project
+	if projects, err = handlers.Handler.ProjectGetMany(query.Skip, 0); err != nil {
+		c.JSON(http.StatusInternalServerError, dtos.Response{Error: err})
+		return
+	}
+
+	c.JSON(http.StatusOK, dtos.Response{
+		Code: http.StatusOK,
+		Data: projects,
+	})
+}

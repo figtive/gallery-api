@@ -30,6 +30,7 @@ func InitializeRouter() *gin.Engine {
 				project := coursework.Group("/project")
 				{
 					project.POST("/", v1.POSTProject)
+					project.GET("/", v1.GETProjects)
 				}
 				blog := coursework.Group("/blog")
 				{
