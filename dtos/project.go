@@ -15,13 +15,13 @@ type Project struct {
 }
 
 type ProjectInsert struct {
-	Name        string `json:"name"`
-	Active      bool   `json:"active"`
-	Description string `json:"description"`
-	Field       string `json:"field"`
-	ClassID     string `json:"classId"`
-	Team        string `json:"team"`
-	Metadata    string `json:"metadata"`
+	Name        string `binding:"required" json:"name"`
+	Active      bool   `binding:"required" json:"active"`
+	Description string `binding:"required" json:"description"`
+	Field       string `binding:"required" json:"field"`
+	ClassID     string `binding:"required" json:"classId"`
+	Team        string `binding:"required" json:"team"`
+	Metadata    string `binding:"required" json:"metadata"`
 }
 
 type ProjectThumbnail struct {

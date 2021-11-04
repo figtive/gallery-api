@@ -1,9 +1,9 @@
 package dtos
 
 type TeamInsert struct {
-	Name      string `json:"name"`
-	ClassID   string `json:"classId"`
-	ProjectID string `json:"projectId"`
+	Name      string `binding:"required" json:"name"`
+	ClassID   string `binding:"required" json:"classId"`
+	ProjectID string `binding:"required" json:"projectId"`
 }
 
 type Team struct {

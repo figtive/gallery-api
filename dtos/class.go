@@ -1,7 +1,7 @@
 package dtos
 
 type Class struct {
-	ID          string `json:"id"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
+	ID          string `binding:"required" json:"id"`
+	Name        string `binding:"required" json:"name"`
+	Description string `binding:"required" json:"description"`
 }

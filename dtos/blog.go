@@ -1,11 +1,11 @@
 package dtos
 
 type BlogInsert struct {
-	Author   string `json:"author"`
-	Title    string `json:"title"`
-	Category string `json:"category"`
-	Link     string `json:"link"`
-	ClassID  string `json:"classId"`
+	Author   string `binding:"required" json:"author"`
+	Title    string `binding:"required" json:"title"`
+	Category string `binding:"required" json:"category"`
+	Link     string `binding:"required" json:"link"`
+	ClassID  string `binding:"required" json:"classId"`
 }
 
 type Blog struct {
