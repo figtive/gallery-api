@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"mime/multipart"
 	"net/http"
+	"os"
 	"path"
 	"path/filepath"
 
@@ -106,8 +107,13 @@ func PUTThumbnail(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, dtos.Response{Error: err})
 		return
 	}
+	fullDir := path.Join(configs.AppConfig.StaticBaseDir, subdir)
+	if err = os.MkdirAll(fullDir, os.ModePerm); err != nil {
+		c.JSON(http.StatusInternalServerError, dtos.Response{Error: err})
+		return
+	}
 	filename := fmt.Sprintf("thumbnail%s", filepath.Ext(file.Filename))
-	if err = c.SaveUploadedFile(file, path.Join(configs.AppConfig.StaticBaseDir, subdir, filename)); err != nil {
+	if err = c.SaveUploadedFile(file, path.Join(fullDir, filename)); err != nil {
 		c.JSON(http.StatusInternalServerError, dtos.Response{Error: err})
 		return
 	}
