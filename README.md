@@ -15,12 +15,12 @@ $ air
 
 ## Deploy
 
-`gallery-api` is containerized and pushed to [Docker Hub](https://hub.docker.com/r/figtive/galleryppl). It is tagged based on its application version, e.g. `figtive/galleryppl:api` or `figtive/galleryppl:api-v1.1.0`.
+`gallery-api` is containerized and pushed to [Docker Hub](https://hub.docker.com/r/figtive/gallery-api/). It is tagged based on its application version, e.g. `figtive/gallery-api:0.1.0` or `figtive/gallery-api:nightly`.
 
 To run `gallery-api`, run the following:
 
 ```shell
-$ docker run --name gallery-api --env-file ./.env -p 8080:8080 -d figtive/galleryppl:api
+$ docker run --name gallery-api --env-file ./.env -p 8080:8080 -d figtive/gallery-api
 ```
 
 ### Dependencies

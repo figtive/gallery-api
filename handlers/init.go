@@ -13,7 +13,12 @@ import (
 )
 
 type dbEntity struct {
-	conn      *gorm.DB
+	conn            *gorm.DB
+	blogOrmer       models.BlogOrmer
+	courseOrmer     models.CourseOrmer
+	courseworkOrmer models.CourseworkOrmer
+	projectOrmer    models.ProjectOrmer
+	// teamOrmer       models.TeamOrmer
 	userOrmer models.UserOrmer
 }
 
@@ -24,6 +29,22 @@ type module struct {
 type HandlerFunc interface {
 	AuthParseGoogleJWT(jwtString string) (claims dtos.GoogleJWTClaim, err error)
 	AuthGenerateJWT(userInfo dtos.User) (token string, err error)
+
+	BlogGetMany(skip int, limit int) (blogs []dtos.Blog, err error)
+	BlogGetOne(id string) (blog dtos.Blog, err error)
+	BlogInsert(blogInsert dtos.BlogInsert, courseID string) (id string, err error)
+
+	CourseGetOneByID(id string) (courseInfo dtos.Course, err error)
+	CourseInsert(courseInfo dtos.Course) (id string, err error)
+
+	CourseworkInsert(courseID string) (id string, err error)
+
+	ProjectGetOne(id string) (project dtos.Project, err error)
+	ProjectGetMany(skip int, limit int) (projects []dtos.Project, err error)
+	ProjectInsert(projectInfo dtos.ProjectInsert, courseID string, thumbnailPath string) (id string, err error)
+	ProjectUpdateThumbnail(id string, thumbnailPath string) error
+
+	// TeamInsert(teamInfo dtos.TeamInsert) (id string, err error)
 
 	UserGetOneByEmail(email string) (userInfo dtos.User, err error)
 	UserInsert(userInfo dtos.User) (id string, err error)
@@ -45,7 +66,12 @@ func InitializeHandler() (err error) {
 		log.Println("[INIT] connected to PostgreSQL")
 		Handler = &module{
 			db: &dbEntity{
-				conn:      db,
+				conn:            db,
+				blogOrmer:       models.NewBlogOrmer(db),
+				courseOrmer:     models.NewCourseOrmer(db),
+				courseworkOrmer: models.NewCourseworkOrmer(db),
+				projectOrmer:    models.NewProjectOrmer(db),
+				// teamOrmer:       models.NewTeamOrmer(db),
 				userOrmer: models.NewUserOrmer(db),
 			},
 		}
