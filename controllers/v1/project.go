@@ -102,7 +102,7 @@ func PUTThumbnail(c *gin.Context) {
 		return
 	}
 
-	subdir := fmt.Sprintf("/coursework/project/%s/thumbnail.png", form.ID)
+	subdir := fmt.Sprintf("/coursework/project/%s", form.ID)
 	if err = handlers.Handler.ProjectUpdateThumbnail(form.ID, subdir); err != nil {
 		c.JSON(http.StatusInternalServerError, dtos.Response{Error: err})
 		return
