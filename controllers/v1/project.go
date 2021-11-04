@@ -25,7 +25,7 @@ func POSTProject(c *gin.Context) {
 
 	var courseInfo dtos.Course
 	if courseInfo, err = handlers.Handler.CourseGetOneByID(projectInsert.CourseID); err != nil {
-		c.JSON(http.StatusNotFound, dtos.Response{Error: "course not found"})
+		c.JSON(http.StatusNotFound, dtos.Response{Error: err})
 		return
 	}
 
@@ -78,7 +78,7 @@ func GETProject(c *gin.Context) {
 	projectID := c.Param("id")
 	var projectInfo dtos.Project
 	if projectInfo, err = handlers.Handler.ProjectGetOne(projectID); err != nil {
-		c.JSON(http.StatusNotFound, dtos.Response{Code: http.StatusNotFound, Error: "project not found"})
+		c.JSON(http.StatusNotFound, dtos.Response{Code: http.StatusNotFound, Error: err})
 		return
 	}
 
@@ -93,12 +93,12 @@ func PUTThumbnail(c *gin.Context) {
 
 	var form dtos.ProjectThumbnail
 	if err = c.ShouldBind(&form); err != nil {
-		c.JSON(http.StatusBadRequest, dtos.Response{Error: "error parsing form data"})
+		c.JSON(http.StatusBadRequest, dtos.Response{Error: err})
 		return
 	}
 	var file *multipart.FileHeader
 	if file, err = c.FormFile("file"); err != nil {
-		c.JSON(http.StatusBadRequest, dtos.Response{Error: "error reading header"})
+		c.JSON(http.StatusBadRequest, dtos.Response{Error: err})
 		return
 	}
 
