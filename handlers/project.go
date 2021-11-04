@@ -18,7 +18,7 @@ func (m *module) ProjectInsert(projectInfo dtos.ProjectInsert, classID string, t
 		Field:        projectInfo.Field,
 		Thumbnail:    thumbnailPath,
 		Team:         projectInfo.Team,
-		Metadata:     projectInfo.Metadata,
+		Metadata:     *projectInfo.Metadata,
 	}); err != nil {
 		return
 	}

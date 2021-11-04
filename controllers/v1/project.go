@@ -23,8 +23,8 @@ func POSTProject(c *gin.Context) {
 	}
 
 	var courseInfo dtos.Course
-	if courseInfo, err = handlers.Handler.CourseGetOneByID(projectInsert.ClassID); err != nil {
-		c.JSON(http.StatusNotFound, dtos.Response{Error: "class not found"})
+	if courseInfo, err = handlers.Handler.CourseGetOneByID(projectInsert.CourseID); err != nil {
+		c.JSON(http.StatusNotFound, dtos.Response{Error: "course not found"})
 		return
 	}
 
