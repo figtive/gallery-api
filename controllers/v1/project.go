@@ -19,19 +19,19 @@ func POSTProject(c *gin.Context) {
 
 	var projectInsert dtos.ProjectInsert
 	if err = c.ShouldBindJSON(&projectInsert); err != nil {
-		c.JSON(http.StatusBadRequest, dtos.Response{Error: err})
+		c.JSON(http.StatusBadRequest, dtos.Response{Error: err.Error()})
 		return
 	}
 
 	var courseInfo dtos.Course
 	if courseInfo, err = handlers.Handler.CourseGetOneByID(projectInsert.CourseID); err != nil {
-		c.JSON(http.StatusNotFound, dtos.Response{Error: err})
+		c.JSON(http.StatusNotFound, dtos.Response{Error: err.Error()})
 		return
 	}
 
 	var projectID string
 	if projectID, err = handlers.Handler.ProjectInsert(projectInsert, courseInfo.ID, ""); err != nil {
-		c.JSON(http.StatusInternalServerError, dtos.Response{Error: err})
+		c.JSON(http.StatusInternalServerError, dtos.Response{Error: err.Error()})
 		return
 	}
 
@@ -55,14 +55,14 @@ func GETProjects(c *gin.Context) {
 
 	var query dtos.Query
 	if err = c.ShouldBindQuery(&query); err != nil {
-		c.JSON(http.StatusBadRequest, dtos.Response{Error: err})
+		c.JSON(http.StatusBadRequest, dtos.Response{Error: err.Error()})
 		return
 	}
 	// TODO: pagination
 
 	var projects []dtos.Project
 	if projects, err = handlers.Handler.ProjectGetMany(query.Skip, 0); err != nil {
-		c.JSON(http.StatusInternalServerError, dtos.Response{Error: err})
+		c.JSON(http.StatusInternalServerError, dtos.Response{Error: err.Error()})
 		return
 	}
 
@@ -78,7 +78,7 @@ func GETProject(c *gin.Context) {
 	projectID := c.Param("id")
 	var projectInfo dtos.Project
 	if projectInfo, err = handlers.Handler.ProjectGetOne(projectID); err != nil {
-		c.JSON(http.StatusNotFound, dtos.Response{Code: http.StatusNotFound, Error: err})
+		c.JSON(http.StatusNotFound, dtos.Response{Code: http.StatusNotFound, Error: err.Error()})
 		return
 	}
 
@@ -93,28 +93,28 @@ func PUTThumbnail(c *gin.Context) {
 
 	var form dtos.ProjectThumbnail
 	if err = c.ShouldBind(&form); err != nil {
-		c.JSON(http.StatusBadRequest, dtos.Response{Error: err})
+		c.JSON(http.StatusBadRequest, dtos.Response{Error: err.Error()})
 		return
 	}
 	var file *multipart.FileHeader
 	if file, err = c.FormFile("file"); err != nil {
-		c.JSON(http.StatusBadRequest, dtos.Response{Error: err})
+		c.JSON(http.StatusBadRequest, dtos.Response{Error: err.Error()})
 		return
 	}
 
 	subdir := fmt.Sprintf("/coursework/project/%s", form.ID)
 	if err = handlers.Handler.ProjectUpdateThumbnail(form.ID, subdir); err != nil {
-		c.JSON(http.StatusInternalServerError, dtos.Response{Error: err})
+		c.JSON(http.StatusInternalServerError, dtos.Response{Error: err.Error()})
 		return
 	}
 	fullDir := path.Join(configs.AppConfig.StaticBaseDir, subdir)
 	if err = os.MkdirAll(fullDir, os.ModePerm); err != nil {
-		c.JSON(http.StatusInternalServerError, dtos.Response{Error: err})
+		c.JSON(http.StatusInternalServerError, dtos.Response{Error: err.Error()})
 		return
 	}
 	filename := fmt.Sprintf("thumbnail%s", filepath.Ext(file.Filename))
 	if err = c.SaveUploadedFile(file, path.Join(fullDir, filename)); err != nil {
-		c.JSON(http.StatusInternalServerError, dtos.Response{Error: err})
+		c.JSON(http.StatusInternalServerError, dtos.Response{Error: err.Error()})
 		return
 	}
 

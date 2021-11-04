@@ -13,13 +13,13 @@ func POSTBlog(c *gin.Context) {
 
 	var blogInsert dtos.BlogInsert
 	if err = c.ShouldBindJSON(&blogInsert); err != nil {
-		c.JSON(http.StatusBadRequest, dtos.Response{Error: err})
+		c.JSON(http.StatusBadRequest, dtos.Response{Error: err.Error()})
 		return
 	}
 
 	var courseInfo dtos.Course
 	if courseInfo, err = handlers.Handler.CourseGetOneByID(blogInsert.ClassID); err != nil {
-		c.JSON(http.StatusNotFound, dtos.Response{Error: err})
+		c.JSON(http.StatusNotFound, dtos.Response{Error: err.Error()})
 		return
 	}
 
@@ -27,7 +27,7 @@ func POSTBlog(c *gin.Context) {
 
 	var blogID string
 	if blogID, err = handlers.Handler.BlogInsert(blogInsert, courseInfo.ID); err != nil {
-		c.JSON(http.StatusInternalServerError, dtos.Response{Error: err})
+		c.JSON(http.StatusInternalServerError, dtos.Response{Error: err.Error()})
 		return
 	}
 
@@ -48,7 +48,7 @@ func GETBlog(c *gin.Context) {
 	blogID := c.Param("id")
 	var blog dtos.Blog
 	if blog, err = handlers.Handler.BlogGetOne(blogID); err != nil {
-		c.JSON(http.StatusNotFound, dtos.Response{Error: err, Code: http.StatusNotFound})
+		c.JSON(http.StatusNotFound, dtos.Response{Code: http.StatusNotFound, Error: err.Error()})
 		return
 	}
 
@@ -63,14 +63,14 @@ func GETBlogs(c *gin.Context) {
 
 	var query dtos.Query
 	if err = c.ShouldBindQuery(&query); err != nil {
-		c.JSON(http.StatusBadRequest, dtos.Response{Error: err})
+		c.JSON(http.StatusBadRequest, dtos.Response{Error: err.Error()})
 		return
 	}
 
 	// TODO: pagination
 	var blogs []dtos.Blog
 	if blogs, err = handlers.Handler.BlogGetMany(query.Limit, 0); err != nil {
-		c.JSON(http.StatusInternalServerError, dtos.Response{Error: err})
+		c.JSON(http.StatusInternalServerError, dtos.Response{Error: err.Error()})
 		return
 	}
 
