@@ -22,14 +22,14 @@ func POSTProject(c *gin.Context) {
 		return
 	}
 
-	var classInfo dtos.Class
-	if classInfo, err = handlers.Handler.ClassGetOneByID(projectInsert.ClassID); err != nil {
+	var courseInfo dtos.Course
+	if courseInfo, err = handlers.Handler.CourseGetOneByID(projectInsert.ClassID); err != nil {
 		c.JSON(http.StatusNotFound, dtos.Response{Error: "class not found"})
 		return
 	}
 
 	var projectID string
-	if projectID, err = handlers.Handler.ProjectInsert(projectInsert, classInfo.ID, ""); err != nil {
+	if projectID, err = handlers.Handler.ProjectInsert(projectInsert, courseInfo.ID, ""); err != nil {
 		c.JSON(http.StatusInternalServerError, dtos.Response{Error: err})
 		return
 	}

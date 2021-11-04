@@ -8,22 +8,22 @@ import (
 	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/handlers"
 )
 
-func POSTClass(c *gin.Context) {
+func POSTCourse(c *gin.Context) {
 	var err error
 
-	var classInfo dtos.Class
-	if err := c.ShouldBindJSON(&classInfo); err != nil {
+	var courseInfo dtos.Course
+	if err := c.ShouldBindJSON(&courseInfo); err != nil {
 		c.JSON(http.StatusBadRequest, dtos.Response{Error: err})
 		return
 	}
 
-	if classInfo.ID, err = handlers.Handler.ClassInsert(classInfo); err != nil {
+	if courseInfo.ID, err = handlers.Handler.CourseInsert(courseInfo); err != nil {
 		c.JSON(http.StatusInternalServerError, dtos.Response{Error: err})
 		return
 	}
 
 	c.JSON(http.StatusOK, dtos.Response{
 		Code: http.StatusOK,
-		Data: classInfo,
+		Data: courseInfo,
 	})
 }

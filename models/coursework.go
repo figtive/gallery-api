@@ -8,8 +8,8 @@ import (
 
 type Coursework struct {
 	ID        string    `gorm:"primaryKey;type:uuid;default:uuid_generate_v4()"`
-	ClassID   string    `gorm:"not null"`
-	Class     Class     `gorm:"foreignKey:ClassID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+	CourseID  string    `gorm:"not null"`
+	Course    Course    `gorm:"foreignKey:CourseID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 	CreatedAt time.Time `gorm:"autoCreateTime" json:"-"`
 }
 

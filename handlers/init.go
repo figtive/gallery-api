@@ -15,7 +15,7 @@ import (
 type dbEntity struct {
 	conn            *gorm.DB
 	blogOrmer       models.BlogOrmer
-	classOrmer      models.ClassOrmer
+	courseOrmer     models.CourseOrmer
 	courseworkOrmer models.CourseworkOrmer
 	projectOrmer    models.ProjectOrmer
 	// teamOrmer       models.TeamOrmer
@@ -32,16 +32,16 @@ type HandlerFunc interface {
 
 	BlogGetMany(skip int, limit int) (blogs []dtos.Blog, err error)
 	BlogGetOne(id string) (blog dtos.Blog, err error)
-	BlogInsert(blogInsert dtos.BlogInsert, classID string) (id string, err error)
+	BlogInsert(blogInsert dtos.BlogInsert, courseID string) (id string, err error)
 
-	ClassGetOneByID(id string) (classInfo dtos.Class, err error)
-	ClassInsert(classInfo dtos.Class) (id string, err error)
+	CourseGetOneByID(id string) (courseInfo dtos.Course, err error)
+	CourseInsert(courseInfo dtos.Course) (id string, err error)
 
-	CourseworkInsert(classID string) (id string, err error)
+	CourseworkInsert(courseID string) (id string, err error)
 
 	ProjectGetOne(id string) (project dtos.Project, err error)
 	ProjectGetMany(skip int, limit int) (projects []dtos.Project, err error)
-	ProjectInsert(projectInfo dtos.ProjectInsert, classID string, thumbnailPath string) (id string, err error)
+	ProjectInsert(projectInfo dtos.ProjectInsert, courseID string, thumbnailPath string) (id string, err error)
 	ProjectUpdateThumbnail(id string, thumbnailPath string) error
 
 	// TeamInsert(teamInfo dtos.TeamInsert) (id string, err error)
@@ -68,7 +68,7 @@ func InitializeHandler() (err error) {
 			db: &dbEntity{
 				conn:            db,
 				blogOrmer:       models.NewBlogOrmer(db),
-				classOrmer:      models.NewClassOrmer(db),
+				courseOrmer:     models.NewCourseOrmer(db),
 				courseworkOrmer: models.NewCourseworkOrmer(db),
 				projectOrmer:    models.NewProjectOrmer(db),
 				// teamOrmer:       models.NewTeamOrmer(db),

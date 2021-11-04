@@ -21,9 +21,9 @@ func InitializeRouter() *gin.Engine {
 			{
 				auth.POST("/login", middlewares.AuthOnly(), v1.POSTLogin)
 			}
-			class := apiV1.Group("/class")
+			course := apiV1.Group("/course")
 			{
-				class.POST("/", v1.POSTClass)
+				course.POST("/", v1.POSTCourse)
 			}
 			coursework := apiV1.Group("/coursework")
 			{

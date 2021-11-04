@@ -17,16 +17,16 @@ func POSTBlog(c *gin.Context) {
 		return
 	}
 
-	var classInfo dtos.Class
-	if classInfo, err = handlers.Handler.ClassGetOneByID(blogInsert.ClassID); err != nil {
-		c.JSON(http.StatusNotFound, dtos.Response{Error: "class not found"})
+	var courseInfo dtos.Course
+	if courseInfo, err = handlers.Handler.CourseGetOneByID(blogInsert.ClassID); err != nil {
+		c.JSON(http.StatusNotFound, dtos.Response{Error: "course not found"})
 		return
 	}
 
 	// TODO: handle user relation here
 
 	var blogID string
-	if blogID, err = handlers.Handler.BlogInsert(blogInsert, classInfo.ID); err != nil {
+	if blogID, err = handlers.Handler.BlogInsert(blogInsert, courseInfo.ID); err != nil {
 		c.JSON(http.StatusInternalServerError, dtos.Response{Error: err})
 		return
 	}

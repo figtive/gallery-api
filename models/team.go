@@ -9,8 +9,8 @@ import (
 type Team struct {
 	ID        string    `gorm:"primaryKey;type:uuid;default:uuid_generate_v4()"`
 	Name      string    `gorm:"type:varchar(64);not null"`
-	ClassID   string    `gorm:"column:class_id"`
-	Class     Class     `gorm:"foreignKey:ClassID"`
+	CourseID  string    `gorm:"column:class_id"`
+	Course    Course    `gorm:"foreignKey:CourseID"`
 	ProjectID string    `gorm:"column:project_id"`
 	Project   Project   `gorm:"foreignKey:ProjectID"`
 	CreatedAt time.Time `gorm:"autoCreateTime" json:"-"`
