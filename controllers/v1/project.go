@@ -40,8 +40,7 @@ func POSTProject(c *gin.Context) {
 		Active:      projectInsert.Active,
 		Description: projectInsert.Description,
 		Field:       projectInsert.Field,
-		// TODO
-		Thumbnail: "",
+		Thumbnail:   "",
 	}
 
 	c.JSON(http.StatusOK, dtos.Response{
@@ -108,7 +107,10 @@ func PUTThumbnail(c *gin.Context) {
 		return
 	}
 	filename := fmt.Sprintf("thumbnail%s", filepath.Ext(file.Filename))
-	c.SaveUploadedFile(file, path.Join(configs.AppConfig.StaticBaseDir, subdir, filename))
+	if err = c.SaveUploadedFile(file, path.Join(configs.AppConfig.StaticBaseDir, subdir, filename)); err != nil {
+		c.JSON(http.StatusInternalServerError, dtos.Response{Error: err})
+		return
+	}
 
 	c.JSON(http.StatusOK, dtos.Response{
 		Code: http.StatusOK,
