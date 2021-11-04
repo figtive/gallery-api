@@ -7,7 +7,7 @@ import (
 )
 
 type Class struct {
-	ID          string    `gorm:"primaryKey;type:uuid;default:uuid_generate_v4()"`
+	ID          string    `gorm:"primaryKey;type:varchar(10);"`
 	Name        string    `gorm:"type:varchar(64);not null"`
 	Description string    `gorm:"not null"`
 	CreatedAt   time.Time `gorm:"autoCreateTime" json:"-"`

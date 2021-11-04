@@ -1,6 +1,8 @@
 package handlers
 
 import (
+	"strings"
+
 	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/dtos"
 	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/models"
 )
@@ -22,7 +24,7 @@ func (m *module) ClassGetOneByID(id string) (classInfo dtos.Class, err error) {
 		return dtos.Class{}, err
 	}
 	classInfo = dtos.Class{
-		ID:          class.ID,
+		ID:          strings.ToLower(class.ID),
 		Name:        class.Name,
 		Description: class.Description,
 	}
