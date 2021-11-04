@@ -31,8 +31,8 @@ func (m *module) ProjectGetMany(skip int, limit int) (projects []dtos.Project, e
 		return
 	}
 	projects = make([]dtos.Project, len(projectsRaw))
-	for _, project := range projectsRaw {
-		projects = append(projects, dtos.Project{
+	for i, project := range projectsRaw {
+		projects[i] = dtos.Project{
 			ID:          project.CourseworkID,
 			Name:        project.Name,
 			Active:      project.Active,
@@ -42,7 +42,7 @@ func (m *module) ProjectGetMany(skip int, limit int) (projects []dtos.Project, e
 			CreatedAt:   project.CreatedAt,
 			Team:        project.Team,
 			Metadata:    project.Metadata,
-		})
+		}
 	}
 	return
 }
