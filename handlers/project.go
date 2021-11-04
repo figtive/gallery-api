@@ -45,6 +45,7 @@ func (m *module) ProjectGetMany(skip int, limit int) (projects []dtos.Project, e
 			CreatedAt:   project.CreatedAt,
 			Team:        project.Team,
 			Metadata:    project.Metadata,
+			CourseId:    project.Coursework.CourseID,
 		}
 	}
 	return
@@ -65,6 +66,7 @@ func (m *module) ProjectGetOne(id string) (project dtos.Project, err error) {
 		CreatedAt:   projectRaw.CreatedAt,
 		Team:        projectRaw.Team,
 		Metadata:    projectRaw.Metadata,
+		CourseId:    projectRaw.Coursework.CourseID,
 	}
 	return
 }

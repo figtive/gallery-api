@@ -39,6 +39,7 @@ func (m *module) BlogGetMany(skip int, limit int) (blogs []dtos.Blog, err error)
 			Title:    blog.Title,
 			Link:     blog.Link,
 			Category: blog.Category,
+			CourseId: blog.CourseworkID,
 		}
 	}
 	return
@@ -55,6 +56,7 @@ func (m *module) BlogGetOne(id string) (blog dtos.Blog, err error) {
 		Title:    blogRaw.Title,
 		Link:     blogRaw.Link,
 		Category: blogRaw.Category,
+		CourseId: blogRaw.CourseworkID,
 	}
 	return
 }
