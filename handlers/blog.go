@@ -28,6 +28,7 @@ func (m *module) BlogGetMany(skip int, limit int) (blogs []dtos.Blog, err error)
 	if blogsRaw, err = m.db.blogOrmer.GetMany(skip, limit); err != nil {
 		return
 	}
+	blogs = make([]dtos.Blog, len(blogsRaw))
 	for _, blog := range blogsRaw {
 		blogs = append(blogs, dtos.Blog{
 			ID:       blog.CourseworkID,

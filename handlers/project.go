@@ -30,6 +30,7 @@ func (m *module) ProjectGetMany(skip int, limit int) (projects []dtos.Project, e
 	if projectsRaw, err = m.db.projectOrmer.GetMany(skip, limit); err != nil {
 		return
 	}
+	projects = make([]dtos.Project, len(projectsRaw))
 	for _, project := range projectsRaw {
 		projects = append(projects, dtos.Project{
 			ID:          project.CourseworkID,
