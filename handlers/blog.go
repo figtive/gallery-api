@@ -1,6 +1,8 @@
 package handlers
 
 import (
+	"math/rand"
+
 	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/dtos"
 	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/models"
 )
@@ -29,7 +31,8 @@ func (m *module) BlogGetMany(skip int, limit int) (blogs []dtos.Blog, err error)
 		return
 	}
 	blogs = make([]dtos.Blog, len(blogsRaw))
-	for i, blog := range blogsRaw {
+	for i, j := range rand.Perm(len(blogsRaw)) {
+		blog := blogsRaw[j]
 		blogs[i] = dtos.Blog{
 			ID:       blog.CourseworkID,
 			Author:   blog.Author,

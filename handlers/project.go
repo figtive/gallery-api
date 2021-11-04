@@ -1,6 +1,8 @@
 package handlers
 
 import (
+	"math/rand"
+
 	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/dtos"
 	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/models"
 )
@@ -31,7 +33,8 @@ func (m *module) ProjectGetMany(skip int, limit int) (projects []dtos.Project, e
 		return
 	}
 	projects = make([]dtos.Project, len(projectsRaw))
-	for i, project := range projectsRaw {
+	for i, j := range rand.Perm(len(projectsRaw)) {
+		project := projectsRaw[j]
 		projects[i] = dtos.Project{
 			ID:          project.CourseworkID,
 			Name:        project.Name,
