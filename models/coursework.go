@@ -15,6 +15,7 @@ type Coursework struct {
 
 type CourseworkOrmer interface {
 	Insert(coursework Coursework) (id string, err error)
+	GetOneByID(id string) (Coursework, error)
 }
 
 type courseworkOrm struct {
@@ -29,4 +30,10 @@ func NewCourseworkOrmer(db *gorm.DB) CourseworkOrmer {
 func (o *courseworkOrm) Insert(coursework Coursework) (id string, err error) {
 	result := o.db.Model(&Coursework{}).Create(&coursework)
 	return coursework.ID, result.Error
+}
+
+func (o *courseworkOrm) GetOneByID(id string) (Coursework, error) {
+	var coursework Coursework
+	result := o.db.Model(&Coursework{}).Where("id = ?", id).First(&coursework)
+	return coursework, result.Error
 }

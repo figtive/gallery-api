@@ -17,6 +17,7 @@ type Vote struct {
 
 type VoteOrmer interface {
 	Insert(vote Vote) (string, error)
+	GetManyByUserIDCourseworkIDAndCreatedAt(userID, courseworkID string, createdAt time.Time) ([]Vote, error)
 }
 
 type voteOrm struct {
@@ -31,4 +32,10 @@ func NewVoteOrmer(db *gorm.DB) VoteOrmer {
 func (o *voteOrm) Insert(vote Vote) (string, error) {
 	result := o.db.Model(&Vote{}).Create(&vote)
 	return vote.ID, result.Error
+}
+
+func (o *voteOrm) GetManyByUserIDCourseworkIDAndCreatedAt(userID, courseworkID string, createdAt time.Time) ([]Vote, error) {
+	var votes []Vote
+	result := o.db.Where("user_id = ? AND coursework_id = ? AND created_at > ?", userID, courseworkID, createdAt).Find(&votes)
+	return votes, result.Error
 }

@@ -38,6 +38,7 @@ type HandlerFunc interface {
 	CourseGetOneByID(id string) (courseInfo dtos.Course, err error)
 	CourseInsert(courseInfo dtos.Course) (id string, err error)
 
+	CourseworkGetOneByID(id string) (dtos.Coursework, error)
 	CourseworkInsert(courseID string) (id string, err error)
 
 	ProjectGetOne(id string) (project dtos.Project, err error)
@@ -49,6 +50,9 @@ type HandlerFunc interface {
 
 	UserGetOneByEmail(email string) (userInfo dtos.User, err error)
 	UserInsert(userInfo dtos.User) (id string, err error)
+
+	VoteInsert(userID string, voteInfo dtos.VoteInsert) (string, error)
+	VoteGetVotesForCourseworkInCurrentTerm(userID, courseworkID string) ([]dtos.Vote, error)
 }
 
 var Handler HandlerFunc

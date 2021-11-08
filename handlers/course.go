@@ -25,14 +25,15 @@ func (m *module) CourseGetOneByID(id string) (dtos.Course, error) {
 	var err error
 	var courseInfo dtos.Course
 
-	var class models.Course
-	if class, err = m.db.courseOrmer.GetOneByID(id); err != nil {
+	var course models.Course
+	if course, err = m.db.courseOrmer.GetOneByID(id); err != nil {
 		return courseInfo, err
 	}
 	courseInfo = dtos.Course{
-		ID:          strings.ToLower(class.ID),
-		Name:        class.Name,
-		Description: class.Description,
+		ID:          strings.ToLower(course.ID),
+		Name:        course.Name,
+		Description: course.Description,
+		VoteQuota:   course.VoteQuota,
 	}
 	return courseInfo, nil
 }
