@@ -20,6 +20,7 @@ type dbEntity struct {
 	projectOrmer    models.ProjectOrmer
 	// teamOrmer       models.TeamOrmer
 	userOrmer models.UserOrmer
+	voteOrmer models.VoteOrmer
 }
 
 type module struct {
@@ -73,6 +74,7 @@ func InitializeHandler() (err error) {
 				projectOrmer:    models.NewProjectOrmer(db),
 				// teamOrmer:       models.NewTeamOrmer(db),
 				userOrmer: models.NewUserOrmer(db),
+				voteOrmer: models.NewVoteOrmer(db),
 			},
 		}
 		return
