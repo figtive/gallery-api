@@ -3,6 +3,7 @@ package handlers
 import (
 	"math/rand"
 
+	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/configs"
 	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/dtos"
 	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/models"
 )
@@ -41,7 +42,7 @@ func (m *module) ProjectGetMany(skip int, limit int) (projects []dtos.Project, e
 			Active:      project.Active,
 			Description: project.Description,
 			Field:       project.Field,
-			Thumbnail:   project.Thumbnail,
+			Thumbnail:   configs.AppConfig.StaticBaseURL + project.Thumbnail,
 			CreatedAt:   project.CreatedAt,
 			Team:        project.Team,
 			Metadata:    project.Metadata,
