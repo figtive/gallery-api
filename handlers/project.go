@@ -1,6 +1,8 @@
 package handlers
 
 import (
+	"math/rand"
+
 	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/dtos"
 	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/models"
 )
@@ -30,8 +32,10 @@ func (m *module) ProjectGetMany(skip int, limit int) (projects []dtos.Project, e
 	if projectsRaw, err = m.db.projectOrmer.GetMany(skip, limit); err != nil {
 		return
 	}
-	for _, project := range projectsRaw {
-		projects = append(projects, dtos.Project{
+	projects = make([]dtos.Project, len(projectsRaw))
+	for i, j := range rand.Perm(len(projectsRaw)) {
+		project := projectsRaw[j]
+		projects[i] = dtos.Project{
 			ID:          project.CourseworkID,
 			Name:        project.Name,
 			Active:      project.Active,
@@ -41,7 +45,8 @@ func (m *module) ProjectGetMany(skip int, limit int) (projects []dtos.Project, e
 			CreatedAt:   project.CreatedAt,
 			Team:        project.Team,
 			Metadata:    project.Metadata,
-		})
+			CourseId:    project.Coursework.CourseID,
+		}
 	}
 	return
 }
@@ -61,6 +66,7 @@ func (m *module) ProjectGetOne(id string) (project dtos.Project, err error) {
 		CreatedAt:   projectRaw.CreatedAt,
 		Team:        projectRaw.Team,
 		Metadata:    projectRaw.Metadata,
+		CourseId:    projectRaw.Coursework.CourseID,
 	}
 	return
 }

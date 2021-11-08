@@ -13,12 +13,12 @@ func POSTCourse(c *gin.Context) {
 
 	var courseInfo dtos.Course
 	if err = c.ShouldBindJSON(&courseInfo); err != nil {
-		c.JSON(http.StatusBadRequest, dtos.Response{Error: err})
+		c.JSON(http.StatusBadRequest, dtos.Response{Error: err.Error()})
 		return
 	}
 
 	if courseInfo.ID, err = handlers.Handler.CourseInsert(courseInfo); err != nil {
-		c.JSON(http.StatusInternalServerError, dtos.Response{Error: err})
+		c.JSON(http.StatusInternalServerError, dtos.Response{Error: err.Error()})
 		return
 	}
 

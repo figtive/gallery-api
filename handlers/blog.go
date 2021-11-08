@@ -1,6 +1,8 @@
 package handlers
 
 import (
+	"math/rand"
+
 	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/dtos"
 	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/models"
 )
@@ -28,14 +30,17 @@ func (m *module) BlogGetMany(skip int, limit int) (blogs []dtos.Blog, err error)
 	if blogsRaw, err = m.db.blogOrmer.GetMany(skip, limit); err != nil {
 		return
 	}
-	for _, blog := range blogsRaw {
-		blogs = append(blogs, dtos.Blog{
+	blogs = make([]dtos.Blog, len(blogsRaw))
+	for i, j := range rand.Perm(len(blogsRaw)) {
+		blog := blogsRaw[j]
+		blogs[i] = dtos.Blog{
 			ID:       blog.CourseworkID,
 			Author:   blog.Author,
 			Title:    blog.Title,
 			Link:     blog.Link,
 			Category: blog.Category,
-		})
+			CourseId: blog.CourseworkID,
+		}
 	}
 	return
 }
@@ -51,6 +56,7 @@ func (m *module) BlogGetOne(id string) (blog dtos.Blog, err error) {
 		Title:    blogRaw.Title,
 		Link:     blogRaw.Link,
 		Category: blogRaw.Category,
+		CourseId: blogRaw.CourseworkID,
 	}
 	return
 }

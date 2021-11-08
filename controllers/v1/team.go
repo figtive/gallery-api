@@ -12,7 +12,7 @@ func POSTTeam(c *gin.Context) {
 
 	var teamInsert dtos.TeamInsert
 	if err = c.ShouldBindJSON(&teamInsert); err != nil {
-		c.JSON(http.StatusBadRequest, dtos.Response{Error: err})
+		c.JSON(http.StatusBadRequest, dtos.Response{Error: err.Error()})
 		return
 	}
 

@@ -14,4 +14,5 @@ type Blog struct {
 	Title    string `json:"title"`
 	Link     string `json:"link"`
 	Category string `json:"category"`
+	CourseId string `json:"courseId"`
 }

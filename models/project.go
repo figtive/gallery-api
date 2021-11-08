@@ -6,7 +6,6 @@ import (
 	"gorm.io/gorm"
 )
 
-// TODO: THUMBNAIL
 type Project struct {
 	CourseworkID string     `gorm:"primaryKey"`
 	Coursework   Coursework `gorm:"foreignKey:CourseworkID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
@@ -43,13 +42,13 @@ func (o *projectOrm) Insert(project Project) (courseworkID string, err error) {
 }
 
 func (o *projectOrm) GetOneByCourseworkID(courseworkID string) (project Project, err error) {
-	result := o.db.Model(&Project{}).Where("coursework_id = ?", courseworkID).First(&project)
+	result := o.db.Model(&Project{}).Where("coursework_id = ?", courseworkID).Preload("Coursework").First(&project)
 	return project, result.Error
 }
 
 // TODO: random ordering
 func (o *projectOrm) GetMany(skip int, limit int) (projects []Project, err error) {
-	result := o.db.Model(&Project{}).Offset(skip)
+	result := o.db.Model(&Project{}).Offset(skip).Preload("Coursework")
 	if limit > 0 {
 		result = result.Limit(limit)
 	}

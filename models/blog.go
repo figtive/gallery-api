@@ -38,13 +38,13 @@ func (o *blogOrm) Insert(blog Blog) (id string, err error) {
 }
 
 func (o *blogOrm) GetOneByCourseworkID(courseworkID string) (blog Blog, err error) {
-	result := o.db.Model(&Blog{}).Where("coursework_id = ?", courseworkID).First(&blog)
+	result := o.db.Model(&Blog{}).Where("coursework_id = ?", courseworkID).Preload("Coursework").First(&blog)
 	return blog, result.Error
 }
 
 // TODO: random ordering
 func (o *blogOrm) GetMany(skip int, limit int) (blogs []Blog, err error) {
-	result := o.db.Model(&Blog{}).Offset(skip)
+	result := o.db.Model(&Blog{}).Offset(skip).Preload("Coursework")
 	if limit > 0 {
 		result = result.Limit(limit)
 	}

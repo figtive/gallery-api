@@ -16,13 +16,13 @@ func POSTLogin(c *gin.Context) {
 
 	var claims dtos.GoogleJWTClaim
 	if claims, err = handlers.Handler.AuthParseGoogleJWT(c.GetString(constants.ContextGoogleJWTKey)); err != nil {
-		c.JSON(http.StatusUnauthorized, dtos.Response{Error: err})
+		c.JSON(http.StatusUnauthorized, dtos.Response{Error: err.Error()})
 		return
 	}
 
 	var userInfo dtos.User
 	if userInfo, err = handlers.Handler.UserGetOneByEmail(claims.Email); err != nil && err != gorm.ErrRecordNotFound {
-		c.JSON(http.StatusInternalServerError, dtos.Response{Error: err})
+		c.JSON(http.StatusInternalServerError, dtos.Response{Error: err.Error()})
 		return
 	}
 
@@ -30,7 +30,7 @@ func POSTLogin(c *gin.Context) {
 		userInfo.Email = claims.Email
 		userInfo.Name = claims.Name
 		if userInfo.ID, err = handlers.Handler.UserInsert(userInfo); err != nil {
-			c.JSON(http.StatusInternalServerError, dtos.Response{Error: err})
+			c.JSON(http.StatusInternalServerError, dtos.Response{Error: err.Error()})
 			return
 		}
 	}

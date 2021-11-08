@@ -12,6 +12,7 @@ type Project struct {
 	CreatedAt   time.Time `json:"createdAt"`
 	Metadata    string    `json:"metadata"`
 	Team        string    `json:"team"`
+	CourseId    string    `json:"courseId"`
 }
 
 type ProjectInsert struct {
