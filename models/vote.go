@@ -16,6 +16,7 @@ type Vote struct {
 }
 
 type VoteOrmer interface {
+	CountByCourseworkID(courseworkID string) (int64, error)
 	Insert(vote Vote) (string, error)
 	GetManyByUserIDCourseworkIDAndCreatedAt(userID, courseworkID string, createdAt time.Time) ([]Vote, error)
 }
@@ -38,4 +39,10 @@ func (o *voteOrm) GetManyByUserIDCourseworkIDAndCreatedAt(userID, courseworkID s
 	var votes []Vote
 	result := o.db.Where("user_id = ? AND coursework_id = ? AND created_at > ?", userID, courseworkID, createdAt).Find(&votes)
 	return votes, result.Error
+}
+
+func (o *voteOrm) CountByCourseworkID(courseworkID string) (int64, error) {
+	var count int64
+	result := o.db.Model(&Vote{}).Where("coursework_id = ?", courseworkID).Count(&count)
+	return count, result.Error
 }

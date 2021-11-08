@@ -51,6 +51,7 @@ type HandlerFunc interface {
 	UserGetOneByEmail(email string) (userInfo dtos.User, err error)
 	UserInsert(userInfo dtos.User) (id string, err error)
 
+	VoteCountByCourseworkID(courseworkID string) (int64, error)
 	VoteInsert(userID string, voteInfo dtos.VoteInsert) (string, error)
 	VoteGetVotesForCourseworkInCurrentTerm(userID, courseworkID string) ([]dtos.Vote, error)
 }

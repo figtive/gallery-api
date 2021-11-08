@@ -37,3 +37,12 @@ func (m *module) VoteGetVotesForCourseworkInCurrentTerm(userID, courseworkID str
 	}
 	return votes, nil
 }
+
+func (m *module) VoteCountByCourseworkID(courseworkID string) (int64, error) {
+	var err error
+	var count int64
+	if count, err = m.db.voteOrmer.CountByCourseworkID(courseworkID); err != nil {
+		return 0, err
+	}
+	return count, nil
+}

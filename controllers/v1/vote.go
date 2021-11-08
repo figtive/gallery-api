@@ -64,5 +64,20 @@ func POSTVote(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, dtos.Response{Code: http.StatusOK, Data: id})
-	return
+}
+
+func GETVoteCount(c *gin.Context) {
+	var err error
+
+	id := c.Param("id")
+	var count int64
+	if count, err = handlers.Handler.VoteCountByCourseworkID(id); err != nil {
+		if err == gorm.ErrRecordNotFound {
+			c.JSON(http.StatusNotFound, dtos.Response{Code: http.StatusNotFound, Error: "Vote not found"})
+		} else {
+			c.JSON(http.StatusInternalServerError, dtos.Response{Code: http.StatusInternalServerError, Error: err.Error()})
+		}
+		return
+	}
+	c.JSON(http.StatusOK, dtos.Response{Code: http.StatusOK, Data: count})
 }
