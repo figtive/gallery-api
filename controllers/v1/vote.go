@@ -13,11 +13,6 @@ import (
 
 func POSTVote(c *gin.Context) {
 	var err error
-	// check is authed
-	if !c.GetBool(constants.ContextIsAuthenticatedKey) {
-		c.JSON(http.StatusUnauthorized, dtos.Response{Code: http.StatusUnauthorized, Error: "You must be logged in to vote"})
-		return
-	}
 	// get body
 	var voteInsert dtos.VoteInsert
 	if err = c.ShouldBindJSON(&voteInsert); err != nil {
