@@ -10,6 +10,7 @@ type Course struct {
 	ID          string    `gorm:"primaryKey;type:varchar(10);"`
 	Name        string    `gorm:"type:varchar(64);not null"`
 	Description string    `gorm:"not null"`
+	VoteQuota   int       `gorm:"not null"`
 	CreatedAt   time.Time `gorm:"autoCreateTime" json:"-"`
 	UpdatedAt   time.Time `gorm:"autoUpdateTime" json:"-"`
 }

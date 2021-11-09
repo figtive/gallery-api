@@ -20,6 +20,7 @@ type dbEntity struct {
 	projectOrmer    models.ProjectOrmer
 	// teamOrmer       models.TeamOrmer
 	userOrmer models.UserOrmer
+	voteOrmer models.VoteOrmer
 }
 
 type module struct {
@@ -37,6 +38,7 @@ type HandlerFunc interface {
 	CourseGetOneByID(id string) (courseInfo dtos.Course, err error)
 	CourseInsert(courseInfo dtos.Course) (id string, err error)
 
+	CourseworkGetOneByID(id string) (dtos.Coursework, error)
 	CourseworkInsert(courseID string) (id string, err error)
 
 	ProjectGetOne(id string) (project dtos.Project, err error)
@@ -48,6 +50,12 @@ type HandlerFunc interface {
 
 	UserGetOneByEmail(email string) (userInfo dtos.User, err error)
 	UserInsert(userInfo dtos.User) (id string, err error)
+
+	VoteCountByCourseworkID(courseworkID string) (int64, error)
+	VoteCountByUserIDJoinCourseworkType(userID, courseworkType string) (int64, error)
+	VoteHasVoted(userID, courseworkID string) (bool, error)
+	VoteInsert(userID string, voteInfo dtos.VoteInsert) (string, error)
+	VoteGetVotesForCourseworkInCurrentTerm(userID, courseworkID string) ([]dtos.Vote, error)
 }
 
 var Handler HandlerFunc
@@ -73,6 +81,7 @@ func InitializeHandler() (err error) {
 				projectOrmer:    models.NewProjectOrmer(db),
 				// teamOrmer:       models.NewTeamOrmer(db),
 				userOrmer: models.NewUserOrmer(db),
+				voteOrmer: models.NewVoteOrmer(db),
 			},
 		}
 		return
