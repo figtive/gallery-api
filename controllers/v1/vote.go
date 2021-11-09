@@ -81,3 +81,23 @@ func GETVoteCount(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, dtos.Response{Code: http.StatusOK, Data: count})
 }
+
+func GETVoteQuota(c *gin.Context) {
+	var err error
+	var user dtos.User
+	if user, err = handlers.Handler.UserGetOneByEmail(c.GetString(constants.ContextUserEmailKey)); err != nil {
+		c.JSON(http.StatusInternalServerError, dtos.Response{Code: http.StatusInternalServerError, Error: err.Error()})
+		return
+	}
+	quotas := make(gin.H, 2)
+	cwType := []string{"projects", "blogs"}
+	for _, cw := range cwType {
+		var quota int64
+		if quota, err = handlers.Handler.VoteCountByUserIDJoinCourseworkType(user.ID, cw); err != nil {
+			c.JSON(http.StatusInternalServerError, dtos.Response{Code: http.StatusInternalServerError, Error: err.Error()})
+			return
+		}
+		quotas[cw] = quota
+	}
+	c.JSON(http.StatusOK, dtos.Response{Code: http.StatusOK, Data: quotas})
+}

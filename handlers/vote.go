@@ -46,3 +46,12 @@ func (m *module) VoteCountByCourseworkID(courseworkID string) (int64, error) {
 	}
 	return count, nil
 }
+
+func (m *module) VoteCountByUserIDJoinCourseworkType(userID, courseworkType string) (int64, error) {
+	var err error
+	var count int64
+	if count, err = m.db.voteOrmer.CountByUserIDJoinCourseworkType(userID, courseworkType); err != nil {
+		return 0, err
+	}
+	return count, nil
+}

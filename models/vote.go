@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fmt"
 	"time"
 
 	"gorm.io/gorm"
@@ -17,6 +18,7 @@ type Vote struct {
 
 type VoteOrmer interface {
 	CountByCourseworkID(courseworkID string) (int64, error)
+	CountByUserIDJoinCourseworkType(userID, courseworkType string) (int64, error)
 	Insert(vote Vote) (string, error)
 	GetManyByUserIDCourseworkIDAndCreatedAt(userID, courseworkID string, createdAt time.Time) ([]Vote, error)
 }
@@ -44,5 +46,13 @@ func (o *voteOrm) GetManyByUserIDCourseworkIDAndCreatedAt(userID, courseworkID s
 func (o *voteOrm) CountByCourseworkID(courseworkID string) (int64, error) {
 	var count int64
 	result := o.db.Model(&Vote{}).Where("coursework_id = ?", courseworkID).Count(&count)
+	return count, result.Error
+}
+
+// Each coursework vote count
+
+func (o *voteOrm) CountByUserIDJoinCourseworkType(userID, courseworkType string) (int64, error) {
+	var count int64
+	result := o.db.Model(&Vote{}).Joins(fmt.Sprintf("inner join %[1]s on votes.coursework_id = %[1]s.coursework_id", courseworkType)).Where("votes.user_id = ?", userID).Count(&count)
 	return count, result.Error
 }
