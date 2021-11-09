@@ -53,6 +53,7 @@ type HandlerFunc interface {
 
 	VoteCountByCourseworkID(courseworkID string) (int64, error)
 	VoteCountByUserIDJoinCourseworkType(userID, courseworkType string) (int64, error)
+	VoteHasVoted(userID, courseworkID string) (bool, error)
 	VoteInsert(userID string, voteInfo dtos.VoteInsert) (string, error)
 	VoteGetVotesForCourseworkInCurrentTerm(userID, courseworkID string) ([]dtos.Vote, error)
 }

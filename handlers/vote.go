@@ -6,6 +6,7 @@ import (
 	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/dtos"
 	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/models"
 	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/utils"
+	"gorm.io/gorm"
 )
 
 func (m *module) VoteInsert(userID string, voteInfo dtos.VoteInsert) (string, error) {
@@ -54,4 +55,15 @@ func (m *module) VoteCountByUserIDJoinCourseworkType(userID, courseworkType stri
 		return 0, err
 	}
 	return count, nil
+}
+
+func (m *module) VoteHasVoted(userID, courseworkID string) (bool, error) {
+	var err error
+	if _, err = m.db.voteOrmer.GetOneByUserIDAndCourseworkID(userID, courseworkID); err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return false, nil
+		}
+		return false, err
+	}
+	return true, nil
 }
