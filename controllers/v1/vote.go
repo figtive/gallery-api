@@ -13,11 +13,9 @@ import (
 
 func POSTVote(c *gin.Context) {
 	var err error
-	// get body
-	var voteInsert dtos.VoteInsert
-	if err = c.ShouldBindJSON(&voteInsert); err != nil {
-		c.JSON(http.StatusBadRequest, dtos.Response{Code: http.StatusBadRequest, Error: err.Error()})
-		return
+	// get coursework id
+	voteInsert := dtos.VoteInsert{
+		CourseworkID: c.Param("id"),
 	}
 	// get user from db
 	var user dtos.User
@@ -33,6 +31,16 @@ func POSTVote(c *gin.Context) {
 		} else {
 			c.JSON(http.StatusInternalServerError, dtos.Response{Code: http.StatusInternalServerError, Error: err.Error()})
 		}
+		return
+	}
+	// check if user has voted for this coursework
+	var hasVoted bool
+	if hasVoted, err = handlers.Handler.VoteHasVoted(user.ID, voteInsert.CourseworkID); err != nil {
+		c.JSON(http.StatusInternalServerError, dtos.Response{Code: http.StatusInternalServerError, Error: err.Error()})
+		return
+	}
+	if hasVoted {
+		c.JSON(http.StatusForbidden, dtos.Response{Code: http.StatusBadRequest, Error: "You have already voted"})
 		return
 	}
 	// get course object
