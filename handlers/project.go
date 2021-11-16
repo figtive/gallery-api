@@ -16,11 +16,11 @@ func (m *module) ProjectInsert(projectInfo dtos.ProjectInsert, classID string, t
 	if id, err = m.db.projectOrmer.Insert(models.Project{
 		CourseworkID: courseworkID,
 		Name:         projectInfo.Name,
-		Active:       projectInfo.Active,
-		Description:  projectInfo.Description,
-		Field:        projectInfo.Field,
-		Thumbnail:    thumbnailPath,
 		Team:         projectInfo.Team,
+		Description:  projectInfo.Description,
+		Thumbnail:    thumbnailPath,
+		Field:        projectInfo.Field,
+		Active:       projectInfo.Active,
 		Metadata:     *projectInfo.Metadata,
 	}); err != nil {
 		return
