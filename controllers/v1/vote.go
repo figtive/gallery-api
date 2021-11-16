@@ -92,15 +92,15 @@ func GETVoteQuota(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, dtos.Response{Code: http.StatusInternalServerError, Error: err.Error()})
 		return
 	}
-	quotas := make(gin.H, 2)
-	cwType := []string{"projects", "blogs"}
-	for _, cw := range cwType {
+	courseworkType := map[string]string{"project": "projects", "blog": "blogs"}
+	quotas := make(gin.H, len(courseworkType))
+	for n, t := range courseworkType {
 		var quota int64
-		if quota, err = handlers.Handler.VoteCountByUserIDJoinCourseworkType(user.ID, cw); err != nil {
+		if quota, err = handlers.Handler.VoteCountByUserIDJoinCourseworkType(user.ID, t); err != nil {
 			c.JSON(http.StatusInternalServerError, dtos.Response{Code: http.StatusInternalServerError, Error: err.Error()})
 			return
 		}
-		quotas[cw] = quota
+		quotas[n] = quota
 	}
 	c.JSON(http.StatusOK, dtos.Response{Code: http.StatusOK, Data: quotas})
 }
