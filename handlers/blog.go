@@ -16,9 +16,9 @@ func (m *module) BlogInsert(blogInsert dtos.BlogInsert, classID string) (id stri
 	if id, err = m.db.blogOrmer.Insert(models.Blog{
 		CourseworkID: courseworkID,
 		Title:        blogInsert.Title,
+		Author:       blogInsert.Author,
 		Link:         blogInsert.Link,
 		Category:     blogInsert.Category,
-		Author:       blogInsert.Author,
 	}); err != nil {
 		return
 	}
@@ -34,12 +34,13 @@ func (m *module) BlogGetMany(skip int, limit int) (blogs []dtos.Blog, err error)
 	for i, j := range rand.Perm(len(blogsRaw)) {
 		blog := blogsRaw[j]
 		blogs[i] = dtos.Blog{
-			ID:       blog.CourseworkID,
-			Author:   blog.Author,
-			Title:    blog.Title,
-			Link:     blog.Link,
-			Category: blog.Category,
-			CourseId: blog.CourseworkID,
+			ID:        blog.CourseworkID,
+			CourseID:  blog.Coursework.CourseID,
+			Title:     blog.Title,
+			Author:    blog.Author,
+			Link:      blog.Link,
+			Category:  blog.Category,
+			CreatedAt: blog.CreatedAt,
 		}
 	}
 	return
@@ -51,12 +52,13 @@ func (m *module) BlogGetOne(id string) (blog dtos.Blog, err error) {
 		return
 	}
 	blog = dtos.Blog{
-		ID:       blogRaw.CourseworkID,
-		Author:   blogRaw.Author,
-		Title:    blogRaw.Title,
-		Link:     blogRaw.Link,
-		Category: blogRaw.Category,
-		CourseId: blogRaw.CourseworkID,
+		ID:        blogRaw.CourseworkID,
+		CourseID:  blogRaw.Coursework.CourseID,
+		Title:     blogRaw.Title,
+		Author:    blogRaw.Author,
+		Link:      blogRaw.Link,
+		Category:  blogRaw.Category,
+		CreatedAt: blogRaw.CreatedAt,
 	}
 	return
 }

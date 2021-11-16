@@ -18,7 +18,7 @@ func POSTBlog(c *gin.Context) {
 	}
 
 	var courseInfo dtos.Course
-	if courseInfo, err = handlers.Handler.CourseGetOneByID(blogInsert.ClassID); err != nil {
+	if courseInfo, err = handlers.Handler.CourseGetOneByID(blogInsert.CourseID); err != nil {
 		c.JSON(http.StatusNotFound, dtos.Response{Error: err.Error()})
 		return
 	}
