@@ -37,3 +37,21 @@ func (m *module) CourseGetOneByID(id string) (dtos.Course, error) {
 	}
 	return courseInfo, nil
 }
+
+func (m *module) CourseGetAll() ([]dtos.Course, error) {
+	var err error
+	var rawCourses []models.Course
+	if rawCourses, err = m.db.courseOrmer.GetAll(); err != nil {
+		return nil, err
+	}
+	courses := make([]dtos.Course, len(rawCourses))
+	for i, rawCourse := range rawCourses {
+		courses[i] = dtos.Course{
+			ID:          strings.ToLower(rawCourse.ID),
+			Name:        rawCourse.Name,
+			Description: rawCourse.Description,
+			VoteQuota:   rawCourse.VoteQuota,
+		}
+	}
+	return courses, nil
+}

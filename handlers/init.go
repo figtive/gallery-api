@@ -36,10 +36,12 @@ type HandlerFunc interface {
 	BlogGetOne(id string) (blog dtos.Blog, err error)
 	BlogInsert(blogInsert dtos.BlogInsert, courseID string) (id string, err error)
 
+	CourseGetAll() ([]dtos.Course, error)
 	CourseGetOneByID(id string) (courseInfo dtos.Course, err error)
 	CourseInsert(courseInfo dtos.Course) (id string, err error)
 
 	CourseworkGetOneByID(id string) (dtos.Coursework, error)
+	CourseworkGetVoted(userID, cwTyoe string) ([]dtos.Coursework, error)
 	CourseworkInsert(courseID string) (id string, err error)
 
 	LeaderboardBlog(term time.Time, courseID string) ([]dtos.Blog, error)
@@ -54,6 +56,7 @@ type HandlerFunc interface {
 
 	UserGetOneByEmail(email string) (userInfo dtos.User, err error)
 	UserInsert(userInfo dtos.User) (id string, err error)
+	UserUpdate(userInfo dtos.User) (err error)
 
 	VoteCountByCourseworkID(courseworkID string) (int64, error)
 	VoteCountByUserIDJoinCourseworkType(userID, courseworkType string) (int64, error)

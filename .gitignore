@@ -1,6 +1,9 @@
 gallery-api
+gallery-cli
+!cmd/**/*
 tmp
 media
+.restbook
 
 # Created by https://www.toptal.com/developers/gitignore/api/go,macos,jetbrains+all,visualstudiocode,dotenv
 # Edit at https://www.toptal.com/developers/gitignore?templates=go,macos,jetbrains+all,visualstudiocode,dotenv
