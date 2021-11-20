@@ -42,6 +42,7 @@ type HandlerFunc interface {
 	CourseworkGetOneByID(id string) (dtos.Coursework, error)
 	CourseworkInsert(courseID string) (id string, err error)
 
+	LeaderboardBlog(term time.Time, courseID string) ([]dtos.Blog, error)
 	LeaderboardProject(term time.Time, courseID string) ([]dtos.Project, error)
 
 	ProjectGetOne(id string) (project dtos.Project, err error)

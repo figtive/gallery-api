@@ -30,3 +30,24 @@ func (m *module) LeaderboardProject(term time.Time, courseID string) ([]dtos.Pro
 	}
 	return projects, nil
 }
+
+func (m *module) LeaderboardBlog(term time.Time, courseID string) ([]dtos.Blog, error) {
+	var err error
+	var rawBlogs []models.Blog
+	if rawBlogs, err = m.db.blogOrmer.GetManyByTermAndCourseIdSortByVotes(term, courseID); err != nil {
+		return nil, err
+	}
+	blogs := make([]dtos.Blog, len(rawBlogs))
+	for i, rawBlog := range rawBlogs {
+		blogs[i] = dtos.Blog{
+			ID:        rawBlog.CourseworkID,
+			CourseID:  rawBlog.Coursework.CourseID,
+			Title:     rawBlog.Title,
+			Author:    rawBlog.Author,
+			Link:      rawBlog.Link,
+			Category:  rawBlog.Category,
+			CreatedAt: rawBlog.CreatedAt,
+		}
+	}
+	return blogs, nil
+}

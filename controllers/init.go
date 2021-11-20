@@ -51,6 +51,7 @@ func InitializeRouter() *gin.Engine {
 			leaderboard := apiV1.Group("/leaderboard")
 			{
 				leaderboard.GET("/:id/project", v1.GETProjectLeaderboard)
+				leaderboard.GET("/:id/blog", v1.GETBlogLeaderboard)
 			}
 			// team := apiV1.Group("/team")
 			// {
