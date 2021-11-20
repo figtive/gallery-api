@@ -56,6 +56,6 @@ func (o *blogOrm) GetMany(skip int, limit int) (blogs []Blog, err error) {
 
 func (o *blogOrm) GetManyByTermAndCourseIdSortByVotes(term time.Time, courseId string) ([]Blog, error) {
 	var blogs []Blog
-	result := o.db.Model(&Blog{}).Joins("INNER JOIN \"courseworks\" ON \"blogs\".\"coursework_id\" = \"courseworks\".\"id\" LEFT JOIN \"votes\" ON \"courseworks\".\"id\" = \"votes\".\"coursework_id\"").Where("blogs.created_at >= ? AND blogs.created_at < ? AND courseworks.course_id = ?", utils.TimeToTermTime(term), utils.NextTermTime(term), courseId).Order("Count(\"votes\".\"id\") DESC").Group("blogs.coursework_id").Preload("Coursework").Find(&blogs)
+	result := o.db.Model(&Blog{}).Joins("INNER JOIN courseworks ON blogs.coursework_id = courseworks.id LEFT JOIN votes ON courseworks.id = votes.coursework_id").Where("blogs.created_at >= ? AND blogs.created_at < ? AND courseworks.course_id = ?", utils.TimeToTermTime(term), utils.NextTermTime(term), courseId).Order("Count(votes.id) DESC").Group("blogs.coursework_id").Preload("Coursework").Find(&blogs)
 	return blogs, result.Error
 }
