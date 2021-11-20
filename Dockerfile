@@ -3,7 +3,7 @@ ARG CGO_ENABLED=0
 WORKDIR /app
 COPY . .
 RUN ["go", "mod", "tidy"]
-RUN ["go", "build"]
+RUN ["go", "build", "-o", ".", "./cmd/..."]
 
 FROM scratch
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/

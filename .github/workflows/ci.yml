@@ -17,4 +17,4 @@ jobs:
         with:
           skip-go-installation: true
       - name: build app
-        run: go build
+        run: go build -o . ./cmd/...
