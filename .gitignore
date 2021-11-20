@@ -1,4 +1,6 @@
 gallery-api
+gallery-cli
+!cmd/**/*
 tmp
 media
 
