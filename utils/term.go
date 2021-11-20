@@ -9,5 +9,11 @@ func TimeToTermTime(t time.Time) time.Time {
 	} else {
 		month = time.January
 	}
-	return time.Date(t.Year(), month, 0, 0, 0, 0, 0, time.UTC)
+	return time.Date(t.Year(), month, 1, 0, 0, 0, 0, time.UTC)
+}
+
+func NextTermTime(t time.Time) time.Time {
+	termTime := TimeToTermTime(t)
+	termTime.AddDate(0, 6, 0)
+	return termTime
 }

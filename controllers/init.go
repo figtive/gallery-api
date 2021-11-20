@@ -48,6 +48,11 @@ func InitializeRouter() *gin.Engine {
 				vote.GET("/count/:id", v1.GETVoteCount)
 				vote.GET("/quota", middlewares.AuthOnly(), v1.GETVoteQuota)
 			}
+			leaderboard := apiV1.Group("/leaderboard")
+			{
+				leaderboard.GET("/:id/project", v1.GETProjectLeaderboard)
+				leaderboard.GET("/:id/blog", v1.GETBlogLeaderboard)
+			}
 			// team := apiV1.Group("/team")
 			// {
 			// 	team.POST("/", v1.POSTTeam)

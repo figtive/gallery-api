@@ -4,6 +4,8 @@ import (
 	"time"
 
 	"gorm.io/gorm"
+
+	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/utils"
 )
 
 type Blog struct {
@@ -19,8 +21,9 @@ type Blog struct {
 
 type BlogOrmer interface {
 	Insert(blog Blog) (id string, err error)
-	GetOneByCourseworkID(courseworkID string) (blog Blog, err error)
 	GetMany(skip int, limit int) (blogs []Blog, err error)
+	GetManyByTermAndCourseIdSortByVotes(term time.Time, courseId string) ([]Blog, error)
+	GetOneByCourseworkID(courseworkID string) (blog Blog, err error)
 }
 
 type blogOrm struct {
@@ -49,5 +52,18 @@ func (o *blogOrm) GetMany(skip int, limit int) (blogs []Blog, err error) {
 		result = result.Limit(limit)
 	}
 	result = result.Find(&blogs)
+	return blogs, result.Error
+}
+
+func (o *blogOrm) GetManyByTermAndCourseIdSortByVotes(term time.Time, courseId string) ([]Blog, error) {
+	var blogs []Blog
+	result := o.db.
+		Model(&Blog{}).
+		Joins("INNER JOIN courseworks ON blogs.coursework_id = courseworks.id LEFT JOIN votes ON courseworks.id = votes.coursework_id").
+		Where("blogs.created_at >= ? AND blogs.created_at < ? AND courseworks.course_id = ?", utils.TimeToTermTime(term), utils.NextTermTime(term), courseId).
+		Order("Count(votes.id) DESC").
+		Group("blogs.coursework_id").
+		Preload("Coursework").
+		Find(&blogs)
 	return blogs, result.Error
 }
