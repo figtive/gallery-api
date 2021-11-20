@@ -38,10 +38,10 @@ func POSTProject(c *gin.Context) {
 	projectInfo := dtos.Project{
 		ID:          projectID,
 		Name:        projectInsert.Name,
-		Active:      projectInsert.Active,
 		Description: projectInsert.Description,
-		Field:       projectInsert.Field,
 		Thumbnail:   "",
+		Field:       projectInsert.Field,
+		Active:      projectInsert.Active,
 	}
 
 	c.JSON(http.StatusOK, dtos.Response{

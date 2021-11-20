@@ -1,18 +1,21 @@
 package dtos
 
-type BlogInsert struct {
-	Author   string `binding:"required" json:"author"`
-	Title    string `binding:"required" json:"title"`
-	Category string `binding:"required" json:"category"`
-	Link     string `binding:"required" json:"link"`
-	ClassID  string `binding:"required" json:"classId"`
-}
+import "time"
 
 type Blog struct {
-	ID       string `json:"id"`
-	Author   string `json:"author"`
-	Title    string `json:"title"`
-	Link     string `json:"link"`
-	Category string `json:"category"`
-	CourseId string `json:"courseId"`
+	ID        string    `json:"id"`
+	CourseID  string    `json:"courseId"`
+	Title     string    `json:"title"`
+	Author    string    `json:"author"`
+	Link      string    `json:"link"`
+	Category  string    `json:"category"`
+	CreatedAt time.Time `json:"createdAt"`
+}
+
+type BlogInsert struct {
+	CourseID string `binding:"required" json:"courseId"`
+	Title    string `binding:"required" json:"title"`
+	Author   string `binding:"required" json:"author"`
+	Link     string `binding:"required" json:"link"`
+	Category string `binding:"required" json:"category"`
 }

@@ -23,21 +23,21 @@ func InitializeRouter() *gin.Engine {
 			}
 			course := apiV1.Group("/course")
 			{
-				course.POST("/", v1.POSTCourse)
+				course.POST("", v1.POSTCourse)
 			}
 			coursework := apiV1.Group("/coursework")
 			{
 				project := coursework.Group("/project")
 				{
-					project.POST("/", v1.POSTProject)
-					project.GET("/", v1.GETProjects)
+					project.POST("", v1.POSTProject)
+					project.GET("", v1.GETProjects)
 					project.GET("/:id", v1.GETProject)
 					project.PUT("/thumbnail", v1.PUTThumbnail)
 				}
 				blog := coursework.Group("/blog")
 				{
-					blog.POST("/", v1.POSTBlog)
-					blog.GET("/", v1.GETBlogs)
+					blog.POST("", v1.POSTBlog)
+					blog.GET("", v1.GETBlogs)
 					blog.GET("/:id", v1.GETBlog)
 				}
 			}
