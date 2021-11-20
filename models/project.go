@@ -3,6 +3,7 @@ package models
 import (
 	"time"
 
+	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/utils"
 	"gorm.io/gorm"
 )
 
@@ -23,6 +24,7 @@ type Project struct {
 type ProjectOrmer interface {
 	GetOneByCourseworkID(courseworkID string) (project Project, err error)
 	GetMany(skip int, limit int) (projects []Project, err error)
+	GetManyByTermAndCourseIdSortByVotes(term time.Time, courseId string) ([]Project, error)
 	Insert(project Project) (courseworkID string, err error)
 	UpdateThumbnail(courseworkID string, path string) (err error)
 }
@@ -59,4 +61,10 @@ func (o *projectOrm) GetMany(skip int, limit int) (projects []Project, err error
 func (o *projectOrm) UpdateThumbnail(courseworkID string, path string) (err error) {
 	result := o.db.Model(&Project{}).Where("coursework_id = ?", courseworkID).Update("thumbnail", path)
 	return result.Error
+}
+
+func (o *projectOrm) GetManyByTermAndCourseIdSortByVotes(term time.Time, courseId string) ([]Project, error) {
+	var projects []Project
+	result := o.db.Model(&Project{}).Joins("INNER JOIN votes ON projects.coursework_id = votes.coursework_id INNER JOIN courseworks ON votes.coursework_id = courseworks.id").Where("projects.created_at >= ? AND projects.created_at < ? AND courseworks.course_id = ?", utils.TimeToTermTime(term), utils.NextTermTime(term), courseId).Order("Count(\"projects\".\"coursework_id\")").Group("projects.coursework_id").Preload("Coursework").Find(&projects)
+	return projects, result.Error
 }

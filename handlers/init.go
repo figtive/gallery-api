@@ -3,6 +3,7 @@ package handlers
 import (
 	"fmt"
 	"log"
+	"time"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -40,6 +41,8 @@ type HandlerFunc interface {
 
 	CourseworkGetOneByID(id string) (dtos.Coursework, error)
 	CourseworkInsert(courseID string) (id string, err error)
+
+	LeaderboardProject(term time.Time, courseID string) ([]dtos.Project, error)
 
 	ProjectGetOne(id string) (project dtos.Project, err error)
 	ProjectGetMany(skip int, limit int) (projects []dtos.Project, err error)
