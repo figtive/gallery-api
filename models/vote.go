@@ -22,6 +22,7 @@ type VoteOrmer interface {
 	Insert(vote Vote) (string, error)
 	GetManyByUserIDCourseworkIDAndCreatedAt(userID, courseworkID string, createdAt time.Time) ([]Vote, error)
 	GetOneByUserIDAndCourseworkID(userID, courseworkID string) (Vote, error)
+	DeleteByUserIDAndCourseworkID(userID, courseworkID string) error
 }
 
 type voteOrm struct {
@@ -50,8 +51,6 @@ func (o *voteOrm) CountByCourseworkID(courseworkID string) (int64, error) {
 	return count, result.Error
 }
 
-// Each coursework vote count
-
 func (o *voteOrm) CountByUserIDJoinCourseworkType(userID, courseworkType string) (int64, error) {
 	var count int64
 	result := o.db.Model(&Vote{}).Joins(fmt.Sprintf("inner join %[1]s on votes.coursework_id = %[1]s.coursework_id", courseworkType)).Where("votes.user_id = ?", userID).Count(&count)
@@ -62,4 +61,8 @@ func (o *voteOrm) GetOneByUserIDAndCourseworkID(userID, courseworkID string) (Vo
 	var vote Vote
 	result := o.db.Where("user_id = ? AND coursework_id = ?", userID, courseworkID).First(&vote)
 	return vote, result.Error
+}
+
+func (o *voteOrm) DeleteByUserIDAndCourseworkID(userID, courseworkID string) error {
+	return o.db.Where("user_id = ? AND coursework_id = ?", userID, courseworkID).Delete(&Vote{}).Error
 }
