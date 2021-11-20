@@ -9,8 +9,8 @@ import (
 type Blog struct {
 	CourseworkID string     `gorm:"primaryKey"`
 	Coursework   Coursework `gorm:"foreignKey:CourseworkID"`
-	Author       string     `gorm:"not null"`
 	Title        string     `gorm:"not null;type:varchar(32)"`
+	Author       string     `gorm:"not null"`
 	Link         string     `gorm:"not null"`
 	Category     string     `gorm:"column:category"`
 	CreatedAt    time.Time  `gorm:"autoCreateTime"`

@@ -9,6 +9,7 @@ import (
 	"gorm.io/gorm"
 
 	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/constants"
+	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/dtos"
 	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/handlers"
 	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/utils"
 )
@@ -42,7 +43,7 @@ func GoogleOAuthMiddleware() gin.HandlerFunc {
 			c.Next()
 		} else {
 			log.Println(err)
-			c.AbortWithStatus(http.StatusUnauthorized)
+			c.AbortWithStatusJSON(http.StatusUnauthorized, dtos.Response{Code: http.StatusUnauthorized, Data: "Invalid JWT"})
 		}
 	}
 }

@@ -67,3 +67,7 @@ func (m *module) VoteHasVoted(userID, courseworkID string) (bool, error) {
 	}
 	return true, nil
 }
+
+func (m *module) VoteUnvote(userID, courseworkID string) error {
+	return m.db.voteOrmer.DeleteByUserIDAndCourseworkID(userID, courseworkID)
+}

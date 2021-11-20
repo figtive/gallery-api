@@ -10,11 +10,11 @@ type Project struct {
 	CourseworkID string     `gorm:"primaryKey"`
 	Coursework   Coursework `gorm:"foreignKey:CourseworkID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 	Name         string     `gorm:"type:varchar(32);not null"`
-	Active       bool       `gorm:"not null"`
-	Description  string     `gorm:"not null"`
-	Field        string     `gorm:"type:varchar(32);not null"`
-	Thumbnail    string     `gorm:"not null"`
 	Team         string     `gorm:"not null"`
+	Description  string     `gorm:"not null"`
+	Thumbnail    string     `gorm:"not null"`
+	Field        string     `gorm:"type:varchar(32);not null"`
+	Active       bool       `gorm:"not null"`
 	Metadata     string     `gorm:"not null"`
 	CreatedAt    time.Time  `gorm:"autoCreateTime"`
 	UpdatedAt    time.Time  `gorm:"autoUpdateTime" json:"-"`
