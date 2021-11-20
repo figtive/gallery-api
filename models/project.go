@@ -3,8 +3,9 @@ package models
 import (
 	"time"
 
-	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/utils"
 	"gorm.io/gorm"
+
+	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/utils"
 )
 
 type Project struct {
@@ -65,6 +66,13 @@ func (o *projectOrm) UpdateThumbnail(courseworkID string, path string) (err erro
 
 func (o *projectOrm) GetManyByTermAndCourseIdSortByVotes(term time.Time, courseId string) ([]Project, error) {
 	var projects []Project
-	result := o.db.Model(&Project{}).Joins("INNER JOIN courseworks ON projects.coursework_id = courseworks.id LEFT JOIN votes ON courseworks.id = votes.coursework_id").Where("projects.created_at >= ? AND projects.created_at < ? AND courseworks.course_id = ?", utils.TimeToTermTime(term), utils.NextTermTime(term), courseId).Order("Count(votes.id) DESC").Group("projects.coursework_id").Preload("Coursework").Find(&projects)
+	result := o.db.
+		Model(&Project{}).
+		Joins("INNER JOIN courseworks ON projects.coursework_id = courseworks.id LEFT JOIN votes ON courseworks.id = votes.coursework_id").
+		Where("projects.created_at >= ? AND projects.created_at < ? AND courseworks.course_id = ?", utils.TimeToTermTime(term), utils.NextTermTime(term), courseId).
+		Order("Count(votes.id) DESC").
+		Group("projects.coursework_id").
+		Preload("Coursework").
+		Find(&projects)
 	return projects, result.Error
 }
