@@ -29,14 +29,14 @@ func InitializeRouter() *gin.Engine {
 			{
 				project := coursework.Group("/project")
 				{
-					project.POST("/", v1.POSTProject)
+					project.POST("/", middlewares.AdminOnly(), v1.POSTProject)
 					project.GET("/", v1.GETProjects)
 					project.GET("/:id", v1.GETProject)
-					project.PUT("/thumbnail", v1.PUTThumbnail)
+					project.PUT("/thumbnail", middlewares.AdminOnly(), v1.PUTThumbnail)
 				}
 				blog := coursework.Group("/blog")
 				{
-					blog.POST("/", v1.POSTBlog)
+					blog.POST("/", middlewares.AdminOnly(), v1.POSTBlog)
 					blog.GET("/", v1.GETBlogs)
 					blog.GET("/:id", v1.GETBlog)
 				}
