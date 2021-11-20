@@ -27,11 +27,11 @@ func (m *module) CourseworkGetOneByID(id string) (dtos.Coursework, error) {
 	}, nil
 }
 
-func (m *module) CourseworkGetVoted(userID, cwTyoe string) ([]dtos.Coursework, error) {
+func (m *module) CourseworkGetVoted(userID, cwType string) ([]dtos.Coursework, error) {
 	var err error
 
 	var courseworksRaw []models.Coursework
-	if courseworksRaw, err = m.db.courseworkOrmer.GetManyByUserIDAndIsVotedJoinCourseworkType(userID, cwTyoe); err != nil {
+	if courseworksRaw, err = m.db.courseworkOrmer.GetManyByUserIDAndIsVotedJoinCourseworkType(userID, cwType); err != nil {
 		return nil, err
 	}
 	courseworks := make([]dtos.Coursework, len(courseworksRaw))
