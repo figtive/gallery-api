@@ -17,6 +17,7 @@ var (
 	modeCommand = make(map[string]Command)
 	modeFlagSet = make(map[string]*flag.FlagSet)
 
+	Stdout = os.Stdout
 	Stderr = os.Stderr
 )
 

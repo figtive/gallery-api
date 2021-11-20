@@ -63,9 +63,9 @@ func (c *adminCommand) Run(args []string) error {
 	}
 
 	if c.promote {
-		fmt.Printf("User %s is now administrator.\n", c.email)
+		fmt.Fprintf(Stdout, "User %s is now administrator.\n", c.email)
 	} else {
-		fmt.Printf("User %s is no longer administrator.\n", c.email)
+		fmt.Fprintf(Stdout, "User %s is no longer administrator.\n", c.email)
 	}
 
 	return nil
