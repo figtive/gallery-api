@@ -33,7 +33,7 @@ func (m *module) UserInsert(userInfo dtos.User) (id string, err error) {
 func (m *module) UserUpdate(userInfo dtos.User) (err error) {
 	if err = m.db.userOrmer.Update(models.User{
 		Email:   userInfo.Email,
-		IsAdmin: false,
+		IsAdmin: userInfo.IsAdmin,
 	}); err != nil {
 		return
 	}
