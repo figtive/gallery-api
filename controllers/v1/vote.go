@@ -109,20 +109,38 @@ func GETVoteCount(c *gin.Context) {
 
 func GETVoteQuota(c *gin.Context) {
 	var err error
+	// update this when adding new coursework type
+	cwType := []string{"projects", "blogs"}
+
 	var user dtos.User
 	if user, err = handlers.Handler.UserGetOneByEmail(c.GetString(constants.ContextUserEmailKey)); err != nil {
 		c.JSON(http.StatusInternalServerError, dtos.Response{Code: http.StatusInternalServerError, Error: err.Error()})
 		return
 	}
-	courseworkType := map[string]string{"project": "projects", "blog": "blogs"}
-	quotas := make(gin.H, len(courseworkType))
-	for n, t := range courseworkType {
-		var quota int64
-		if quota, err = handlers.Handler.VoteCountByUserIDJoinCourseworkType(user.ID, t); err != nil {
+	quotas := make(map[string]map[string]int)
+	var rawCourses []dtos.Course
+	if rawCourses, err = handlers.Handler.CourseGetAll(); err != nil {
+		c.JSON(http.StatusInternalServerError, dtos.Response{Code: http.StatusInternalServerError, Error: err.Error()})
+		return
+	}
+	courseQuotaMap := make(map[string]int)
+	for _, course := range rawCourses {
+		quotas[course.ID] = make(map[string]int)
+		courseQuotaMap[course.ID] = course.VoteQuota
+		for _, cwType := range cwType {
+			quotas[course.ID][cwType] = course.VoteQuota
+		}
+	}
+
+	for _, cw := range cwType {
+		var courseworks []dtos.Coursework
+		if courseworks, err = handlers.Handler.CourseworkGetVoted(user.ID, cw); err != nil {
 			c.JSON(http.StatusInternalServerError, dtos.Response{Code: http.StatusInternalServerError, Error: err.Error()})
 			return
 		}
-		quotas[n] = quota
+		for _, coursework := range courseworks {
+			quotas[coursework.CourseID][cw]--
+		}
 	}
 	c.JSON(http.StatusOK, dtos.Response{Code: http.StatusOK, Data: quotas})
 }
