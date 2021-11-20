@@ -26,3 +26,21 @@ func (m *module) CourseworkGetOneByID(id string) (dtos.Coursework, error) {
 		CreatedAt: courseworkRaw.CreatedAt,
 	}, nil
 }
+
+func (m *module) CourseworkGetVoted(userID, cwTyoe string) ([]dtos.Coursework, error) {
+	var err error
+
+	var courseworksRaw []models.Coursework
+	if courseworksRaw, err = m.db.courseworkOrmer.GetManyByUserIDAndIsVotedJoinCourseworkType(userID, cwTyoe); err != nil {
+		return nil, err
+	}
+	courseworks := make([]dtos.Coursework, len(courseworksRaw))
+	for i, coursework := range courseworksRaw {
+		courseworks[i] = dtos.Coursework{
+			ID:        coursework.ID,
+			CourseID:  coursework.CourseID,
+			CreatedAt: coursework.CreatedAt,
+		}
+	}
+	return courseworks, nil
+}
