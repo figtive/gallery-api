@@ -16,11 +16,11 @@ func (m *module) ProjectInsert(projectInfo dtos.ProjectInsert, classID string, t
 	if id, err = m.db.projectOrmer.Insert(models.Project{
 		CourseworkID: courseworkID,
 		Name:         projectInfo.Name,
-		Active:       projectInfo.Active,
-		Description:  projectInfo.Description,
-		Field:        projectInfo.Field,
-		Thumbnail:    thumbnailPath,
 		Team:         projectInfo.Team,
+		Description:  projectInfo.Description,
+		Thumbnail:    thumbnailPath,
+		Field:        projectInfo.Field,
+		Active:       projectInfo.Active,
 		Metadata:     *projectInfo.Metadata,
 	}); err != nil {
 		return
@@ -38,15 +38,15 @@ func (m *module) ProjectGetMany(skip int, limit int) (projects []dtos.Project, e
 		project := projectsRaw[j]
 		projects[i] = dtos.Project{
 			ID:          project.CourseworkID,
+			CourseID:    project.Coursework.CourseID,
 			Name:        project.Name,
-			Active:      project.Active,
-			Description: project.Description,
-			Field:       project.Field,
-			Thumbnail:   configs.AppConfig.StaticBaseURL + project.Thumbnail,
-			CreatedAt:   project.CreatedAt,
 			Team:        project.Team,
+			Description: project.Description,
+			Thumbnail:   configs.AppConfig.StaticBaseURL + project.Thumbnail,
+			Field:       project.Field,
+			Active:      project.Active,
 			Metadata:    project.Metadata,
-			CourseId:    project.Coursework.CourseID,
+			CreatedAt:   project.CreatedAt,
 		}
 	}
 	return
@@ -59,15 +59,15 @@ func (m *module) ProjectGetOne(id string) (project dtos.Project, err error) {
 	}
 	project = dtos.Project{
 		ID:          projectRaw.CourseworkID,
+		CourseID:    projectRaw.Coursework.CourseID,
 		Name:        projectRaw.Name,
-		Active:      projectRaw.Active,
-		Description: projectRaw.Description,
-		Field:       projectRaw.Field,
-		Thumbnail:   projectRaw.Thumbnail,
-		CreatedAt:   projectRaw.CreatedAt,
 		Team:        projectRaw.Team,
+		Description: projectRaw.Description,
+		Thumbnail:   projectRaw.Thumbnail,
+		Field:       projectRaw.Field,
+		Active:      projectRaw.Active,
 		Metadata:    projectRaw.Metadata,
-		CourseId:    projectRaw.Coursework.CourseID,
+		CreatedAt:   projectRaw.CreatedAt,
 	}
 	return
 }
