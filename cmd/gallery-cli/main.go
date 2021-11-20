@@ -92,6 +92,14 @@ For help in each mode:
 
   gallery-cli <mode> --help
 
+Global variables: (to be set before running any command)
+
+  DB_HOST: PostgreSQL host
+  DB_PORT: PostgreSQL port
+  DB_USER: PostgreSQL user
+  DB_PASSWORD: PostgreSQL password
+  DB_NAME: PostgreSQL name
+
 `)
 }
 
