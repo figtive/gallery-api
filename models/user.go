@@ -10,6 +10,7 @@ type User struct {
 	ID        string    `gorm:"primaryKey;type:uuid;default:uuid_generate_v4()"`
 	Name      string    `gorm:"type:varchar(32);not null"`
 	Email     string    `gorm:"uniqueIndex;not null"`
+	IsAdmin   bool      `gorm:"not null"`
 	CreatedAt time.Time `gorm:"autoCreateTime" json:"-"`
 	UpdatedAt time.Time `gorm:"autoUpdateTime" json:"-"`
 }
@@ -17,6 +18,7 @@ type User struct {
 type UserOrmer interface {
 	Insert(user User) (id string, err error)
 	GetOneByEmail(email string) (user User, err error)
+	Update(user User) (err error)
 }
 
 type userOrm struct {
@@ -36,4 +38,9 @@ func (o *userOrm) Insert(user User) (id string, err error) {
 func (o *userOrm) GetOneByEmail(email string) (user User, err error) {
 	result := o.db.Model(&User{}).Where("email = ?", email).First(&user)
 	return user, result.Error
+}
+
+func (o *userOrm) Update(user User) (err error) {
+	result := o.db.Model(&User{}).Where("email = ?", user.Email).Select("is_admin").Updates(&user)
+	return result.Error
 }
