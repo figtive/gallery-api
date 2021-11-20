@@ -19,20 +19,20 @@ func InitializeRouter() *gin.Engine {
 		{
 			auth := apiV1.Group("/auth")
 			{
-				auth.POST("/login", middlewares.AuthOnly(), v1.POSTLogin)
+				auth.POST("/login", middlewares.LooseAuthOnly(), v1.POSTLogin)
 			}
 			course := apiV1.Group("/course")
 			{
-				course.POST("/", v1.POSTCourse)
+				course.POST("/", middlewares.AuthOnly(), middlewares.AdminOnly(), v1.POSTCourse)
 			}
 			coursework := apiV1.Group("/coursework")
 			{
 				project := coursework.Group("/project")
 				{
-					project.POST("/", middlewares.AdminOnly(), v1.POSTProject)
+					project.POST("/", middlewares.AuthOnly(), middlewares.AdminOnly(), v1.POSTProject)
 					project.GET("/", v1.GETProjects)
 					project.GET("/:id", v1.GETProject)
-					project.PUT("/thumbnail", middlewares.AdminOnly(), v1.PUTThumbnail)
+					project.PUT("/thumbnail", middlewares.AuthOnly(), middlewares.AdminOnly(), v1.PUTThumbnail)
 				}
 				blog := coursework.Group("/blog")
 				{
