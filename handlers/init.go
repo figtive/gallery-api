@@ -50,6 +50,7 @@ type HandlerFunc interface {
 
 	UserGetOneByEmail(email string) (userInfo dtos.User, err error)
 	UserInsert(userInfo dtos.User) (id string, err error)
+	UserUpdate(userInfo dtos.User) (err error)
 
 	VoteCountByCourseworkID(courseworkID string) (int64, error)
 	VoteCountByUserIDJoinCourseworkType(userID, courseworkType string) (int64, error)
