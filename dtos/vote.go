@@ -13,3 +13,7 @@ type VoteInsert struct {
 type VoteQuery struct {
 	CourseWorkID string `json:"courseworkId"`
 }
+
+type VoteVote struct {
+	Vote bool `json:"vote"`
+}
