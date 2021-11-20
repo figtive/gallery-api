@@ -10,7 +10,7 @@ type User struct {
 	ID        string    `gorm:"primaryKey;type:uuid;default:uuid_generate_v4()"`
 	Name      string    `gorm:"type:varchar(32);not null"`
 	Email     string    `gorm:"uniqueIndex;not null"`
-	IsAdmin   bool      `gorm:"not null"`
+	IsAdmin   bool      `gorm:"not null;default:false"`
 	CreatedAt time.Time `gorm:"autoCreateTime" json:"-"`
 	UpdatedAt time.Time `gorm:"autoUpdateTime" json:"-"`
 }
