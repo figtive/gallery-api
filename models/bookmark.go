@@ -31,7 +31,7 @@ func NewBookmarkOrmer(db *gorm.DB) BookmarkOrmer {
 }
 
 func (o *bookmarkOrm) Insert(bookmark Bookmark) (string, error) {
-	result := o.db.Model(&Vote{}).Create(&bookmark)
+	result := o.db.Model(&Bookmark{}).Create(&bookmark)
 	return bookmark.ID, result.Error
 }
 
