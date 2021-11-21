@@ -2,10 +2,12 @@ package handlers
 
 import (
 	"math/rand"
+	"time"
 
 	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/configs"
 	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/dtos"
 	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/models"
+	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/utils"
 )
 
 func (m *module) ProjectInsert(projectInfo dtos.ProjectInsert, classID string, thumbnailPath string) (id string, err error) {
@@ -78,4 +80,37 @@ func (m *module) ProjectUpdateThumbnail(id string, thumbnailPath string) error {
 		return err
 	}
 	return nil
+}
+
+func (m *module) ProjectGetManyByCourseID(courseID string, currentOnly bool) ([]dtos.Project, error) {
+	var err error
+	var startTime, endTime time.Time
+	if currentOnly {
+		startTime = utils.TimeToTermTime(time.Now())
+		endTime = utils.NextTermTime(time.Now())
+	} else {
+		startTime = time.Unix(-2208988800, 0)
+		endTime = startTime.Add(1<<63 - 1)
+	}
+	var projectsRaw []models.Project
+	if projectsRaw, err = m.db.projectOrmer.GetManyByCourseIDAndTerm(courseID, startTime, endTime); err != nil {
+		return nil, err
+	}
+	projects := make([]dtos.Project, len(projectsRaw))
+	for i, j := range rand.Perm(len(projectsRaw)) {
+		project := projectsRaw[j]
+		projects[i] = dtos.Project{
+			ID:          project.CourseworkID,
+			CourseID:    project.Coursework.CourseID,
+			Name:        project.Name,
+			Team:        project.Team,
+			Description: project.Description,
+			Thumbnail:   project.Thumbnail,
+			Field:       project.Field,
+			Active:      project.Active,
+			Metadata:    project.Metadata,
+			CreatedAt:   project.CreatedAt,
+		}
+	}
+	return projects, nil
 }

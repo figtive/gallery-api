@@ -20,11 +20,12 @@ type Blog struct {
 }
 
 type BlogOrmer interface {
-	Insert(blog Blog) (id string, err error)
 	GetMany(skip int, limit int) (blogs []Blog, err error)
+	GetManyByCourseIDAndTerm(courseID string, term, maxTerm time.Time) ([]Blog, error)
 	GetManyByTermAndCourseIdSortByVotes(term time.Time, courseId string) ([]Blog, error)
 	GetOneByCourseworkID(courseworkID string) (blog Blog, err error)
 	GetManyBookmarkByUserID(userID string) ([]Blog, error)
+	Insert(blog Blog) (id string, err error)
 }
 
 type blogOrm struct {
@@ -75,6 +76,17 @@ func (o *blogOrm) GetManyBookmarkByUserID(userID string) ([]Blog, error) {
 		Model(&Blog{}).
 		Joins("INNER JOIN bookmarks ON blogs.coursework_id = bookmarks.coursework_id").
 		Where("bookmarks.user_id >= ?", userID).
+		Find(&blogs)
+	return blogs, result.Error
+}
+
+func (o *blogOrm) GetManyByCourseIDAndTerm(courseID string, term, maxTerm time.Time) ([]Blog, error) {
+	var blogs []Blog
+	result := o.db.
+		Model(&Blog{}).
+		Joins("INNER JOIN courseworks ON blogs.coursework_id = courseworks.id").
+		Where("courseworks.course_id = ? AND blogs.created_at >= ? AND blogs.created_at < ?", courseID, term, maxTerm).
+		Preload("Coursework").
 		Find(&blogs)
 	return blogs, result.Error
 }
