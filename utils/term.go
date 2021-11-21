@@ -14,6 +14,5 @@ func TimeToTermTime(t time.Time) time.Time {
 
 func NextTermTime(t time.Time) time.Time {
 	termTime := TimeToTermTime(t)
-	termTime.AddDate(0, 6, 0)
-	return termTime
+	return termTime.AddDate(0, 6, 0)
 }
