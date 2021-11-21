@@ -74,8 +74,18 @@ func GETBlogs(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, dtos.Response{
-		Code: http.StatusOK,
-		Data: blogs,
-	})
+	c.JSON(http.StatusOK, dtos.Response{Code: http.StatusOK, Data: blogs})
+}
+
+func GETBlogsInCurrentTermAndCourse(c *gin.Context) {
+	var err error
+
+	courseID := c.Param("courseID")
+	var blogs []dtos.Blog
+	if blogs, err = handlers.Handler.BlogGetManyByCourseIDInCurrentTerm(courseID); err != nil {
+		c.JSON(http.StatusInternalServerError, dtos.Response{Error: err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, dtos.Response{Code: http.StatusOK, Data: blogs})
 }

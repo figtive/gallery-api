@@ -33,6 +33,7 @@ type HandlerFunc interface {
 	AuthGenerateJWT(userInfo dtos.User) (token string, err error)
 
 	BlogGetMany(skip int, limit int) (blogs []dtos.Blog, err error)
+	BlogGetManyByCourseIDInCurrentTerm(courseID string) ([]dtos.Blog, error)
 	BlogGetOne(id string) (blog dtos.Blog, err error)
 	BlogInsert(blogInsert dtos.BlogInsert, courseID string) (id string, err error)
 

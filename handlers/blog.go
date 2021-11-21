@@ -2,9 +2,11 @@ package handlers
 
 import (
 	"math/rand"
+	"time"
 
 	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/dtos"
 	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/models"
+	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/utils"
 )
 
 func (m *module) BlogInsert(blogInsert dtos.BlogInsert, classID string) (id string, err error) {
@@ -61,4 +63,26 @@ func (m *module) BlogGetOne(id string) (blog dtos.Blog, err error) {
 		CreatedAt: blogRaw.CreatedAt,
 	}
 	return
+}
+
+func (m *module) BlogGetManyByCourseIDInCurrentTerm(courseID string) ([]dtos.Blog, error) {
+	var err error
+	var blogsRaw []models.Blog
+	if blogsRaw, err = m.db.blogOrmer.GetManyByCourseIDAndTerm(courseID, utils.TimeToTermTime(time.Now()), utils.NextTermTime(time.Now())); err != nil {
+		return nil, err
+	}
+	blogs := make([]dtos.Blog, len(blogsRaw))
+	for i, j := range rand.Perm(len(blogsRaw)) {
+		blog := blogsRaw[j]
+		blogs[i] = dtos.Blog{
+			ID:        blog.CourseworkID,
+			CourseID:  blog.Coursework.CourseID,
+			Title:     blog.Title,
+			Author:    blog.Author,
+			Link:      blog.Link,
+			Category:  blog.Category,
+			CreatedAt: blog.CreatedAt,
+		}
+	}
+	return blogs, nil
 }

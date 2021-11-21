@@ -39,6 +39,7 @@ func InitializeRouter() *gin.Engine {
 				{
 					blog.POST("", middlewares.AdminOnly(), v1.POSTBlog)
 					blog.GET("", v1.GETBlogs)
+					blog.GET("/course/:courseID", v1.GETBlogsInCurrentTermAndCourse)
 					blog.GET("/:id", v1.GETBlog)
 				}
 			}
