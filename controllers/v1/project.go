@@ -133,7 +133,7 @@ func GETProjectsInCurrentTermAndCourse(c *gin.Context) {
 		return
 	}
 
-	courseID := c.Param("courseID")
+	courseID := c.Param("course_id")
 	var projects []dtos.Project
 	if projects, err = handlers.Handler.ProjectGetManyByCourseID(courseID, query.Current); err != nil {
 		c.JSON(http.StatusInternalServerError, dtos.Response{Error: err.Error()})

@@ -86,7 +86,7 @@ func GETBlogsInCurrentTermAndCourse(c *gin.Context) {
 		return
 	}
 
-	courseID := c.Param("courseID")
+	courseID := c.Param("course_id")
 	var blogs []dtos.Blog
 	if blogs, err = handlers.Handler.BlogGetManyByCourseIDInCurrentTerm(courseID, query.Current); err != nil {
 		c.JSON(http.StatusInternalServerError, dtos.Response{Error: err.Error()})

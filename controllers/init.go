@@ -31,16 +31,16 @@ func InitializeRouter() *gin.Engine {
 				{
 					project.POST("", middlewares.AuthOnly(), middlewares.AdminOnly(), v1.POSTProject)
 					project.GET("", v1.GETProjects)
-					project.GET("/course/:courseID", v1.GETProjectsInCurrentTermAndCourse)
-					project.GET("/:id", v1.GETProject)
 					project.PUT("/thumbnail", middlewares.AuthOnly(), middlewares.AdminOnly(), v1.PUTThumbnail)
+					project.GET("/:course_id", v1.GETProjectsInCurrentTermAndCourse)
+					project.GET("/:course_id/:id", v1.GETProject)
 				}
 				blog := coursework.Group("/blog")
 				{
 					blog.POST("", middlewares.AdminOnly(), v1.POSTBlog)
 					blog.GET("", v1.GETBlogs)
-					blog.GET("/course/:courseID", v1.GETBlogsInCurrentTermAndCourse)
-					blog.GET("/:id", v1.GETBlog)
+					blog.GET("/:course_id", v1.GETBlogsInCurrentTermAndCourse)
+					blog.GET("/:course_id/:id", v1.GETBlog)
 				}
 			}
 			vote := apiV1.Group("/vote")
