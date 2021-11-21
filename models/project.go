@@ -25,6 +25,7 @@ type Project struct {
 type ProjectOrmer interface {
 	GetOneByCourseworkID(courseworkID string) (project Project, err error)
 	GetMany(skip int, limit int) (projects []Project, err error)
+	GetManyByCourseIDAndTerm(courseID string, term, maxTerm time.Time) ([]Project, error)
 	GetManyByTermAndCourseIdSortByVotes(term time.Time, courseId string) ([]Project, error)
 	Insert(project Project) (courseworkID string, err error)
 	UpdateThumbnail(courseworkID string, path string) (err error)
@@ -72,6 +73,17 @@ func (o *projectOrm) GetManyByTermAndCourseIdSortByVotes(term time.Time, courseI
 		Where("projects.created_at >= ? AND projects.created_at < ? AND courseworks.course_id = ?", utils.TimeToTermTime(term), utils.NextTermTime(term), courseId).
 		Order("Count(votes.id) DESC").
 		Group("projects.coursework_id").
+		Preload("Coursework").
+		Find(&projects)
+	return projects, result.Error
+}
+
+func (o *projectOrm) GetManyByCourseIDAndTerm(courseID string, term, maxTerm time.Time) ([]Project, error) {
+	var projects []Project
+	result := o.db.
+		Model(&Project{}).
+		Joins("INNER JOIN courseworks ON projects.coursework_id = courseworks.id").
+		Where("courseworks.course_id = ? AND projects.created_at >= ? AND projects.created_at < ?", courseID, term, maxTerm).
 		Preload("Coursework").
 		Find(&projects)
 	return projects, result.Error

@@ -123,3 +123,15 @@ func PUTThumbnail(c *gin.Context) {
 		Data: form,
 	})
 }
+
+func GETProjectsInCurrentTermAndCourse(c *gin.Context) {
+	var err error
+
+	courseID := c.Param("courseID")
+	var projects []dtos.Project
+	if projects, err = handlers.Handler.ProjectGetManyByCourseID(courseID); err != nil {
+		c.JSON(http.StatusInternalServerError, dtos.Response{Error: err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, dtos.Response{Code: http.StatusOK, Data: projects})
+}

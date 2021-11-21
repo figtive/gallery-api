@@ -31,6 +31,7 @@ func InitializeRouter() *gin.Engine {
 				{
 					project.POST("", middlewares.AuthOnly(), middlewares.AdminOnly(), v1.POSTProject)
 					project.GET("", v1.GETProjects)
+					project.GET("/course/:courseID", v1.GETProjectsInCurrentTermAndCourse)
 					project.GET("/:id", v1.GETProject)
 					project.PUT("/thumbnail", middlewares.AuthOnly(), middlewares.AdminOnly(), v1.PUTThumbnail)
 				}
