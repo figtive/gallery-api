@@ -26,6 +26,7 @@ func InitializeRouter() *gin.Engine {
 				bookmark.GET("/blog", middlewares.AuthOnly(), v1.GETBookmarkBlogs)
 				bookmark.GET("/project", middlewares.AuthOnly(), v1.GETBookmarkProjects)
 				bookmark.POST("/:courseworkId", middlewares.AuthOnly(), v1.POSTBookmark)
+				bookmark.GET("/:courseworkId", middlewares.AuthOnly(), v1.GETBookmarkStatus)
 			}
 			course := apiV1.Group("/course")
 			{

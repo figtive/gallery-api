@@ -3,9 +3,10 @@ package handlers
 import (
 	"math/rand"
 
+	"gorm.io/gorm"
+
 	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/dtos"
 	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/models"
-	"gorm.io/gorm"
 )
 
 func (m *module) BookmarkInsert(bookmark dtos.Bookmark) (string, error) {
