@@ -78,7 +78,7 @@ func GETBookmarkBlogs(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, dtos.Response{Code: http.StatusInternalServerError, Error: err.Error()})
 		return
 	}
-	c.JSON(http.StatusOK, dtos.Response{Code: http.StatusOK, Data: dtos.Response{Data: blogs}})
+	c.JSON(http.StatusOK, dtos.Response{Code: http.StatusOK, Data: blogs})
 }
 
 func GETBookmarkProjects(c *gin.Context) {
@@ -94,5 +94,5 @@ func GETBookmarkProjects(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, dtos.Response{Code: http.StatusInternalServerError, Error: err.Error()})
 		return
 	}
-	c.JSON(http.StatusOK, dtos.Response{Code: http.StatusOK, Data: dtos.Response{Data: projects}})
+	c.JSON(http.StatusOK, dtos.Response{Code: http.StatusOK, Data: projects})
 }
