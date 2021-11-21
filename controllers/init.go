@@ -21,6 +21,12 @@ func InitializeRouter() *gin.Engine {
 			{
 				auth.POST("/login", middlewares.LooseAuthOnly(), v1.POSTLogin)
 			}
+			bookmark := apiV1.Group("/bookmark")
+			{
+				bookmark.GET("/blog", middlewares.AuthOnly(), v1.GETBookmarkBlogs)
+				bookmark.GET("/project", middlewares.AuthOnly(), v1.GETBookmarkProjects)
+				bookmark.POST("/:courseworkId", middlewares.AuthOnly(), v1.POSTBookmark)
+			}
 			course := apiV1.Group("/course")
 			{
 				course.POST("", middlewares.AuthOnly(), middlewares.AdminOnly(), v1.POSTCourse)
@@ -53,10 +59,6 @@ func InitializeRouter() *gin.Engine {
 				leaderboard.GET("/:id/project", v1.GETProjectLeaderboard)
 				leaderboard.GET("/:id/blog", v1.GETBlogLeaderboard)
 			}
-			// team := apiV1.Group("/team")
-			// {
-			// 	team.POST("/", v1.POSTTeam)
-			// }
 		}
 
 	}
