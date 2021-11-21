@@ -28,6 +28,7 @@ type ProjectOrmer interface {
 	GetManyByTermAndCourseIdSortByVotes(term time.Time, courseId string) ([]Project, error)
 	Insert(project Project) (courseworkID string, err error)
 	UpdateThumbnail(courseworkID string, path string) (err error)
+	GetManyBookmarkByUserID(userID string) ([]Project, error)
 }
 
 type projectOrm struct {
@@ -73,6 +74,16 @@ func (o *projectOrm) GetManyByTermAndCourseIdSortByVotes(term time.Time, courseI
 		Order("Count(votes.id) DESC").
 		Group("projects.coursework_id").
 		Preload("Coursework").
+		Find(&projects)
+	return projects, result.Error
+}
+
+func (o *projectOrm) GetManyBookmarkByUserID(userID string) ([]Project, error) {
+	var projects []Project
+	result := o.db.
+		Model(&Project{}).
+		Joins("INNER JOIN bookmarks ON projects.coursework_id = bookmarks.coursework_id").
+		Where("bookmarks.user_id >= ?", userID).
 		Find(&projects)
 	return projects, result.Error
 }

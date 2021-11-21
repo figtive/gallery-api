@@ -24,6 +24,7 @@ type BlogOrmer interface {
 	GetMany(skip int, limit int) (blogs []Blog, err error)
 	GetManyByTermAndCourseIdSortByVotes(term time.Time, courseId string) ([]Blog, error)
 	GetOneByCourseworkID(courseworkID string) (blog Blog, err error)
+	GetManyBookmarkByUserID(userID string) ([]Blog, error)
 }
 
 type blogOrm struct {
@@ -64,6 +65,16 @@ func (o *blogOrm) GetManyByTermAndCourseIdSortByVotes(term time.Time, courseId s
 		Order("Count(votes.id) DESC").
 		Group("blogs.coursework_id").
 		Preload("Coursework").
+		Find(&blogs)
+	return blogs, result.Error
+}
+
+func (o *blogOrm) GetManyBookmarkByUserID(userID string) ([]Blog, error) {
+	var blogs []Blog
+	result := o.db.
+		Model(&Blog{}).
+		Joins("INNER JOIN blogs ON blogs.coursework_id = bookmarks.coursework_id").
+		Where("bookmarks.user_id >= ?", userID).
 		Find(&blogs)
 	return blogs, result.Error
 }
