@@ -105,7 +105,7 @@ func (o *projectOrm) GetManyByUserIDJoinVote(userID string) ([]Project, error) {
 	var projects []Project
 	result := o.db.
 		Model(&Project{}).
-		Joins("INNER JOIN courseworks ON projects.coursework_id = courseworks.id INNER JOIN votes ON courseworks.id = votes.coursework_id").
+		Joins("INNER JOIN votes ON projects.coursework_id = votes.coursework_id").
 		Where("votes.user_id = ?", userID).
 		Preload("Coursework").
 		Find(&projects)

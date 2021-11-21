@@ -96,7 +96,7 @@ func (o *blogOrm) GetManyByUserIDJoinVote(userID string) ([]Blog, error) {
 	var blogs []Blog
 	result := o.db.
 		Model(&Blog{}).
-		Joins("INNER JOIN courseworks ON blogs.coursework_id = courseworks.id INNER JOIN votes ON courseworks.id = votes.coursework_id").
+		Joins("INNER JOIN votes ON blogs.coursework_id = votes.coursework_id").
 		Where("votes.user_id = ?", userID).
 		Preload("Coursework").
 		Find(&blogs)

@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"math/rand"
 	"time"
 
 	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/dtos"
@@ -80,8 +79,7 @@ func (m *module) VoteGetVotedProjects(userID string) ([]dtos.Project, error) {
 		return nil, err
 	}
 	projects := make([]dtos.Project, len(projectsRaw))
-	for i, j := range rand.Perm(len(projectsRaw)) {
-		project := projectsRaw[j]
+	for i, project := range projectsRaw {
 		projects[i] = dtos.Project{
 			ID:          project.CourseworkID,
 			CourseID:    project.Coursework.CourseID,
@@ -105,8 +103,7 @@ func (m *module) VoteGetVotedBlogs(userID string) ([]dtos.Blog, error) {
 		return nil, err
 	}
 	blogs := make([]dtos.Blog, len(blogsRaw))
-	for i, j := range rand.Perm(len(blogsRaw)) {
-		blog := blogsRaw[j]
+	for i, blog := range blogsRaw {
 		blogs[i] = dtos.Blog{
 			ID:        blog.CourseworkID,
 			CourseID:  blog.Coursework.CourseID,
