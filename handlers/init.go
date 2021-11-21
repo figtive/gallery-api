@@ -16,12 +16,12 @@ import (
 type dbEntity struct {
 	conn            *gorm.DB
 	blogOrmer       models.BlogOrmer
+	bookmarkOrmer   models.BookmarkOrmer
 	courseOrmer     models.CourseOrmer
 	courseworkOrmer models.CourseworkOrmer
 	projectOrmer    models.ProjectOrmer
-	// teamOrmer       models.TeamOrmer
-	userOrmer models.UserOrmer
-	voteOrmer models.VoteOrmer
+	userOrmer       models.UserOrmer
+	voteOrmer       models.VoteOrmer
 }
 
 type module struct {
@@ -35,6 +35,12 @@ type HandlerFunc interface {
 	BlogGetMany(skip int, limit int) (blogs []dtos.Blog, err error)
 	BlogGetOne(id string) (blog dtos.Blog, err error)
 	BlogInsert(blogInsert dtos.BlogInsert, courseID string) (id string, err error)
+
+	BookmarkInsert(bookmark dtos.Bookmark) (string, error)
+	BookmarkHasMarked(bookmark dtos.Bookmark) (bool, error)
+	BookmarkDelete(bookmark dtos.Bookmark) error
+	BookmarkGetManyBlogByUserID(userID string) ([]dtos.Blog, error)
+	BookmarkGetManyProjectByUserID(userID string) ([]dtos.Project, error)
 
 	CourseGetAll() ([]dtos.Course, error)
 	CourseGetOneByID(id string) (courseInfo dtos.Course, err error)
@@ -51,8 +57,6 @@ type HandlerFunc interface {
 	ProjectGetMany(skip int, limit int) (projects []dtos.Project, err error)
 	ProjectInsert(projectInfo dtos.ProjectInsert, courseID string, thumbnailPath string) (id string, err error)
 	ProjectUpdateThumbnail(id string, thumbnailPath string) error
-
-	// TeamInsert(teamInfo dtos.TeamInsert) (id string, err error)
 
 	UserGetOneByEmail(email string) (userInfo dtos.User, err error)
 	UserInsert(userInfo dtos.User) (id string, err error)
@@ -84,12 +88,12 @@ func InitializeHandler() (err error) {
 			db: &dbEntity{
 				conn:            db,
 				blogOrmer:       models.NewBlogOrmer(db),
+				bookmarkOrmer:   models.NewBookmarkOrmer(db),
 				courseOrmer:     models.NewCourseOrmer(db),
 				courseworkOrmer: models.NewCourseworkOrmer(db),
 				projectOrmer:    models.NewProjectOrmer(db),
-				// teamOrmer:       models.NewTeamOrmer(db),
-				userOrmer: models.NewUserOrmer(db),
-				voteOrmer: models.NewVoteOrmer(db),
+				userOrmer:       models.NewUserOrmer(db),
+				voteOrmer:       models.NewVoteOrmer(db),
 			},
 		}
 		return
