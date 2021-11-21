@@ -41,7 +41,7 @@ func (o *voteOrm) Insert(vote Vote) (string, error) {
 
 func (o *voteOrm) GetManyByUserIDCourseworkIDAndCreatedAt(userID, courseworkID string, createdAt time.Time) ([]Vote, error) {
 	var votes []Vote
-	result := o.db.Where("user_id = ? AND coursework_id = ? AND created_at > ?", userID, courseworkID, createdAt).Find(&votes)
+	result := o.db.Model(&Vote{}).Where("user_id = ? AND coursework_id = ? AND created_at > ?", userID, courseworkID, createdAt).Find(&votes)
 	return votes, result.Error
 }
 
@@ -59,10 +59,10 @@ func (o *voteOrm) CountByUserIDJoinCourseworkType(userID, courseworkType string)
 
 func (o *voteOrm) GetOneByUserIDAndCourseworkID(userID, courseworkID string) (Vote, error) {
 	var vote Vote
-	result := o.db.Where("user_id = ? AND coursework_id = ?", userID, courseworkID).First(&vote)
+	result := o.db.Model(&Vote{}).Where("user_id = ? AND coursework_id = ?", userID, courseworkID).First(&vote)
 	return vote, result.Error
 }
 
 func (o *voteOrm) DeleteByUserIDAndCourseworkID(userID, courseworkID string) error {
-	return o.db.Where("user_id = ? AND coursework_id = ?", userID, courseworkID).Delete(&Vote{}).Error
+	return o.db.Model(&Vote{}).Where("user_id = ? AND coursework_id = ?", userID, courseworkID).Delete(&Vote{}).Error
 }
