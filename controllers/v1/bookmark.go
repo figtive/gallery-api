@@ -26,7 +26,7 @@ func POSTBookmark(c *gin.Context) {
 
 	bookmark := dtos.Bookmark{
 		UserID:       user.ID,
-		CourseworkID: c.Param("courseworkId"),
+		CourseworkID: c.Param("coursework_id"),
 	}
 
 	if _, err = handlers.Handler.CourseworkGetOneByID(bookmark.CourseworkID); err != nil {
@@ -100,7 +100,7 @@ func GETBookmarkProjects(c *gin.Context) {
 func GETBookmarkStatus(c *gin.Context) {
 	var err error
 
-	courseworkId := c.Param("courseworkId")
+	courseworkID := c.Param("coursework_id")
 
 	var user dtos.User
 	if user, err = handlers.Handler.UserGetOneByEmail(c.GetString(constants.ContextUserEmailKey)); err != nil {
@@ -108,7 +108,7 @@ func GETBookmarkStatus(c *gin.Context) {
 		return
 	}
 
-	if _, err = handlers.Handler.CourseworkGetOneByID(courseworkId); err != nil {
+	if _, err = handlers.Handler.CourseworkGetOneByID(courseworkID); err != nil {
 		if err == gorm.ErrRecordNotFound {
 			c.JSON(http.StatusNotFound, dtos.Response{Code: http.StatusNotFound, Error: "coursework not found"})
 		} else {
@@ -120,7 +120,7 @@ func GETBookmarkStatus(c *gin.Context) {
 	var hasVoted bool
 	if hasVoted, err = handlers.Handler.BookmarkHasMarked(dtos.Bookmark{
 		UserID:       user.ID,
-		CourseworkID: courseworkId,
+		CourseworkID: courseworkID,
 	}); err != nil {
 		c.JSON(http.StatusInternalServerError, dtos.Response{Code: http.StatusInternalServerError, Error: err.Error()})
 		return

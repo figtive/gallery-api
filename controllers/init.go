@@ -25,8 +25,8 @@ func InitializeRouter() *gin.Engine {
 			{
 				bookmark.GET("/blog", middlewares.AuthOnly(), v1.GETBookmarkBlogs)
 				bookmark.GET("/project", middlewares.AuthOnly(), v1.GETBookmarkProjects)
-				bookmark.POST("/:courseworkId", middlewares.AuthOnly(), v1.POSTBookmark)
-				bookmark.GET("/:courseworkId", middlewares.AuthOnly(), v1.GETBookmarkStatus)
+				bookmark.POST("/:coursework_id", middlewares.AuthOnly(), v1.POSTBookmark)
+				bookmark.GET("/:coursework_id", middlewares.AuthOnly(), v1.GETBookmarkStatus)
 			}
 			course := apiV1.Group("/course")
 			{
@@ -40,27 +40,27 @@ func InitializeRouter() *gin.Engine {
 					project.GET("", v1.GETProjects)
 					project.PUT("/thumbnail", middlewares.AuthOnly(), middlewares.AdminOnly(), v1.PUTThumbnail)
 					project.GET("/:course_id", v1.GETProjectsInCurrentTermAndCourse)
-					project.GET("/:course_id/:id", v1.GETProject)
+					project.GET("/:course_id/:coursework_id", v1.GETProject)
 				}
 				blog := coursework.Group("/blog")
 				{
 					blog.POST("", middlewares.AdminOnly(), v1.POSTBlog)
 					blog.GET("", v1.GETBlogs)
 					blog.GET("/:course_id", v1.GETBlogsInCurrentTermAndCourse)
-					blog.GET("/:course_id/:id", v1.GETBlog)
+					blog.GET("/:course_id/:coursework_id", v1.GETBlog)
 				}
 			}
 			vote := apiV1.Group("/vote")
 			{
 				vote.GET("/quota", middlewares.AuthOnly(), v1.GETVoteQuota)
-				vote.GET("/count/:courseworkId", v1.GETVoteCount)
-				vote.POST("/:courseworkId", middlewares.AuthOnly(), v1.POSTVote)
-				vote.GET("/:courseworkId", middlewares.AuthOnly(), v1.GETVoteStatus)
+				vote.GET("/count/:coursework_id", v1.GETVoteCount)
+				vote.POST("/:coursework_id", middlewares.AuthOnly(), v1.POSTVote)
+				vote.GET("/:coursework_id", middlewares.AuthOnly(), v1.GETVoteStatus)
 			}
 			leaderboard := apiV1.Group("/leaderboard")
 			{
-				leaderboard.GET("/:courseId/blog", v1.GETBlogLeaderboard)
-				leaderboard.GET("/:courseId/project", v1.GETProjectLeaderboard)
+				leaderboard.GET("/:course_id/blog", v1.GETBlogLeaderboard)
+				leaderboard.GET("/:course_id/project", v1.GETProjectLeaderboard)
 			}
 		}
 
