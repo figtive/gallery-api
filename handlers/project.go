@@ -82,10 +82,18 @@ func (m *module) ProjectUpdateThumbnail(id string, thumbnailPath string) error {
 	return nil
 }
 
-func (m *module) ProjectGetManyByCourseID(courseID string) ([]dtos.Project, error) {
+func (m *module) ProjectGetManyByCourseID(courseID string, currentOnly bool) ([]dtos.Project, error) {
 	var err error
+	var startTime, endTime time.Time
+	if currentOnly {
+		startTime = utils.TimeToTermTime(time.Now())
+		endTime = utils.NextTermTime(time.Now())
+	} else {
+		startTime = time.Unix(-2208988800, 0)
+		endTime = startTime.Add(1<<63 - 1)
+	}
 	var projectsRaw []models.Project
-	if projectsRaw, err = m.db.projectOrmer.GetManyByCourseIDAndTerm(courseID, utils.TimeToTermTime(time.Now()), utils.NextTermTime(time.Now())); err != nil {
+	if projectsRaw, err = m.db.projectOrmer.GetManyByCourseIDAndTerm(courseID, startTime, endTime); err != nil {
 		return nil, err
 	}
 	projects := make([]dtos.Project, len(projectsRaw))

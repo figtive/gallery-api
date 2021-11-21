@@ -127,9 +127,15 @@ func PUTThumbnail(c *gin.Context) {
 func GETProjectsInCurrentTermAndCourse(c *gin.Context) {
 	var err error
 
+	var query dtos.Query
+	if err = c.ShouldBindQuery(&query); err != nil {
+		c.JSON(http.StatusBadRequest, dtos.Response{Code: http.StatusBadRequest, Error: err.Error()})
+		return
+	}
+
 	courseID := c.Param("courseID")
 	var projects []dtos.Project
-	if projects, err = handlers.Handler.ProjectGetManyByCourseID(courseID); err != nil {
+	if projects, err = handlers.Handler.ProjectGetManyByCourseID(courseID, query.Current); err != nil {
 		c.JSON(http.StatusInternalServerError, dtos.Response{Error: err.Error()})
 		return
 	}

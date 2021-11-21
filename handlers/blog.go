@@ -65,10 +65,18 @@ func (m *module) BlogGetOne(id string) (blog dtos.Blog, err error) {
 	return
 }
 
-func (m *module) BlogGetManyByCourseIDInCurrentTerm(courseID string) ([]dtos.Blog, error) {
+func (m *module) BlogGetManyByCourseIDInCurrentTerm(courseID string, currentOnly bool) ([]dtos.Blog, error) {
 	var err error
+	var startTime, endTime time.Time
+	if currentOnly {
+		startTime = utils.TimeToTermTime(time.Now())
+		endTime = utils.NextTermTime(time.Now())
+	} else {
+		startTime = time.Unix(-2208988800, 0)
+		endTime = startTime.Add(1<<63 - 1)
+	}
 	var blogsRaw []models.Blog
-	if blogsRaw, err = m.db.blogOrmer.GetManyByCourseIDAndTerm(courseID, utils.TimeToTermTime(time.Now()), utils.NextTermTime(time.Now())); err != nil {
+	if blogsRaw, err = m.db.blogOrmer.GetManyByCourseIDAndTerm(courseID, startTime, endTime); err != nil {
 		return nil, err
 	}
 	blogs := make([]dtos.Blog, len(blogsRaw))

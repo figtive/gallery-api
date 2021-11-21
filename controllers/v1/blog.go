@@ -80,9 +80,15 @@ func GETBlogs(c *gin.Context) {
 func GETBlogsInCurrentTermAndCourse(c *gin.Context) {
 	var err error
 
+	var query dtos.Query
+	if err = c.ShouldBindQuery(&query); err != nil {
+		c.JSON(http.StatusBadRequest, dtos.Response{Code: http.StatusBadRequest, Error: err.Error()})
+		return
+	}
+
 	courseID := c.Param("courseID")
 	var blogs []dtos.Blog
-	if blogs, err = handlers.Handler.BlogGetManyByCourseIDInCurrentTerm(courseID); err != nil {
+	if blogs, err = handlers.Handler.BlogGetManyByCourseIDInCurrentTerm(courseID, query.Current); err != nil {
 		c.JSON(http.StatusInternalServerError, dtos.Response{Error: err.Error()})
 		return
 	}
