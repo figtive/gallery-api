@@ -13,7 +13,7 @@ import (
 func GETProjectLeaderboard(c *gin.Context) {
 	var err error
 
-	courseID := c.Param("id")
+	courseID := c.Param("courseId")
 
 	var projects []dtos.Project
 	if projects, err = handlers.Handler.LeaderboardProject(time.Now(), courseID); err != nil {
@@ -27,7 +27,7 @@ func GETProjectLeaderboard(c *gin.Context) {
 func GETBlogLeaderboard(c *gin.Context) {
 	var err error
 
-	courseID := c.Param("id")
+	courseID := c.Param("courseId")
 
 	var blogs []dtos.Blog
 	if blogs, err = handlers.Handler.LeaderboardBlog(time.Now(), courseID); err != nil {

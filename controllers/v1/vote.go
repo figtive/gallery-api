@@ -16,7 +16,7 @@ func POSTVote(c *gin.Context) {
 
 	// get coursework id
 	voteInsert := dtos.VoteInsert{
-		CourseworkID: c.Param("id"),
+		CourseworkID: c.Param("courseworkId"),
 	}
 	// get post body
 	var voteVote dtos.VoteVote
@@ -94,7 +94,7 @@ func POSTVote(c *gin.Context) {
 func GETVoteCount(c *gin.Context) {
 	var err error
 
-	id := c.Param("id")
+	id := c.Param("courseworkId")
 	var count int64
 	if count, err = handlers.Handler.VoteCountByCourseworkID(id); err != nil {
 		if err == gorm.ErrRecordNotFound {
@@ -148,7 +148,7 @@ func GETVoteQuota(c *gin.Context) {
 func GETHasVoted(c *gin.Context) {
 	var err error
 
-	courseworkId := c.Param("id")
+	courseworkId := c.Param("courseworkId")
 	email := c.GetString(constants.ContextUserEmailKey)
 	var user dtos.User
 	if user, err = handlers.Handler.UserGetOneByEmail(email); err != nil {

@@ -37,8 +37,8 @@ func InitializeRouter() *gin.Engine {
 				{
 					project.POST("", middlewares.AuthOnly(), middlewares.AdminOnly(), v1.POSTProject)
 					project.GET("", v1.GETProjects)
-					project.GET("/:id", v1.GETProject)
 					project.PUT("/thumbnail", middlewares.AuthOnly(), middlewares.AdminOnly(), v1.PUTThumbnail)
+					project.GET("/:id", v1.GETProject)
 				}
 				blog := coursework.Group("/blog")
 				{
@@ -49,15 +49,15 @@ func InitializeRouter() *gin.Engine {
 			}
 			vote := apiV1.Group("/vote")
 			{
-				vote.POST("/:id", middlewares.AuthOnly(), v1.POSTVote)
-				vote.GET("/:id", middlewares.AuthOnly(), v1.GETHasVoted)
-				vote.GET("/count/:id", v1.GETVoteCount)
 				vote.GET("/quota", middlewares.AuthOnly(), v1.GETVoteQuota)
+				vote.GET("/count/:courseworkId", v1.GETVoteCount)
+				vote.POST("/:courseworkId", middlewares.AuthOnly(), v1.POSTVote)
+				vote.GET("/:courseworkId", middlewares.AuthOnly(), v1.GETHasVoted)
 			}
 			leaderboard := apiV1.Group("/leaderboard")
 			{
-				leaderboard.GET("/:id/project", v1.GETProjectLeaderboard)
-				leaderboard.GET("/:id/blog", v1.GETBlogLeaderboard)
+				leaderboard.GET("/:courseId/blog", v1.GETBlogLeaderboard)
+				leaderboard.GET("/:courseId/project", v1.GETProjectLeaderboard)
 			}
 		}
 
