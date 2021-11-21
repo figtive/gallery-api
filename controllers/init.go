@@ -53,7 +53,7 @@ func InitializeRouter() *gin.Engine {
 				vote.GET("/quota", middlewares.AuthOnly(), v1.GETVoteQuota)
 				vote.GET("/count/:courseworkId", v1.GETVoteCount)
 				vote.POST("/:courseworkId", middlewares.AuthOnly(), v1.POSTVote)
-				vote.GET("/:courseworkId", middlewares.AuthOnly(), v1.GETHasVoted)
+				vote.GET("/:courseworkId", middlewares.AuthOnly(), v1.GETVoteStatus)
 			}
 			leaderboard := apiV1.Group("/leaderboard")
 			{

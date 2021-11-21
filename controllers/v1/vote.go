@@ -145,7 +145,7 @@ func GETVoteQuota(c *gin.Context) {
 	c.JSON(http.StatusOK, dtos.Response{Code: http.StatusOK, Data: quotas})
 }
 
-func GETHasVoted(c *gin.Context) {
+func GETVoteStatus(c *gin.Context) {
 	var err error
 
 	courseworkId := c.Param("courseworkId")
