@@ -45,7 +45,7 @@ func POSTBlog(c *gin.Context) {
 func GETBlog(c *gin.Context) {
 	var err error
 
-	blogID := c.Param("id")
+	blogID := c.Param("coursework_id")
 	var blog dtos.Blog
 	if blog, err = handlers.Handler.BlogGetOne(blogID); err != nil {
 		c.JSON(http.StatusNotFound, dtos.Response{Code: http.StatusNotFound, Error: err.Error()})

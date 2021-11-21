@@ -16,7 +16,7 @@ func POSTVote(c *gin.Context) {
 
 	// get coursework id
 	voteInsert := dtos.VoteInsert{
-		CourseworkID: c.Param("id"),
+		CourseworkID: c.Param("coursework_id"),
 	}
 	// get post body
 	var voteVote dtos.VoteVote
@@ -94,7 +94,7 @@ func POSTVote(c *gin.Context) {
 func GETVoteCount(c *gin.Context) {
 	var err error
 
-	id := c.Param("id")
+	id := c.Param("coursework_id")
 	var count int64
 	if count, err = handlers.Handler.VoteCountByCourseworkID(id); err != nil {
 		if err == gorm.ErrRecordNotFound {
@@ -145,17 +145,17 @@ func GETVoteQuota(c *gin.Context) {
 	c.JSON(http.StatusOK, dtos.Response{Code: http.StatusOK, Data: quotas})
 }
 
-func GETHasVoted(c *gin.Context) {
+func GETVoteStatus(c *gin.Context) {
 	var err error
 
-	courseworkId := c.Param("id")
+	courseworkID := c.Param("coursework_id")
 	email := c.GetString(constants.ContextUserEmailKey)
 	var user dtos.User
 	if user, err = handlers.Handler.UserGetOneByEmail(email); err != nil {
 		c.JSON(http.StatusInternalServerError, dtos.Response{Code: http.StatusInternalServerError, Error: err.Error()})
 		return
 	}
-	if _, err = handlers.Handler.CourseworkGetOneByID(courseworkId); err != nil {
+	if _, err = handlers.Handler.CourseworkGetOneByID(courseworkID); err != nil {
 		if err == gorm.ErrRecordNotFound {
 			c.JSON(http.StatusNotFound, dtos.Response{Code: http.StatusNotFound, Error: "Coursework not found"})
 		} else {
@@ -164,7 +164,7 @@ func GETHasVoted(c *gin.Context) {
 		return
 	}
 	var hasVoted bool
-	if hasVoted, err = handlers.Handler.VoteHasVoted(user.ID, courseworkId); err != nil {
+	if hasVoted, err = handlers.Handler.VoteHasVoted(user.ID, courseworkID); err != nil {
 		c.JSON(http.StatusInternalServerError, dtos.Response{Code: http.StatusInternalServerError, Error: err.Error()})
 		return
 	}
