@@ -187,3 +187,20 @@ func GETVotedProject(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, dtos.Response{Code: http.StatusOK, Data: projects})
 }
+
+func GETVotedBlogs(c *gin.Context) {
+	var err error
+
+	userEmail := c.GetString(constants.ContextUserEmailKey)
+	var user dtos.User
+	if user, err = handlers.Handler.UserGetOneByEmail(userEmail); err != nil {
+		c.JSON(http.StatusInternalServerError, dtos.Response{Code: http.StatusInternalServerError, Error: err.Error()})
+		return
+	}
+	var blogs []dtos.Blog
+	if blogs, err = handlers.Handler.VoteGetVotedBlogs(user.ID); err != nil {
+		c.JSON(http.StatusInternalServerError, dtos.Response{Code: http.StatusInternalServerError, Error: err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, dtos.Response{Code: http.StatusOK, Data: blogs})
+}

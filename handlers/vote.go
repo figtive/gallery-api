@@ -97,3 +97,25 @@ func (m *module) VoteGetVotedProjects(userID string) ([]dtos.Project, error) {
 	}
 	return projects, nil
 }
+
+func (m *module) VoteGetVotedBlogs(userID string) ([]dtos.Blog, error) {
+	var err error
+	var blogsRaw []models.Blog
+	if blogsRaw, err = m.db.blogOrmer.GetManyByUserIDJoinVote(userID); err != nil {
+		return nil, err
+	}
+	blogs := make([]dtos.Blog, len(blogsRaw))
+	for i, j := range rand.Perm(len(blogsRaw)) {
+		blog := blogsRaw[j]
+		blogs[i] = dtos.Blog{
+			ID:        blog.CourseworkID,
+			CourseID:  blog.Coursework.CourseID,
+			Title:     blog.Title,
+			Author:    blog.Author,
+			Link:      blog.Link,
+			Category:  blog.Category,
+			CreatedAt: blog.CreatedAt,
+		}
+	}
+	return blogs, nil
+}
