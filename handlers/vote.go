@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"math/rand"
 	"time"
 
 	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/dtos"
@@ -70,4 +71,29 @@ func (m *module) VoteHasVoted(userID, courseworkID string) (bool, error) {
 
 func (m *module) VoteUnvote(userID, courseworkID string) error {
 	return m.db.voteOrmer.DeleteByUserIDAndCourseworkID(userID, courseworkID)
+}
+
+func (m *module) VoteGetVotedProjects(userID string) ([]dtos.Project, error) {
+	var err error
+	var projectsRaw []models.Project
+	if projectsRaw, err = m.db.projectOrmer.GetManyByUserIDJoinVote(userID); err != nil {
+		return nil, err
+	}
+	projects := make([]dtos.Project, len(projectsRaw))
+	for i, j := range rand.Perm(len(projectsRaw)) {
+		project := projectsRaw[j]
+		projects[i] = dtos.Project{
+			ID:          project.CourseworkID,
+			CourseID:    project.Coursework.CourseID,
+			Name:        project.Name,
+			Team:        project.Team,
+			Description: project.Description,
+			Thumbnail:   project.Thumbnail,
+			Field:       project.Field,
+			Active:      project.Active,
+			Metadata:    project.Metadata,
+			CreatedAt:   project.CreatedAt,
+		}
+	}
+	return projects, nil
 }

@@ -53,6 +53,7 @@ func InitializeRouter() *gin.Engine {
 			vote := apiV1.Group("/vote")
 			{
 				vote.GET("/quota", middlewares.AuthOnly(), v1.GETVoteQuota)
+				vote.GET("/projects", middlewares.AuthOnly(), v1.GETVotedProject)
 				vote.GET("/count/:coursework_id", v1.GETVoteCount)
 				vote.POST("/:coursework_id", middlewares.AuthOnly(), v1.POSTVote)
 				vote.GET("/:coursework_id", middlewares.AuthOnly(), v1.GETVoteStatus)
