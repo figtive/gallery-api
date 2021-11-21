@@ -23,6 +23,7 @@ type BlogOrmer interface {
 	GetMany(skip int, limit int) (blogs []Blog, err error)
 	GetManyByCourseIDAndTerm(courseID string, term, maxTerm time.Time) ([]Blog, error)
 	GetManyByTermAndCourseIdSortByVotes(term time.Time, courseId string) ([]Blog, error)
+	GetManyByUserIDJoinVote(userID string) ([]Blog, error)
 	GetOneByCourseworkID(courseworkID string) (blog Blog, err error)
 	GetManyBookmarkByUserID(userID string) ([]Blog, error)
 	Insert(blog Blog) (id string, err error)
@@ -86,6 +87,17 @@ func (o *blogOrm) GetManyByCourseIDAndTerm(courseID string, term, maxTerm time.T
 		Model(&Blog{}).
 		Joins("INNER JOIN courseworks ON blogs.coursework_id = courseworks.id").
 		Where("courseworks.course_id = ? AND blogs.created_at >= ? AND blogs.created_at < ?", courseID, term, maxTerm).
+		Preload("Coursework").
+		Find(&blogs)
+	return blogs, result.Error
+}
+
+func (o *blogOrm) GetManyByUserIDJoinVote(userID string) ([]Blog, error) {
+	var blogs []Blog
+	result := o.db.
+		Model(&Blog{}).
+		Joins("INNER JOIN votes ON blogs.coursework_id = votes.coursework_id").
+		Where("votes.user_id = ?", userID).
 		Preload("Coursework").
 		Find(&blogs)
 	return blogs, result.Error

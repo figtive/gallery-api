@@ -30,6 +30,7 @@ type ProjectOrmer interface {
 	Insert(project Project) (courseworkID string, err error)
 	UpdateThumbnail(courseworkID string, path string) (err error)
 	GetManyBookmarkByUserID(userID string) ([]Project, error)
+	GetManyByUserIDJoinVote(userID string) ([]Project, error)
 }
 
 type projectOrm struct {
@@ -95,6 +96,17 @@ func (o *projectOrm) GetManyByCourseIDAndTerm(courseID string, term, maxTerm tim
 		Model(&Project{}).
 		Joins("INNER JOIN courseworks ON projects.coursework_id = courseworks.id").
 		Where("courseworks.course_id = ? AND projects.created_at >= ? AND projects.created_at < ?", courseID, term, maxTerm).
+		Preload("Coursework").
+		Find(&projects)
+	return projects, result.Error
+}
+
+func (o *projectOrm) GetManyByUserIDJoinVote(userID string) ([]Project, error) {
+	var projects []Project
+	result := o.db.
+		Model(&Project{}).
+		Joins("INNER JOIN votes ON projects.coursework_id = votes.coursework_id").
+		Where("votes.user_id = ?", userID).
 		Preload("Coursework").
 		Find(&projects)
 	return projects, result.Error

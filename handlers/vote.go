@@ -71,3 +71,48 @@ func (m *module) VoteHasVoted(userID, courseworkID string) (bool, error) {
 func (m *module) VoteUnvote(userID, courseworkID string) error {
 	return m.db.voteOrmer.DeleteByUserIDAndCourseworkID(userID, courseworkID)
 }
+
+func (m *module) VoteGetVotedProjects(userID string) ([]dtos.Project, error) {
+	var err error
+	var projectsRaw []models.Project
+	if projectsRaw, err = m.db.projectOrmer.GetManyByUserIDJoinVote(userID); err != nil {
+		return nil, err
+	}
+	projects := make([]dtos.Project, len(projectsRaw))
+	for i, project := range projectsRaw {
+		projects[i] = dtos.Project{
+			ID:          project.CourseworkID,
+			CourseID:    project.Coursework.CourseID,
+			Name:        project.Name,
+			Team:        project.Team,
+			Description: project.Description,
+			Thumbnail:   project.Thumbnail,
+			Field:       project.Field,
+			Active:      project.Active,
+			Metadata:    project.Metadata,
+			CreatedAt:   project.CreatedAt,
+		}
+	}
+	return projects, nil
+}
+
+func (m *module) VoteGetVotedBlogs(userID string) ([]dtos.Blog, error) {
+	var err error
+	var blogsRaw []models.Blog
+	if blogsRaw, err = m.db.blogOrmer.GetManyByUserIDJoinVote(userID); err != nil {
+		return nil, err
+	}
+	blogs := make([]dtos.Blog, len(blogsRaw))
+	for i, blog := range blogsRaw {
+		blogs[i] = dtos.Blog{
+			ID:        blog.CourseworkID,
+			CourseID:  blog.Coursework.CourseID,
+			Title:     blog.Title,
+			Author:    blog.Author,
+			Link:      blog.Link,
+			Category:  blog.Category,
+			CreatedAt: blog.CreatedAt,
+		}
+	}
+	return blogs, nil
+}
