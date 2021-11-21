@@ -73,7 +73,7 @@ func (o *blogOrm) GetManyBookmarkByUserID(userID string) ([]Blog, error) {
 	var blogs []Blog
 	result := o.db.
 		Model(&Blog{}).
-		Joins("INNER JOIN blogs ON blogs.coursework_id = bookmarks.coursework_id").
+		Joins("INNER JOIN bookmarks ON blogs.coursework_id = bookmarks.coursework_id").
 		Where("bookmarks.user_id >= ?", userID).
 		Find(&blogs)
 	return blogs, result.Error
