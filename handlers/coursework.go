@@ -23,9 +23,10 @@ func (m *module) CourseworkGetOneByID(id string) (dtos.Coursework, error) {
 		return dtos.Coursework{}, err
 	}
 	return dtos.Coursework{
-		ID:        courseworkRaw.ID,
-		CourseID:  courseworkRaw.CourseID,
-		CreatedAt: courseworkRaw.CreatedAt,
+		ID:             courseworkRaw.ID,
+		CourseID:       courseworkRaw.CourseID,
+		CreatedAt:      courseworkRaw.CreatedAt,
+		CourseworkType: courseworkRaw.CourseworkType,
 	}, nil
 }
 
@@ -39,9 +40,10 @@ func (m *module) CourseworkGetVoted(userID, cwType string) ([]dtos.Coursework, e
 	courseworks := make([]dtos.Coursework, len(courseworksRaw))
 	for i, coursework := range courseworksRaw {
 		courseworks[i] = dtos.Coursework{
-			ID:        coursework.ID,
-			CourseID:  coursework.CourseID,
-			CreatedAt: coursework.CreatedAt,
+			ID:             coursework.ID,
+			CourseID:       coursework.CourseID,
+			CreatedAt:      coursework.CreatedAt,
+			CourseworkType: coursework.CourseworkType,
 		}
 	}
 	return courseworks, nil
