@@ -5,7 +5,6 @@ import (
 
 	"gorm.io/gorm"
 
-	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/configs"
 	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/dtos"
 	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/models"
 	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/utils"
@@ -88,7 +87,7 @@ func (m *module) VoteGetVotedProjects(userID string) ([]dtos.Project, error) {
 			Name:        project.Name,
 			Team:        project.Team,
 			Description: project.Description,
-			Thumbnail:   configs.AppConfig.StaticBaseURL + project.Thumbnail,
+			Thumbnail:   project.Thumbnail,
 			Link:        project.Link,
 			Video:       project.Video,
 			Field:       project.Field,
