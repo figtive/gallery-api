@@ -115,11 +115,16 @@ func (m *module) ProjectDeleteThumbnail(id string, thumbnailPath string) error {
 		return err
 	}
 
+	var found bool
 	for i, thumbnail := range project.Thumbnail {
 		if thumbnail == thumbnailPath {
 			project.Thumbnail = append(project.Thumbnail[:i], project.Thumbnail[i+1:]...)
+			found = true
 			break
 		}
+	}
+	if !found {
+		return fmt.Errorf("thumbnail not found")
 	}
 
 	if err = m.db.projectOrmer.Update(project); err != nil {
