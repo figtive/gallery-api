@@ -2,6 +2,7 @@ package v1
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -59,17 +60,17 @@ func POSTVote(c *gin.Context) {
 			c.JSON(http.StatusInternalServerError, dtos.Response{Code: http.StatusInternalServerError, Error: err.Error()})
 			return
 		}
-		// get all votes for coursework in current term
-		var votes []dtos.Vote
-		if votes, err = handlers.Handler.VoteGetVotesForCourseworkInCurrentTerm(user.ID, coursework.ID); err != nil {
+
+		var voteCount int64
+		if voteCount, err = handlers.Handler.VoteCountVoteByUserForCourseworkTypeInCourse(user.ID, course.ID, constants.CourseworkTableName[coursework.CourseworkType], time.Now()); err != nil {
 			c.JSON(http.StatusInternalServerError, dtos.Response{Code: http.StatusInternalServerError, Error: err.Error()})
 			return
 		}
-		// check if number of votes has reached quota
-		if len(votes) >= course.VoteQuota {
-			c.JSON(http.StatusForbidden, dtos.Response{Code: http.StatusForbidden, Error: "You have reached the vote quota"})
+		if voteCount >= int64(course.VoteQuota) {
+			c.JSON(http.StatusForbidden, dtos.Response{Code: http.StatusForbidden, Error: "You have reached your vote quota"})
 			return
 		}
+
 		// create vote
 		var id string
 		if id, err = handlers.Handler.VoteInsert(user.ID, voteInsert); err != nil {

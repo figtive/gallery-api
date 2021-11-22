@@ -20,7 +20,7 @@ type VoteOrmer interface {
 	CountByCourseworkID(courseworkID string) (int64, error)
 	CountByUserIDJoinCourseworkType(userID, courseworkType string) (int64, error)
 	Insert(vote Vote) (string, error)
-	GetManyByUserIDCourseworkIDAndCreatedAt(userID, courseworkID string, createdAt time.Time) ([]Vote, error)
+	CountVoteByCourseIDByUserIDByTimeJoinCourseworkType(courseID, userID, courseworkType string, startTime, endTime time.Time) (int64, error)
 	GetOneByUserIDAndCourseworkID(userID, courseworkID string) (Vote, error)
 	DeleteByUserIDAndCourseworkID(userID, courseworkID string) error
 }
@@ -39,10 +39,14 @@ func (o *voteOrm) Insert(vote Vote) (string, error) {
 	return vote.ID, result.Error
 }
 
-func (o *voteOrm) GetManyByUserIDCourseworkIDAndCreatedAt(userID, courseworkID string, createdAt time.Time) ([]Vote, error) {
-	var votes []Vote
-	result := o.db.Model(&Vote{}).Where("user_id = ? AND coursework_id = ? AND created_at > ?", userID, courseworkID, createdAt).Find(&votes)
-	return votes, result.Error
+// Count votes by user in a given course for a given coursework type in specific term
+func (o *voteOrm) CountVoteByCourseIDByUserIDByTimeJoinCourseworkType(courseID, userID, courseworkType string, startTime, endTime time.Time) (int64, error) {
+	var count int64
+	result := o.db.Model(&Vote{}).
+		Joins(fmt.Sprintf("INNER JOIN courseworks ON votes.coursework_id = courseworks.id INNER JOIN %[1]s ON courseworks.id = %[1]s.coursework_id", courseworkType)).
+		Where("votes.user_id = ? AND courseworks.course_id = ? AND votes.created_at >= ? AND votes.created_at < ?", userID, courseID, startTime, endTime).
+		Count(&count)
+	return count, result.Error
 }
 
 func (o *voteOrm) CountByCourseworkID(courseworkID string) (int64, error) {

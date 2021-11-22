@@ -49,7 +49,7 @@ type HandlerFunc interface {
 
 	CourseworkGetOneByID(id string) (dtos.Coursework, error)
 	CourseworkGetVoted(userID, cwTyoe string) ([]dtos.Coursework, error)
-	CourseworkInsert(courseID string) (id string, err error)
+	CourseworkInsert(courseID, courseworkType string) (string, error)
 
 	LeaderboardBlog(term time.Time, courseID string) ([]dtos.Blog, error)
 	LeaderboardProject(term time.Time, courseID string) ([]dtos.Project, error)
@@ -67,8 +67,8 @@ type HandlerFunc interface {
 
 	VoteCountByCourseworkID(courseworkID string) (int64, error)
 	VoteCountByUserIDJoinCourseworkType(userID, courseworkType string) (int64, error)
+	VoteCountVoteByUserForCourseworkTypeInCourse(userID, courseID, courseworkType string, term time.Time) (int64, error)
 	VoteHasVoted(userID, courseworkID string) (bool, error)
-	VoteGetVotesForCourseworkInCurrentTerm(userID, courseworkID string) ([]dtos.Vote, error)
 	VoteGetVotedBlogs(userID string) ([]dtos.Blog, error)
 	VoteGetVotedProjects(userID string) ([]dtos.Project, error)
 	VoteInsert(userID string, voteInfo dtos.VoteInsert) (string, error)

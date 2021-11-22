@@ -8,10 +8,11 @@ import (
 )
 
 type Coursework struct {
-	ID        string    `gorm:"primaryKey;type:uuid;default:uuid_generate_v4()"`
-	CourseID  string    `gorm:"not null"`
-	Course    Course    `gorm:"foreignKey:CourseID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
-	CreatedAt time.Time `gorm:"autoCreateTime" json:"-"`
+	ID             string    `gorm:"primaryKey;type:uuid;default:uuid_generate_v4()"`
+	CourseID       string    `gorm:"not null"`
+	Course         Course    `gorm:"foreignKey:CourseID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+	CreatedAt      time.Time `gorm:"autoCreateTime" json:"-"`
+	CourseworkType string    `gorm:"not null"`
 }
 
 type CourseworkOrmer interface {

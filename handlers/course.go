@@ -11,7 +11,7 @@ func (m *module) CourseInsert(courseInfo dtos.Course) (string, error) {
 	var err error
 	var id string
 	if id, err = m.db.courseOrmer.Insert(models.Course{
-		ID:          courseInfo.ID,
+		ID:          strings.ToLower(courseInfo.ID),
 		Name:        courseInfo.Name,
 		Description: courseInfo.Description,
 		VoteQuota:   courseInfo.VoteQuota,

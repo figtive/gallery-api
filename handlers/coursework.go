@@ -5,13 +5,15 @@ import (
 	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/models"
 )
 
-func (m *module) CourseworkInsert(courseID string) (id string, err error) {
-	if id, err = m.db.courseworkOrmer.Insert(models.Coursework{
-		CourseID: courseID,
-	}); err != nil {
-		return
+func (m *module) CourseworkInsert(courseID, courseworkType string) (string, error) {
+	var err error
+
+	coursework := models.Coursework{CourseID: courseID, CourseworkType: courseworkType}
+	var id string
+	if id, err = m.db.courseworkOrmer.Insert(coursework); err != nil {
+		return "", err
 	}
-	return
+	return id, nil
 }
 
 func (m *module) CourseworkGetOneByID(id string) (dtos.Coursework, error) {
@@ -21,9 +23,10 @@ func (m *module) CourseworkGetOneByID(id string) (dtos.Coursework, error) {
 		return dtos.Coursework{}, err
 	}
 	return dtos.Coursework{
-		ID:        courseworkRaw.ID,
-		CourseID:  courseworkRaw.CourseID,
-		CreatedAt: courseworkRaw.CreatedAt,
+		ID:             courseworkRaw.ID,
+		CourseID:       courseworkRaw.CourseID,
+		CreatedAt:      courseworkRaw.CreatedAt,
+		CourseworkType: courseworkRaw.CourseworkType,
 	}, nil
 }
 
@@ -37,9 +40,10 @@ func (m *module) CourseworkGetVoted(userID, cwType string) ([]dtos.Coursework, e
 	courseworks := make([]dtos.Coursework, len(courseworksRaw))
 	for i, coursework := range courseworksRaw {
 		courseworks[i] = dtos.Coursework{
-			ID:        coursework.ID,
-			CourseID:  coursework.CourseID,
-			CreatedAt: coursework.CreatedAt,
+			ID:             coursework.ID,
+			CourseID:       coursework.CourseID,
+			CreatedAt:      coursework.CreatedAt,
+			CourseworkType: coursework.CourseworkType,
 		}
 	}
 	return courseworks, nil

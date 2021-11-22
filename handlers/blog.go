@@ -4,17 +4,20 @@ import (
 	"math/rand"
 	"time"
 
+	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/constants"
 	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/dtos"
 	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/models"
 	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/utils"
 )
 
-func (m *module) BlogInsert(blogInsert dtos.BlogInsert, classID string) (id string, err error) {
-	var courseworkID string
-	if courseworkID, err = Handler.CourseworkInsert(classID); err != nil {
-		return
-	}
+func (m *module) BlogInsert(blogInsert dtos.BlogInsert, classID string) (string, error) {
+	var err error
 
+	var courseworkID string
+	if courseworkID, err = Handler.CourseworkInsert(classID, constants.CourseworkTypeBlog); err != nil {
+		return "", err
+	}
+	var id string
 	if id, err = m.db.blogOrmer.Insert(models.Blog{
 		CourseworkID: courseworkID,
 		Title:        blogInsert.Title,
@@ -22,9 +25,9 @@ func (m *module) BlogInsert(blogInsert dtos.BlogInsert, classID string) (id stri
 		Link:         blogInsert.Link,
 		Category:     blogInsert.Category,
 	}); err != nil {
-		return
+		return "", err
 	}
-	return
+	return id, nil
 }
 
 func (m *module) BlogGetMany(skip int, limit int) (blogs []dtos.Blog, err error) {

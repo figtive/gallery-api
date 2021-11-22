@@ -22,22 +22,15 @@ func (m *module) VoteInsert(userID string, voteInfo dtos.VoteInsert) (string, er
 	return id, nil
 }
 
-func (m *module) VoteGetVotesForCourseworkInCurrentTerm(userID, courseworkID string) ([]dtos.Vote, error) {
+func (m *module) VoteCountVoteByUserForCourseworkTypeInCourse(userID, courseID, courseworkType string, term time.Time) (int64, error) {
 	var err error
-	termDate := utils.TimeToTermTime(time.Now())
-	var votesRaw []models.Vote
-	if votesRaw, err = m.db.voteOrmer.GetManyByUserIDCourseworkIDAndCreatedAt(userID, courseworkID, termDate); err != nil {
-		return nil, err
+
+	var count int64
+	if count, err = m.db.voteOrmer.
+		CountVoteByCourseIDByUserIDByTimeJoinCourseworkType(courseID, userID, courseworkType, utils.TimeToTermTime(term), utils.NextTermTime(term)); err != nil {
+		return 0, err
 	}
-	votes := make([]dtos.Vote, len(votesRaw))
-	for i, vote := range votesRaw {
-		votes[i] = dtos.Vote{
-			ID:           vote.ID,
-			UserID:       vote.UserID,
-			CourseworkID: vote.CourseworkID,
-		}
-	}
-	return votes, nil
+	return count, nil
 }
 
 func (m *module) VoteCountByCourseworkID(courseworkID string) (int64, error) {
