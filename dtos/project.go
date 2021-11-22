@@ -32,7 +32,12 @@ type ProjectInsert struct {
 	Metadata    *string `binding:"required" json:"metadata"`
 }
 
-type ProjectThumbnail struct {
+type ProjectThumbnailUpload struct {
 	ID   string                `binding:"required" form:"id"`
 	File *multipart.FileHeader `binding:"required" form:"file"`
+}
+
+type ProjectThumbnailDelete struct {
+	ID        string `binding:"required" json:"id"`
+	Thumbnail string `binding:"required" json:"thumbnail"`
 }

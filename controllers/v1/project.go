@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+
 	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/configs"
 	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/dtos"
 	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/handlers"
@@ -30,7 +31,7 @@ func POSTProject(c *gin.Context) {
 	}
 
 	var projectID string
-	if projectID, err = handlers.Handler.ProjectInsert(projectInsert, courseInfo.ID, make([]string, 0)); err != nil {
+	if projectID, err = handlers.Handler.ProjectInsert(projectInsert, courseInfo.ID); err != nil {
 		c.JSON(http.StatusInternalServerError, dtos.Response{Error: err.Error()})
 		return
 	}
@@ -91,15 +92,15 @@ func GETProject(c *gin.Context) {
 func PUTThumbnail(c *gin.Context) {
 	var err error
 
-	var form dtos.ProjectThumbnail
-	if err = c.ShouldBind(&form); err != nil {
+	var upload dtos.ProjectThumbnailUpload
+	if err = c.ShouldBind(&upload); err != nil {
 		c.JSON(http.StatusBadRequest, dtos.Response{Error: err.Error()})
 		return
 	}
 
-	subdir := fmt.Sprintf("/coursework/project/%s", form.ID)
-	filename := fmt.Sprintf("thumbnail-%d%s", time.Now().UnixNano(), filepath.Ext(form.File.Filename))
-	if err = handlers.Handler.ProjectUpdateThumbnail(form.ID, path.Join(subdir, filename)); err != nil {
+	subdir := fmt.Sprintf("/coursework/project/%s", upload.ID)
+	filename := fmt.Sprintf("thumbnail-%d%s", time.Now().UnixNano(), filepath.Ext(upload.File.Filename))
+	if err = handlers.Handler.ProjectInsertThumbnail(upload.ID, path.Join(subdir, filename)); err != nil {
 		c.JSON(http.StatusInternalServerError, dtos.Response{Error: err.Error()})
 		return
 	}
@@ -108,15 +109,29 @@ func PUTThumbnail(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, dtos.Response{Error: err.Error()})
 		return
 	}
-	if err = c.SaveUploadedFile(form.File, path.Join(fullDir, filename)); err != nil {
+	if err = c.SaveUploadedFile(upload.File, path.Join(fullDir, filename)); err != nil {
 		c.JSON(http.StatusInternalServerError, dtos.Response{Error: err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, dtos.Response{
-		Code: http.StatusOK,
-		Data: form,
-	})
+	c.JSON(http.StatusOK, dtos.Response{Code: http.StatusOK})
+}
+
+func DELETEThumbnail(c *gin.Context) {
+	var err error
+
+	var thumbnailDelete dtos.ProjectThumbnailDelete
+	if err = c.ShouldBindJSON(&thumbnailDelete); err != nil {
+		c.JSON(http.StatusBadRequest, dtos.Response{Error: err.Error()})
+		return
+	}
+
+	if err = handlers.Handler.ProjectDeleteThumbnail(thumbnailDelete.ID, thumbnailDelete.Thumbnail); err != nil {
+		c.JSON(http.StatusInternalServerError, dtos.Response{Error: err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, dtos.Response{Code: http.StatusOK})
 }
 
 func GETProjectsInCurrentTermAndCourse(c *gin.Context) {
