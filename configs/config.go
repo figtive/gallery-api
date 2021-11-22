@@ -9,7 +9,6 @@ type Config struct {
 	Debug  bool
 	Secret string
 
-	StaticBaseURL string
 	StaticBaseDir string
 
 	DbHost     string
@@ -35,7 +34,6 @@ func InitializeConfig() {
 	AppConfig.Debug = viper.GetBool("DEBUG")
 	AppConfig.Secret = viper.GetString("SECRET")
 
-	AppConfig.StaticBaseURL = viper.GetString("STATIC_BASE_URL")
 	AppConfig.StaticBaseDir = viper.GetString("STATIC_BASE_DIR")
 
 	AppConfig.DbHost = viper.GetString("DB_HOST")
