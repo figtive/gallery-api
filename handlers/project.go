@@ -1,7 +1,10 @@
 package handlers
 
 import (
+	"fmt"
 	"math/rand"
+	"mime/multipart"
+	"path/filepath"
 	"time"
 
 	"github.com/lib/pq"
@@ -84,16 +87,22 @@ func (m *module) ProjectGetOne(id string) (project dtos.Project, err error) {
 	return
 }
 
-func (m *module) ProjectInsertThumbnail(id string, thumbnailPath string) error {
+func (m *module) ProjectInsertThumbnail(id string, header *multipart.FileHeader) error {
 	var err error
-	var project models.Project
-	if project, err = m.db.projectOrmer.GetOneByCourseworkID(id); err != nil {
+	dir := fmt.Sprintf("/coursework/project/%s/thumbnail-%d%s", id, time.Now().UnixNano(), filepath.Ext(header.Filename))
+
+	if err = utils.SaveMedia(header, dir); err != nil {
 		return err
 	}
 
-	project.Thumbnail = append(project.Thumbnail, thumbnailPath)
-
+	var project models.Project
+	if project, err = m.db.projectOrmer.GetOneByCourseworkID(id); err != nil {
+		_ = utils.DeleteMedia(dir)
+		return err
+	}
+	project.Thumbnail = append(project.Thumbnail, dir)
 	if err = m.db.projectOrmer.Update(project); err != nil {
+		_ = utils.DeleteMedia(dir)
 		return err
 	}
 	return nil
@@ -106,16 +115,23 @@ func (m *module) ProjectDeleteThumbnail(id string, thumbnailPath string) error {
 		return err
 	}
 
+	var found bool
 	for i, thumbnail := range project.Thumbnail {
 		if thumbnail == thumbnailPath {
 			project.Thumbnail = append(project.Thumbnail[:i], project.Thumbnail[i+1:]...)
+			found = true
 			break
 		}
+	}
+	if !found {
+		return fmt.Errorf("thumbnail not found")
 	}
 
 	if err = m.db.projectOrmer.Update(project); err != nil {
 		return err
 	}
+
+	_ = utils.DeleteMedia(thumbnailPath)
 	return nil
 }
 

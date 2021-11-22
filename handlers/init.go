@@ -3,6 +3,7 @@ package handlers
 import (
 	"fmt"
 	"log"
+	"mime/multipart"
 	"time"
 
 	"gorm.io/driver/postgres"
@@ -58,7 +59,7 @@ type HandlerFunc interface {
 	ProjectGetMany(skip int, limit int) (projects []dtos.Project, err error)
 	ProjectGetManyByCourseID(courseID string, currentOnly bool) ([]dtos.Project, error)
 	ProjectInsert(projectInfo dtos.ProjectInsert, courseID string) (id string, err error)
-	ProjectInsertThumbnail(id string, thumbnailPath string) error
+	ProjectInsertThumbnail(id string, header *multipart.FileHeader) error
 	ProjectDeleteThumbnail(id string, thumbnailPath string) error
 
 	UserGetOneByEmail(email string) (userInfo dtos.User, err error)
