@@ -4,9 +4,12 @@ import (
 	"io"
 	"mime/multipart"
 	"os"
+	"path/filepath"
+
+	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/configs"
 )
 
-func SaveMedia(fh *multipart.FileHeader, d string) error {
+func SaveMedia(fh *multipart.FileHeader, path string) error {
 	var err error
 	var f multipart.File
 	if f, err = fh.Open(); err != nil {
@@ -14,11 +17,12 @@ func SaveMedia(fh *multipart.FileHeader, d string) error {
 	}
 	defer f.Close()
 
-	if err = os.MkdirAll(d, os.ModePerm); err != nil {
+	dir := filepath.Join(configs.AppConfig.StaticBaseDir, path)
+	if err = os.MkdirAll(filepath.Dir(dir), os.ModePerm); err != nil {
 		return err
 	}
 	var out *os.File
-	if out, err = os.Create(d); err != nil {
+	if out, err = os.Create(dir); err != nil {
 		return err
 	}
 	defer out.Close()
@@ -29,9 +33,10 @@ func SaveMedia(fh *multipart.FileHeader, d string) error {
 	return nil
 }
 
-func DeleteMedia(d string) error {
+func DeleteMedia(path string) error {
 	var err error
-	if err = os.Remove(d); err != nil {
+	dir := filepath.Join(configs.AppConfig.StaticBaseDir, path)
+	if err = os.Remove(dir); err != nil {
 		return err
 	}
 	return nil
