@@ -1,16 +1,10 @@
 package v1
 
 import (
-	"fmt"
 	"net/http"
-	"os"
-	"path"
-	"path/filepath"
-	"time"
 
 	"github.com/gin-gonic/gin"
 
-	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/configs"
 	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/dtos"
 	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/handlers"
 )
@@ -98,18 +92,7 @@ func PUTThumbnail(c *gin.Context) {
 		return
 	}
 
-	subdir := fmt.Sprintf("/coursework/project/%s", upload.ID)
-	filename := fmt.Sprintf("thumbnail-%d%s", time.Now().UnixNano(), filepath.Ext(upload.File.Filename))
-	if err = handlers.Handler.ProjectInsertThumbnail(upload.ID, path.Join(subdir, filename)); err != nil {
-		c.JSON(http.StatusInternalServerError, dtos.Response{Error: err.Error()})
-		return
-	}
-	fullDir := path.Join(configs.AppConfig.StaticBaseDir, subdir)
-	if err = os.MkdirAll(fullDir, os.ModePerm); err != nil {
-		c.JSON(http.StatusInternalServerError, dtos.Response{Error: err.Error()})
-		return
-	}
-	if err = c.SaveUploadedFile(upload.File, path.Join(fullDir, filename)); err != nil {
+	if err = handlers.Handler.ProjectInsertThumbnail(upload.ID, upload.File); err != nil {
 		c.JSON(http.StatusInternalServerError, dtos.Response{Error: err.Error()})
 		return
 	}
