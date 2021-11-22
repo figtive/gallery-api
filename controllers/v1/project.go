@@ -2,11 +2,11 @@ package v1
 
 import (
 	"fmt"
-	"mime/multipart"
 	"net/http"
 	"os"
 	"path"
 	"path/filepath"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/configs"
@@ -30,7 +30,7 @@ func POSTProject(c *gin.Context) {
 	}
 
 	var projectID string
-	if projectID, err = handlers.Handler.ProjectInsert(projectInsert, courseInfo.ID, ""); err != nil {
+	if projectID, err = handlers.Handler.ProjectInsert(projectInsert, courseInfo.ID, make([]string, 0)); err != nil {
 		c.JSON(http.StatusInternalServerError, dtos.Response{Error: err.Error()})
 		return
 	}
@@ -39,7 +39,7 @@ func POSTProject(c *gin.Context) {
 		ID:          projectID,
 		Name:        projectInsert.Name,
 		Description: projectInsert.Description,
-		Thumbnail:   "",
+		Thumbnail:   make([]string, 0),
 		Field:       projectInsert.Field,
 		Active:      projectInsert.Active,
 	}
@@ -96,14 +96,9 @@ func PUTThumbnail(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, dtos.Response{Error: err.Error()})
 		return
 	}
-	var file *multipart.FileHeader
-	if file, err = c.FormFile("file"); err != nil {
-		c.JSON(http.StatusBadRequest, dtos.Response{Error: err.Error()})
-		return
-	}
 
 	subdir := fmt.Sprintf("/coursework/project/%s", form.ID)
-	filename := fmt.Sprintf("thumbnail%s", filepath.Ext(file.Filename))
+	filename := fmt.Sprintf("thumbnail-%d%s", time.Now().UnixNano(), filepath.Ext(form.File.Filename))
 	if err = handlers.Handler.ProjectUpdateThumbnail(form.ID, path.Join(subdir, filename)); err != nil {
 		c.JSON(http.StatusInternalServerError, dtos.Response{Error: err.Error()})
 		return
@@ -113,7 +108,7 @@ func PUTThumbnail(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, dtos.Response{Error: err.Error()})
 		return
 	}
-	if err = c.SaveUploadedFile(file, path.Join(fullDir, filename)); err != nil {
+	if err = c.SaveUploadedFile(form.File, path.Join(fullDir, filename)); err != nil {
 		c.JSON(http.StatusInternalServerError, dtos.Response{Error: err.Error()})
 		return
 	}

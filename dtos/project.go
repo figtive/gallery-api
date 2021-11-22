@@ -1,6 +1,9 @@
 package dtos
 
-import "time"
+import (
+	"mime/multipart"
+	"time"
+)
 
 type Project struct {
 	ID          string    `json:"id"`
@@ -8,7 +11,7 @@ type Project struct {
 	Name        string    `json:"name"`
 	Team        string    `json:"team"`
 	Description string    `json:"description"`
-	Thumbnail   string    `json:"thumbnail"`
+	Thumbnail   []string  `json:"thumbnail"`
 	Link        string    `json:"link"`
 	Video       string    `json:"video"`
 	Field       string    `json:"field"`
@@ -30,5 +33,6 @@ type ProjectInsert struct {
 }
 
 type ProjectThumbnail struct {
-	ID string `form:"id"`
+	ID   string                `binding:"required" form:"id"`
+	File *multipart.FileHeader `binding:"required" form:"file"`
 }
