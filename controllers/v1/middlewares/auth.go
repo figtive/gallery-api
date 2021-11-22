@@ -27,15 +27,19 @@ func GoogleOAuthMiddleware() gin.HandlerFunc {
 			if valid {
 				if user, err := handlers.Handler.UserGetOneByEmail(claims.Email); err == nil {
 					c.Set(constants.ContextIsAuthenticatedKey, true)
+					c.Set(constants.ContextIsFirstLoginKey, false)
 					c.Set(constants.ContextGoogleJWTKey, jwtString)
-					c.Set(constants.ContextUserEmailKey, user.Email)
+					c.Set(constants.ContextUserEmailKey, claims.Email)
 					c.Set(constants.ContextIsAdminKey, user.IsAdmin)
 				} else if err == gorm.ErrRecordNotFound {
 					c.Set(constants.ContextIsAuthenticatedKey, true)
 					c.Set(constants.ContextIsFirstLoginKey, true)
+					c.Set(constants.ContextGoogleJWTKey, jwtString)
+					c.Set(constants.ContextUserEmailKey, claims.Email)
 				} else {
 					log.Println(err)
 					c.AbortWithStatus(http.StatusUnauthorized)
+					return
 				}
 			} else {
 				c.Set(constants.ContextIsAuthenticatedKey, false)
