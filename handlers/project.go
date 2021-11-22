@@ -6,16 +6,19 @@ import (
 
 	"github.com/lib/pq"
 
+	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/constants"
 	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/dtos"
 	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/models"
 	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/utils"
 )
 
-func (m *module) ProjectInsert(projectInfo dtos.ProjectInsert, classID string) (id string, err error) {
+func (m *module) ProjectInsert(projectInfo dtos.ProjectInsert, classID string) (string, error) {
+	var err error
 	var courseworkID string
-	if courseworkID, err = Handler.CourseworkInsert(classID); err != nil {
-		return
+	if courseworkID, err = Handler.CourseworkInsert(classID, constants.CourseworkTypeProject); err != nil {
+		return "", err
 	}
+	var id string
 	if id, err = m.db.projectOrmer.Insert(models.Project{
 		CourseworkID: courseworkID,
 		Name:         projectInfo.Name,
@@ -28,9 +31,9 @@ func (m *module) ProjectInsert(projectInfo dtos.ProjectInsert, classID string) (
 		Active:       projectInfo.Active,
 		Metadata:     *projectInfo.Metadata,
 	}); err != nil {
-		return
+		return "", err
 	}
-	return
+	return id, nil
 }
 
 func (m *module) ProjectGetMany(skip int, limit int) (projects []dtos.Project, err error) {

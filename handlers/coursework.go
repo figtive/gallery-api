@@ -5,13 +5,15 @@ import (
 	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/models"
 )
 
-func (m *module) CourseworkInsert(courseID string) (id string, err error) {
-	if id, err = m.db.courseworkOrmer.Insert(models.Coursework{
-		CourseID: courseID,
-	}); err != nil {
-		return
+func (m *module) CourseworkInsert(courseID, courseworkType string) (string, error) {
+	var err error
+
+	coursework := models.Coursework{CourseID: courseID, CourseworkType: courseworkType}
+	var id string
+	if id, err = m.db.courseworkOrmer.Insert(coursework); err != nil {
+		return "", err
 	}
-	return
+	return id, nil
 }
 
 func (m *module) CourseworkGetOneByID(id string) (dtos.Coursework, error) {

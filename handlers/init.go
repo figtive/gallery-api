@@ -49,7 +49,7 @@ type HandlerFunc interface {
 
 	CourseworkGetOneByID(id string) (dtos.Coursework, error)
 	CourseworkGetVoted(userID, cwTyoe string) ([]dtos.Coursework, error)
-	CourseworkInsert(courseID string) (id string, err error)
+	CourseworkInsert(courseID, courseworkType string) (string, error)
 
 	LeaderboardBlog(term time.Time, courseID string) ([]dtos.Blog, error)
 	LeaderboardProject(term time.Time, courseID string) ([]dtos.Project, error)
