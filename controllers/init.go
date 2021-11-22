@@ -31,6 +31,7 @@ func InitializeRouter() *gin.Engine {
 			course := apiV1.Group("/course")
 			{
 				course.POST("", middlewares.AuthOnly(), middlewares.AdminOnly(), v1.POSTCourse)
+				course.GET("", v1.GETCourses)
 			}
 			coursework := apiV1.Group("/coursework")
 			{

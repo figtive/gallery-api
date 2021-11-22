@@ -27,3 +27,15 @@ func POSTCourse(c *gin.Context) {
 		Data: courseInfo,
 	})
 }
+
+func GETCourses(c *gin.Context) {
+	var err error
+
+	var courses []dtos.Course
+	if courses, err = handlers.Handler.CourseGetAll(); err != nil {
+		c.JSON(http.StatusInternalServerError, dtos.Response{Code: http.StatusInternalServerError, Error: err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, dtos.Response{Code: http.StatusOK, Data: courses})
+}
