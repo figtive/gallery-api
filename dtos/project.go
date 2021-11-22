@@ -9,6 +9,8 @@ type Project struct {
 	Team        string    `json:"team"`
 	Description string    `json:"description"`
 	Thumbnail   string    `json:"thumbnail"`
+	Link        string    `json:"link"`
+	Video       string    `json:"video"`
 	Field       string    `json:"field"`
 	Active      bool      `json:"active"`
 	Metadata    string    `json:"metadata"`
@@ -20,6 +22,8 @@ type ProjectInsert struct {
 	Name        string  `binding:"required" json:"name"`
 	Team        string  `binding:"required" json:"team"`
 	Description string  `binding:"required" json:"description"`
+	Link        string  `binding:"required" json:"link"`
+	Video       string  `binding:"required" json:"video"`
 	Field       string  `binding:"required" json:"field"`
 	Active      bool    `binding:"required" json:"active"`
 	Metadata    *string `binding:"required" json:"metadata"`

@@ -15,6 +15,8 @@ type Project struct {
 	Team         string     `gorm:"not null"`
 	Description  string     `gorm:"not null"`
 	Thumbnail    string     `gorm:"not null"`
+	Link         string     `gorm:"not null"`
+	Video        string     `gorm:"not null"`
 	Field        string     `gorm:"type:varchar(32);not null"`
 	Active       bool       `gorm:"not null"`
 	Metadata     string     `gorm:"not null"`
