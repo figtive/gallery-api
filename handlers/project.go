@@ -4,13 +4,14 @@ import (
 	"math/rand"
 	"time"
 
-	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/configs"
+	"github.com/lib/pq"
+
 	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/dtos"
 	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/models"
 	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/utils"
 )
 
-func (m *module) ProjectInsert(projectInfo dtos.ProjectInsert, classID string, thumbnailPath string) (id string, err error) {
+func (m *module) ProjectInsert(projectInfo dtos.ProjectInsert, classID string) (id string, err error) {
 	var courseworkID string
 	if courseworkID, err = Handler.CourseworkInsert(classID); err != nil {
 		return
@@ -20,7 +21,9 @@ func (m *module) ProjectInsert(projectInfo dtos.ProjectInsert, classID string, t
 		Name:         projectInfo.Name,
 		Team:         projectInfo.Team,
 		Description:  projectInfo.Description,
-		Thumbnail:    thumbnailPath,
+		Thumbnail:    make(pq.StringArray, 0),
+		Link:         projectInfo.Link,
+		Video:        projectInfo.Video,
 		Field:        projectInfo.Field,
 		Active:       projectInfo.Active,
 		Metadata:     *projectInfo.Metadata,
@@ -44,7 +47,9 @@ func (m *module) ProjectGetMany(skip int, limit int) (projects []dtos.Project, e
 			Name:        project.Name,
 			Team:        project.Team,
 			Description: project.Description,
-			Thumbnail:   configs.AppConfig.StaticBaseURL + project.Thumbnail,
+			Thumbnail:   project.Thumbnail,
+			Link:        project.Link,
+			Video:       project.Video,
 			Field:       project.Field,
 			Active:      project.Active,
 			Metadata:    project.Metadata,
@@ -66,6 +71,8 @@ func (m *module) ProjectGetOne(id string) (project dtos.Project, err error) {
 		Team:        projectRaw.Team,
 		Description: projectRaw.Description,
 		Thumbnail:   projectRaw.Thumbnail,
+		Link:        projectRaw.Link,
+		Video:       projectRaw.Video,
 		Field:       projectRaw.Field,
 		Active:      projectRaw.Active,
 		Metadata:    projectRaw.Metadata,
@@ -74,9 +81,36 @@ func (m *module) ProjectGetOne(id string) (project dtos.Project, err error) {
 	return
 }
 
-func (m *module) ProjectUpdateThumbnail(id string, thumbnailPath string) error {
+func (m *module) ProjectInsertThumbnail(id string, thumbnailPath string) error {
 	var err error
-	if err = m.db.projectOrmer.UpdateThumbnail(id, thumbnailPath); err != nil {
+	var project models.Project
+	if project, err = m.db.projectOrmer.GetOneByCourseworkID(id); err != nil {
+		return err
+	}
+
+	project.Thumbnail = append(project.Thumbnail, thumbnailPath)
+
+	if err = m.db.projectOrmer.Update(project); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *module) ProjectDeleteThumbnail(id string, thumbnailPath string) error {
+	var err error
+	var project models.Project
+	if project, err = m.db.projectOrmer.GetOneByCourseworkID(id); err != nil {
+		return err
+	}
+
+	for i, thumbnail := range project.Thumbnail {
+		if thumbnail == thumbnailPath {
+			project.Thumbnail = append(project.Thumbnail[:i], project.Thumbnail[i+1:]...)
+			break
+		}
+	}
+
+	if err = m.db.projectOrmer.Update(project); err != nil {
 		return err
 	}
 	return nil
@@ -106,6 +140,8 @@ func (m *module) ProjectGetManyByCourseID(courseID string, currentOnly bool) ([]
 			Team:        project.Team,
 			Description: project.Description,
 			Thumbnail:   project.Thumbnail,
+			Link:        project.Link,
+			Video:       project.Video,
 			Field:       project.Field,
 			Active:      project.Active,
 			Metadata:    project.Metadata,

@@ -57,8 +57,9 @@ type HandlerFunc interface {
 	ProjectGetOne(id string) (project dtos.Project, err error)
 	ProjectGetMany(skip int, limit int) (projects []dtos.Project, err error)
 	ProjectGetManyByCourseID(courseID string, currentOnly bool) ([]dtos.Project, error)
-	ProjectInsert(projectInfo dtos.ProjectInsert, courseID string, thumbnailPath string) (id string, err error)
-	ProjectUpdateThumbnail(id string, thumbnailPath string) error
+	ProjectInsert(projectInfo dtos.ProjectInsert, courseID string) (id string, err error)
+	ProjectInsertThumbnail(id string, thumbnailPath string) error
+	ProjectDeleteThumbnail(id string, thumbnailPath string) error
 
 	UserGetOneByEmail(email string) (userInfo dtos.User, err error)
 	UserInsert(userInfo dtos.User) (id string, err error)

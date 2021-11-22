@@ -3,10 +3,11 @@ package handlers
 import (
 	"time"
 
+	"gorm.io/gorm"
+
 	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/dtos"
 	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/models"
 	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/utils"
-	"gorm.io/gorm"
 )
 
 func (m *module) VoteInsert(userID string, voteInfo dtos.VoteInsert) (string, error) {
@@ -87,6 +88,8 @@ func (m *module) VoteGetVotedProjects(userID string) ([]dtos.Project, error) {
 			Team:        project.Team,
 			Description: project.Description,
 			Thumbnail:   project.Thumbnail,
+			Link:        project.Link,
+			Video:       project.Video,
 			Field:       project.Field,
 			Active:      project.Active,
 			Metadata:    project.Metadata,
