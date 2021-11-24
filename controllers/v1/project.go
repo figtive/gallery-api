@@ -1,9 +1,11 @@
 package v1
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 
 	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/dtos"
 	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/handlers"
@@ -133,4 +135,26 @@ func GETProjectsInCurrentTermAndCourse(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, dtos.Response{Code: http.StatusOK, Data: projects})
+}
+
+func PUTProject(c *gin.Context) {
+	var err error
+
+	var projectInfo dtos.ProjectUpdate
+	if err = c.ShouldBindJSON(&projectInfo); err != nil {
+		c.JSON(http.StatusBadRequest, dtos.Response{Error: err.Error()})
+		return
+	}
+
+	if err = handlers.Handler.ProjectUpdate(projectInfo); err != nil {
+		if err == gorm.ErrRecordNotFound {
+			c.JSON(http.StatusNotFound, dtos.Response{Code: http.StatusNotFound, Error: err.Error()})
+			log.Println("here")
+		} else {
+			c.JSON(http.StatusInternalServerError, dtos.Response{Code: http.StatusInternalServerError, Error: err.Error()})
+		}
+		return
+	}
+
+	c.JSON(http.StatusOK, dtos.Response{Code: http.StatusOK})
 }

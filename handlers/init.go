@@ -55,12 +55,13 @@ type HandlerFunc interface {
 	LeaderboardBlog(term time.Time, courseID string) ([]dtos.Blog, error)
 	LeaderboardProject(term time.Time, courseID string) ([]dtos.Project, error)
 
+	ProjectDeleteThumbnail(id string, thumbnailPath string) error
 	ProjectGetOne(id string) (project dtos.Project, err error)
 	ProjectGetMany(skip int, limit int) (projects []dtos.Project, err error)
 	ProjectGetManyByCourseID(courseID string, currentOnly bool) ([]dtos.Project, error)
 	ProjectInsert(projectInfo dtos.ProjectInsert, courseID string) (id string, err error)
 	ProjectInsertThumbnail(id string, header *multipart.FileHeader) error
-	ProjectDeleteThumbnail(id string, thumbnailPath string) error
+	ProjectUpdate(projectInfo dtos.ProjectUpdate) error
 
 	UserGetOneByEmail(email string) (userInfo dtos.User, err error)
 	UserInsert(userInfo dtos.User) (id string, err error)

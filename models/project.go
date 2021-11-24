@@ -66,7 +66,7 @@ func (o *projectOrm) GetMany(skip int, limit int) (projects []Project, err error
 
 func (o *projectOrm) Update(project Project) error {
 	// https://gorm.io/docs/update.html#Update-Selected-Fields
-	result := o.db.Model(&Project{}).Where("coursework_id = ?", project.CourseworkID).Select("*").Updates(project)
+	result := o.db.Model(&Project{}).Where("coursework_id = ?", project.CourseworkID).Select("*").Omit("thumbnail", "created_at").Updates(project)
 	return result.Error
 }
 
