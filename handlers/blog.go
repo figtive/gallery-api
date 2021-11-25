@@ -122,3 +122,11 @@ func (m *module) BlogUpdate(blogInfo dtos.BlogUpdate) error {
 	}
 	return nil
 }
+
+func (m *module) BlogDelete(id string) error {
+	var err error
+	if err = m.db.blogOrmer.DeleteByID(id); err != nil {
+		return err
+	}
+	return nil
+}

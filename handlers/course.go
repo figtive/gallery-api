@@ -70,3 +70,11 @@ func (m *module) CourseUpdate(courseInfo dtos.CourseUpdate) error {
 	}
 	return nil
 }
+
+func (m *module) CourseDelete(id string) error {
+	var err error
+	if err = m.db.courseOrmer.DeleteByID(id); err != nil {
+		return err
+	}
+	return nil
+}

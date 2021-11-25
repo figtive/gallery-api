@@ -16,9 +16,10 @@ type Coursework struct {
 }
 
 type CourseworkOrmer interface {
-	Insert(coursework Coursework) (id string, err error)
+	DeleteByID(id string) error
 	GetOneByID(id string) (Coursework, error)
 	GetManyByUserIDAndIsVotedJoinCourseworkType(userID, courseworkType string) ([]Coursework, error)
+	Insert(coursework Coursework) (id string, err error)
 	Update(coursework Coursework) error
 }
 
@@ -50,4 +51,9 @@ func (o *courseworkOrm) GetManyByUserIDAndIsVotedJoinCourseworkType(userID, cour
 
 func (o *courseworkOrm) Update(coursework Coursework) error {
 	return o.db.Model(&Coursework{}).Omit("created_at").Where("id = ?", coursework.ID).Updates(coursework).Error
+}
+
+func (o *courseworkOrm) DeleteByID(id string) error {
+	result := o.db.Model(&Coursework{}).Where("id = ?", id).Delete(&Coursework{})
+	return result.Error
 }

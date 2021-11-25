@@ -197,3 +197,21 @@ func (m *module) ProjectUpdate(projectInfo dtos.ProjectUpdate) error {
 	}
 	return nil
 }
+
+func (m *module) ProjectDelete(id string) error {
+	var err error
+	var project dtos.Project
+	if project, err = m.ProjectGetOne(id); err != nil {
+		return err
+	}
+	for _, thumbnail := range project.Thumbnail {
+		_ = utils.DeleteMedia(thumbnail)
+	}
+	if err = m.db.projectOrmer.DeleteByID(id); err != nil {
+		return err
+	}
+	if err = m.db.courseworkOrmer.DeleteByID(id); err != nil {
+		return err
+	}
+	return nil
+}

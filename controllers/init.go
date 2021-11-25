@@ -34,6 +34,7 @@ func InitializeRouter() *gin.Engine {
 				course.GET("", v1.GETCourses)
 				course.PUT("", middlewares.AuthOnly(), middlewares.AdminOnly(), v1.PUTCourse)
 				course.GET("/:course_id", v1.GETCourse)
+				course.DELETE("/:course_id", middlewares.AuthOnly(), middlewares.AdminOnly(), v1.DELETECourse)
 			}
 			coursework := apiV1.Group("/coursework")
 			{
@@ -46,6 +47,7 @@ func InitializeRouter() *gin.Engine {
 					project.DELETE("/thumbnail", middlewares.AuthOnly(), middlewares.AdminOnly(), v1.DELETEThumbnail)
 					project.GET("/:course_id", v1.GETProjectsInCurrentTermAndCourse)
 					project.GET("/:course_id/:coursework_id", v1.GETProject)
+					project.DELETE("/:course_id/:project_id", middlewares.AuthOnly(), middlewares.AdminOnly(), v1.DELETEProject)
 				}
 				blog := coursework.Group("/blog")
 				{
@@ -54,6 +56,7 @@ func InitializeRouter() *gin.Engine {
 					blog.PUT("", middlewares.AuthOnly(), middlewares.AdminOnly(), v1.PUTBlog)
 					blog.GET("/:course_id", v1.GETBlogsInCurrentTermAndCourse)
 					blog.GET("/:course_id/:coursework_id", v1.GETBlog)
+					blog.DELETE("/:course_id/:blog_id", middlewares.AuthOnly(), middlewares.AdminOnly(), v1.DELETEBlog)
 				}
 			}
 			vote := apiV1.Group("/vote")

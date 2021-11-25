@@ -79,3 +79,19 @@ func GETCourse(c *gin.Context) {
 
 	c.JSON(http.StatusOK, dtos.Response{Code: http.StatusOK, Data: courseInfo})
 }
+
+func DELETECourse(c *gin.Context) {
+	var err error
+
+	id := c.Param("course_id")
+	if err = handlers.Handler.CourseDelete(id); err != nil {
+		if err == gorm.ErrRecordNotFound {
+			c.JSON(http.StatusNotFound, dtos.Response{Error: err.Error()})
+		} else {
+			c.JSON(http.StatusInternalServerError, dtos.Response{Error: err.Error()})
+		}
+		return
+	}
+
+	c.JSON(http.StatusOK, dtos.Response{Code: http.StatusOK})
+}

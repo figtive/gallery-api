@@ -20,6 +20,7 @@ type Blog struct {
 }
 
 type BlogOrmer interface {
+	DeleteByID(id string) error
 	GetMany(skip int, limit int) (blogs []Blog, err error)
 	GetManyByCourseIDAndTerm(courseID string, term, maxTerm time.Time) ([]Blog, error)
 	GetManyByTermAndCourseIdSortByVotes(term time.Time, courseId string) ([]Blog, error)
@@ -106,4 +107,9 @@ func (o *blogOrm) GetManyByUserIDJoinVote(userID string) ([]Blog, error) {
 
 func (o *blogOrm) Update(blog Blog) error {
 	return o.db.Model(&Blog{}).Where("coursework_id = ?", blog.CourseworkID).Omit("created_at").Updates(blog).Error
+}
+
+func (o *blogOrm) DeleteByID(id string) error {
+	result := o.db.Model(&Blog{}).Where("coursework_id = ?", id).Delete(&Blog{})
+	return result.Error
 }

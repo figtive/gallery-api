@@ -117,3 +117,19 @@ func PUTBlog(c *gin.Context) {
 
 	c.JSON(http.StatusOK, dtos.Response{Code: http.StatusOK})
 }
+
+func DELETEBlog(c *gin.Context) {
+	var err error
+
+	blogID := c.Param("blog_id")
+	if err = handlers.Handler.BlogDelete(blogID); err != nil {
+		if err == gorm.ErrRecordNotFound {
+			c.JSON(http.StatusNotFound, dtos.Response{Code: http.StatusNotFound, Error: err.Error()})
+		} else {
+			c.JSON(http.StatusInternalServerError, dtos.Response{Error: err.Error()})
+		}
+		return
+	}
+
+	c.JSON(http.StatusOK, dtos.Response{Code: http.StatusOK})
+}

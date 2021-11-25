@@ -26,6 +26,7 @@ type Project struct {
 }
 
 type ProjectOrmer interface {
+	DeleteByID(courseworkID string) error
 	GetOneByCourseworkID(courseworkID string) (project Project, err error)
 	GetMany(skip int, limit int) (projects []Project, err error)
 	GetManyByCourseIDAndTerm(courseID string, term, maxTerm time.Time) ([]Project, error)
@@ -113,4 +114,9 @@ func (o *projectOrm) GetManyByUserIDJoinVote(userID string) ([]Project, error) {
 		Preload("Coursework").
 		Find(&projects)
 	return projects, result.Error
+}
+
+func (o *projectOrm) DeleteByID(courseworkID string) error {
+	result := o.db.Model(&Project{}).Where("coursework_id = ?", courseworkID).Delete(&Project{})
+	return result.Error
 }

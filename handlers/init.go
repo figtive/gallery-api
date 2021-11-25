@@ -33,6 +33,7 @@ type HandlerFunc interface {
 	AuthParseGoogleJWT(jwtString string) (claims dtos.GoogleJWTClaim, err error)
 	AuthGenerateJWT(userInfo dtos.User) (token string, err error)
 
+	BlogDelete(id string) error
 	BlogGetMany(skip int, limit int) (blogs []dtos.Blog, err error)
 	BlogGetManyByCourseIDInCurrentTerm(courseID string, currentOnly bool) ([]dtos.Blog, error)
 	BlogGetOne(id string) (blog dtos.Blog, err error)
@@ -45,6 +46,7 @@ type HandlerFunc interface {
 	BookmarkGetManyBlogByUserID(userID string) ([]dtos.Blog, error)
 	BookmarkGetManyProjectByUserID(userID string) ([]dtos.Project, error)
 
+	CourseDelete(id string) error
 	CourseGetAll() ([]dtos.Course, error)
 	CourseGetOneByID(id string) (courseInfo dtos.Course, err error)
 	CourseInsert(courseInfo dtos.Course) (id string, err error)
@@ -57,6 +59,7 @@ type HandlerFunc interface {
 	LeaderboardBlog(term time.Time, courseID string) ([]dtos.Blog, error)
 	LeaderboardProject(term time.Time, courseID string) ([]dtos.Project, error)
 
+	ProjectDelete(id string) error
 	ProjectDeleteThumbnail(id string, thumbnailPath string) error
 	ProjectGetOne(id string) (project dtos.Project, err error)
 	ProjectGetMany(skip int, limit int) (projects []dtos.Project, err error)
