@@ -97,3 +97,28 @@ func (m *module) BlogGetManyByCourseIDInCurrentTerm(courseID string, currentOnly
 	}
 	return blogs, nil
 }
+
+func (m *module) BlogUpdate(blogInfo dtos.BlogUpdate) error {
+	var err error
+
+	coursework := models.Coursework{
+		ID:             blogInfo.ID,
+		CourseID:       blogInfo.CourseID,
+		CourseworkType: constants.CourseworkTypeBlog,
+	}
+	blog := models.Blog{
+		CourseworkID: blogInfo.ID,
+		Title:        blogInfo.Title,
+		Author:       blogInfo.Author,
+		Link:         blogInfo.Link,
+		Category:     blogInfo.Category,
+		UpdatedAt:    time.Now(),
+	}
+	if err = m.db.courseworkOrmer.Update(coursework); err != nil {
+		return err
+	}
+	if err = m.db.blogOrmer.Update(blog); err != nil {
+		return err
+	}
+	return nil
+}

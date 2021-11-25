@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/dtos"
 	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/handlers"
+	"gorm.io/gorm"
 )
 
 func POSTBlog(c *gin.Context) {
@@ -94,4 +95,25 @@ func GETBlogsInCurrentTermAndCourse(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, dtos.Response{Code: http.StatusOK, Data: blogs})
+}
+
+func PUTBlog(c *gin.Context) {
+	var err error
+
+	var blogUpdate dtos.BlogUpdate
+	if err = c.ShouldBindJSON(&blogUpdate); err != nil {
+		c.JSON(http.StatusBadRequest, dtos.Response{Error: err.Error()})
+		return
+	}
+
+	if err = handlers.Handler.BlogUpdate(blogUpdate); err != nil {
+		if err == gorm.ErrRecordNotFound {
+			c.JSON(http.StatusNotFound, dtos.Response{Code: http.StatusNotFound, Error: err.Error()})
+		} else {
+			c.JSON(http.StatusInternalServerError, dtos.Response{Error: err.Error()})
+		}
+		return
+	}
+
+	c.JSON(http.StatusOK, dtos.Response{Code: http.StatusOK})
 }

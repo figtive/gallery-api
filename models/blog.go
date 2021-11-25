@@ -27,6 +27,7 @@ type BlogOrmer interface {
 	GetOneByCourseworkID(courseworkID string) (blog Blog, err error)
 	GetManyBookmarkByUserID(userID string) ([]Blog, error)
 	Insert(blog Blog) (id string, err error)
+	Update(blog Blog) error
 }
 
 type blogOrm struct {
@@ -101,4 +102,8 @@ func (o *blogOrm) GetManyByUserIDJoinVote(userID string) ([]Blog, error) {
 		Preload("Coursework").
 		Find(&blogs)
 	return blogs, result.Error
+}
+
+func (o *blogOrm) Update(blog Blog) error {
+	return o.db.Model(&Blog{}).Where("coursework_id = ?", blog.CourseworkID).Omit("created_at").Updates(blog).Error
 }

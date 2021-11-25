@@ -37,6 +37,7 @@ type HandlerFunc interface {
 	BlogGetManyByCourseIDInCurrentTerm(courseID string, currentOnly bool) ([]dtos.Blog, error)
 	BlogGetOne(id string) (blog dtos.Blog, err error)
 	BlogInsert(blogInsert dtos.BlogInsert, courseID string) (id string, err error)
+	BlogUpdate(blogInfo dtos.BlogUpdate) error
 
 	BookmarkInsert(bookmark dtos.Bookmark) (string, error)
 	BookmarkHasMarked(bookmark dtos.Bookmark) (bool, error)
