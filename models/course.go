@@ -19,6 +19,7 @@ type CourseOrmer interface {
 	Insert(course Course) (id string, err error)
 	GetOneByID(id string) (course Course, err error)
 	GetAll() (courses []Course, err error)
+	Update(course Course) (err error)
 }
 
 type courseOrm struct {
@@ -43,4 +44,9 @@ func (o *courseOrm) GetOneByID(id string) (course Course, err error) {
 func (o *courseOrm) GetAll() (courses []Course, err error) {
 	result := o.db.Model(&Course{}).Find(&courses)
 	return courses, result.Error
+}
+
+func (o *courseOrm) Update(course Course) (err error) {
+	result := o.db.Model(&Course{}).Where("id = ?", course.ID).Omit("created_at").Updates(&course)
+	return result.Error
 }

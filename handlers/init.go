@@ -48,6 +48,7 @@ type HandlerFunc interface {
 	CourseGetAll() ([]dtos.Course, error)
 	CourseGetOneByID(id string) (courseInfo dtos.Course, err error)
 	CourseInsert(courseInfo dtos.Course) (id string, err error)
+	CourseUpdate(courseInfo dtos.CourseUpdate) error
 
 	CourseworkGetOneByID(id string) (dtos.Coursework, error)
 	CourseworkGetVoted(userID, cwTyoe string) ([]dtos.Coursework, error)

@@ -3,6 +3,8 @@ package v1
 import (
 	"net/http"
 
+	"gorm.io/gorm"
+
 	"github.com/gin-gonic/gin"
 	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/dtos"
 	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/handlers"
@@ -38,4 +40,42 @@ func GETCourses(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, dtos.Response{Code: http.StatusOK, Data: courses})
+}
+
+func PUTCourse(c *gin.Context) {
+	var err error
+
+	var courseInfo dtos.CourseUpdate
+	if err = c.ShouldBindJSON(&courseInfo); err != nil {
+		c.JSON(http.StatusBadRequest, dtos.Response{Error: err.Error()})
+		return
+	}
+
+	if err = handlers.Handler.CourseUpdate(courseInfo); err != nil {
+		if err == gorm.ErrRecordNotFound {
+			c.JSON(http.StatusNotFound, dtos.Response{Error: err.Error()})
+		} else {
+			c.JSON(http.StatusInternalServerError, dtos.Response{Error: err.Error()})
+		}
+		return
+	}
+
+	c.JSON(http.StatusOK, dtos.Response{Code: http.StatusOK})
+}
+
+func GETCourse(c *gin.Context) {
+	var err error
+
+	id := c.Param("course_id")
+	var courseInfo dtos.Course
+	if courseInfo, err = handlers.Handler.CourseGetOneByID(id); err != nil {
+		if err == gorm.ErrRecordNotFound {
+			c.JSON(http.StatusNotFound, dtos.Response{Error: err.Error()})
+		} else {
+			c.JSON(http.StatusInternalServerError, dtos.Response{Error: err.Error()})
+		}
+		return
+	}
+
+	c.JSON(http.StatusOK, dtos.Response{Code: http.StatusOK, Data: courseInfo})
 }
