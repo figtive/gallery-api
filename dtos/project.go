@@ -41,3 +41,16 @@ type ProjectThumbnailDelete struct {
 	ID        string `binding:"required" json:"id"`
 	Thumbnail string `binding:"required" json:"thumbnail"`
 }
+
+type ProjectUpdate struct {
+	ID          string `json:"id"`
+	CourseID    string `json:"courseId"`
+	Name        string `json:"name"`
+	Team        string `json:"team"`
+	Description string `json:"description"`
+	Link        string `json:"link"`
+	Video       string `json:"video"`
+	Field       string `json:"field"`
+	Active      bool   `json:"active"`
+	Metadata    string `json:"metadata"`
+}

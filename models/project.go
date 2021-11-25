@@ -26,6 +26,7 @@ type Project struct {
 }
 
 type ProjectOrmer interface {
+	DeleteByID(courseworkID string) error
 	GetOneByCourseworkID(courseworkID string) (project Project, err error)
 	GetMany(skip int, limit int) (projects []Project, err error)
 	GetManyByCourseIDAndTerm(courseID string, term, maxTerm time.Time) ([]Project, error)
@@ -66,7 +67,7 @@ func (o *projectOrm) GetMany(skip int, limit int) (projects []Project, err error
 
 func (o *projectOrm) Update(project Project) error {
 	// https://gorm.io/docs/update.html#Update-Selected-Fields
-	result := o.db.Model(&Project{}).Where("coursework_id = ?", project.CourseworkID).Select("*").Updates(project)
+	result := o.db.Model(&Project{}).Where("coursework_id = ?", project.CourseworkID).Select("*").Omit("thumbnail", "created_at").Updates(project)
 	return result.Error
 }
 
@@ -113,4 +114,9 @@ func (o *projectOrm) GetManyByUserIDJoinVote(userID string) ([]Project, error) {
 		Preload("Coursework").
 		Find(&projects)
 	return projects, result.Error
+}
+
+func (o *projectOrm) DeleteByID(courseworkID string) error {
+	result := o.db.Model(&Project{}).Where("coursework_id = ?", courseworkID).Delete(&Project{})
+	return result.Error
 }

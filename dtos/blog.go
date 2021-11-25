@@ -19,3 +19,12 @@ type BlogInsert struct {
 	Link     string `binding:"required" json:"link"`
 	Category string `binding:"required" json:"category"`
 }
+
+type BlogUpdate struct {
+	ID       string `json:"id"`
+	CourseID string `json:"courseId"`
+	Title    string `json:"title"`
+	Author   string `json:"author"`
+	Link     string `json:"link"`
+	Category string `json:"category"`
+}

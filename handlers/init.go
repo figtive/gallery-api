@@ -33,10 +33,12 @@ type HandlerFunc interface {
 	AuthParseGoogleJWT(jwtString string) (claims dtos.GoogleJWTClaim, err error)
 	AuthGenerateJWT(userInfo dtos.User) (token string, err error)
 
+	BlogDelete(id string) error
 	BlogGetMany(skip int, limit int) (blogs []dtos.Blog, err error)
 	BlogGetManyByCourseIDInCurrentTerm(courseID string, currentOnly bool) ([]dtos.Blog, error)
 	BlogGetOne(id string) (blog dtos.Blog, err error)
 	BlogInsert(blogInsert dtos.BlogInsert, courseID string) (id string, err error)
+	BlogUpdate(blogInfo dtos.BlogUpdate) error
 
 	BookmarkInsert(bookmark dtos.Bookmark) (string, error)
 	BookmarkHasMarked(bookmark dtos.Bookmark) (bool, error)
@@ -44,9 +46,11 @@ type HandlerFunc interface {
 	BookmarkGetManyBlogByUserID(userID string) ([]dtos.Blog, error)
 	BookmarkGetManyProjectByUserID(userID string) ([]dtos.Project, error)
 
+	CourseDelete(id string) error
 	CourseGetAll() ([]dtos.Course, error)
 	CourseGetOneByID(id string) (courseInfo dtos.Course, err error)
 	CourseInsert(courseInfo dtos.Course) (id string, err error)
+	CourseUpdate(courseInfo dtos.CourseUpdate) error
 
 	CourseworkGetOneByID(id string) (dtos.Coursework, error)
 	CourseworkGetVoted(userID, cwTyoe string) ([]dtos.Coursework, error)
@@ -55,12 +59,14 @@ type HandlerFunc interface {
 	LeaderboardBlog(term time.Time, courseID string) ([]dtos.Blog, error)
 	LeaderboardProject(term time.Time, courseID string) ([]dtos.Project, error)
 
+	ProjectDelete(id string) error
+	ProjectDeleteThumbnail(id string, thumbnailPath string) error
 	ProjectGetOne(id string) (project dtos.Project, err error)
 	ProjectGetMany(skip int, limit int) (projects []dtos.Project, err error)
 	ProjectGetManyByCourseID(courseID string, currentOnly bool) ([]dtos.Project, error)
 	ProjectInsert(projectInfo dtos.ProjectInsert, courseID string) (id string, err error)
 	ProjectInsertThumbnail(id string, header *multipart.FileHeader) error
-	ProjectDeleteThumbnail(id string, thumbnailPath string) error
+	ProjectUpdate(projectInfo dtos.ProjectUpdate) error
 
 	UserGetOneByEmail(email string) (userInfo dtos.User, err error)
 	UserInsert(userInfo dtos.User) (id string, err error)

@@ -169,3 +169,49 @@ func (m *module) ProjectGetManyByCourseID(courseID string, currentOnly bool) ([]
 	}
 	return projects, nil
 }
+
+func (m *module) ProjectUpdate(projectInfo dtos.ProjectUpdate) error {
+	var err error
+	coursework := models.Coursework{
+		ID:             projectInfo.ID,
+		CourseID:       projectInfo.CourseID,
+		CourseworkType: constants.CourseworkTypeProject,
+	}
+	project := models.Project{
+		CourseworkID: projectInfo.ID,
+		Name:         projectInfo.Name,
+		Team:         projectInfo.Team,
+		Description:  projectInfo.Description,
+		Link:         projectInfo.Link,
+		Video:        projectInfo.Video,
+		Field:        projectInfo.Field,
+		Active:       projectInfo.Active,
+		Metadata:     projectInfo.Metadata,
+		UpdatedAt:    time.Now(),
+	}
+	if err = m.db.courseworkOrmer.Update(coursework); err != nil {
+		return err
+	}
+	if err = m.db.projectOrmer.Update(project); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *module) ProjectDelete(id string) error {
+	var err error
+	var project dtos.Project
+	if project, err = m.ProjectGetOne(id); err != nil {
+		return err
+	}
+	for _, thumbnail := range project.Thumbnail {
+		_ = utils.DeleteMedia(thumbnail)
+	}
+	if err = m.db.projectOrmer.DeleteByID(id); err != nil {
+		return err
+	}
+	if err = m.db.courseworkOrmer.DeleteByID(id); err != nil {
+		return err
+	}
+	return nil
+}

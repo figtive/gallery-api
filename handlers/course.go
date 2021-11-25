@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"strings"
+	"time"
 
 	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/dtos"
 	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/models"
@@ -54,4 +55,26 @@ func (m *module) CourseGetAll() ([]dtos.Course, error) {
 		}
 	}
 	return courses, nil
+}
+
+func (m *module) CourseUpdate(courseInfo dtos.CourseUpdate) error {
+	var err error
+	course := models.Course{
+		ID:          courseInfo.ID,
+		Description: courseInfo.Description,
+		VoteQuota:   courseInfo.VoteQuota,
+		UpdatedAt:   time.Now(),
+	}
+	if err = m.db.courseOrmer.Update(course); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *module) CourseDelete(id string) error {
+	var err error
+	if err = m.db.courseOrmer.DeleteByID(id); err != nil {
+		return err
+	}
+	return nil
 }
