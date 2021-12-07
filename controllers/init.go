@@ -11,8 +11,8 @@ import (
 
 func InitializeRouter() *gin.Engine {
 	router := gin.Default()
+	router.Use(middlewares.CORSMiddleware())
 	api := router.Group("/api")
-	api.Use(middlewares.CORSMiddleware())
 	api.Use(middlewares.GoogleOAuthMiddleware())
 	{
 		api.GET("/ping", func(c *gin.Context) { c.JSON(http.StatusOK, map[string]string{"ping": "pong"}) })
