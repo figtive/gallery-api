@@ -3,6 +3,7 @@ module gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api
 go 1.16
 
 require (
+	github.com/gin-contrib/cors v1.3.1
 	github.com/gin-gonic/gin v1.7.4
 	github.com/golang-jwt/jwt/v4 v4.1.0
 	github.com/lib/pq v1.10.2

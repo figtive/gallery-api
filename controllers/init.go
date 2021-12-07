@@ -11,6 +11,7 @@ import (
 
 func InitializeRouter() *gin.Engine {
 	router := gin.Default()
+	router.Use(middlewares.CORSMiddleware())
 	api := router.Group("/api")
 	api.Use(middlewares.GoogleOAuthMiddleware())
 	{
