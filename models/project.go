@@ -33,6 +33,7 @@ type ProjectOrmer interface {
 	GetManyByTermAndCourseIdSortByVotes(term time.Time, courseId string) ([]Project, error)
 	Insert(project Project) (courseworkID string, err error)
 	Update(project Project) (err error)
+	UpdateThumbnail(project Project) (err error)
 	GetManyBookmarkByUserID(userID string) ([]Project, error)
 	GetManyByUserIDJoinVote(userID string) ([]Project, error)
 }
@@ -68,6 +69,12 @@ func (o *projectOrm) GetMany(skip int, limit int) (projects []Project, err error
 func (o *projectOrm) Update(project Project) error {
 	// https://gorm.io/docs/update.html#Update-Selected-Fields
 	result := o.db.Model(&Project{}).Where("coursework_id = ?", project.CourseworkID).Select("*").Omit("thumbnail", "created_at").Updates(project)
+	return result.Error
+}
+
+func (o *projectOrm) UpdateThumbnail(project Project) error {
+	// https://gorm.io/docs/update.html#Update-Selected-Fields
+	result := o.db.Model(&Project{}).Where("coursework_id = ?", project.CourseworkID).Select("thumbnail").Updates(project)
 	return result.Error
 }
 

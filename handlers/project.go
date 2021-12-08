@@ -101,7 +101,7 @@ func (m *module) ProjectInsertThumbnail(id string, header *multipart.FileHeader)
 		return err
 	}
 	project.Thumbnail = append(project.Thumbnail, dir)
-	if err = m.db.projectOrmer.Update(project); err != nil {
+	if err = m.db.projectOrmer.UpdateThumbnail(project); err != nil {
 		_ = utils.DeleteMedia(dir)
 		return err
 	}
@@ -127,7 +127,7 @@ func (m *module) ProjectDeleteThumbnail(id string, thumbnailPath string) error {
 		return fmt.Errorf("thumbnail not found")
 	}
 
-	if err = m.db.projectOrmer.Update(project); err != nil {
+	if err = m.db.projectOrmer.UpdateThumbnail(project); err != nil {
 		return err
 	}
 
