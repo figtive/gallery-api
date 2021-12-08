@@ -11,7 +11,7 @@ type Bookmark struct {
 	UserID       string     `gorm:"type:uuid;not null"`
 	User         User       `gorm:"foreignkey:UserID"`
 	CourseworkID string     `gorm:"type:uuid;not null"`
-	Coursework   Coursework `gorm:"foreignkey:CourseworkID"`
+	Coursework   Coursework `gorm:"foreignkey:CourseworkID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 	CreatedAt    time.Time  `gorm:"autoCreateTime"`
 }
 
