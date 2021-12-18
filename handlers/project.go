@@ -39,9 +39,9 @@ func (m *module) ProjectInsert(projectInfo dtos.ProjectInsert, classID string) (
 	return id, nil
 }
 
-func (m *module) ProjectGetMany(skip int, limit int) (projects []dtos.Project, err error) {
+func (m *module) ProjectGetMany(skip int, limit int, name, field string) (projects []dtos.Project, err error) {
 	var projectsRaw []models.Project
-	if projectsRaw, err = m.db.projectOrmer.GetMany(skip, limit); err != nil {
+	if projectsRaw, err = m.db.projectOrmer.GetMany(skip, limit, name, field); err != nil {
 		return
 	}
 	projects = make([]dtos.Project, len(projectsRaw))

@@ -50,15 +50,14 @@ func POSTProject(c *gin.Context) {
 func GETProjects(c *gin.Context) {
 	var err error
 
-	var query dtos.Query
+	var query dtos.ProjectQuery
 	if err = c.ShouldBindQuery(&query); err != nil {
 		c.JSON(http.StatusBadRequest, dtos.Response{Error: err.Error()})
 		return
 	}
-	// TODO: pagination
 
 	var projects []dtos.Project
-	if projects, err = handlers.Handler.ProjectGetMany(query.Skip, 0); err != nil {
+	if projects, err = handlers.Handler.ProjectGetMany(0, 0, query.Name, query.Field); err != nil {
 		c.JSON(http.StatusInternalServerError, dtos.Response{Error: err.Error()})
 		return
 	}

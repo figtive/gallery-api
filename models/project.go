@@ -28,7 +28,7 @@ type Project struct {
 type ProjectOrmer interface {
 	DeleteByID(courseworkID string) error
 	GetOneByCourseworkID(courseworkID string) (project Project, err error)
-	GetMany(skip int, limit int) (projects []Project, err error)
+	GetMany(skip int, limit int, name, field string) (projects []Project, err error)
 	GetManyByCourseIDAndTerm(courseID string, term, maxTerm time.Time) ([]Project, error)
 	GetManyByTermAndCourseIdSortByVotes(term time.Time, courseId string) ([]Project, error)
 	Insert(project Project) (courseworkID string, err error)
@@ -57,8 +57,14 @@ func (o *projectOrm) GetOneByCourseworkID(courseworkID string) (project Project,
 	return project, result.Error
 }
 
-func (o *projectOrm) GetMany(skip int, limit int) (projects []Project, err error) {
+func (o *projectOrm) GetMany(skip int, limit int, name, field string) (projects []Project, err error) {
 	result := o.db.Model(&Project{}).Offset(skip).Preload("Coursework")
+	if name != "" {
+		result.Where("LOWER(projects.name) LIKE LOWER(?)", "%"+name+"%")
+	}
+	if field != "" {
+		result.Where(Project{Field: field})
+	}
 	if limit > 0 {
 		result = result.Limit(limit)
 	}
