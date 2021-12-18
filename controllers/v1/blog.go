@@ -62,15 +62,14 @@ func GETBlog(c *gin.Context) {
 func GETBlogs(c *gin.Context) {
 	var err error
 
-	var query dtos.Query
+	var query dtos.BlogQuery
 	if err = c.ShouldBindQuery(&query); err != nil {
 		c.JSON(http.StatusBadRequest, dtos.Response{Error: err.Error()})
 		return
 	}
 
-	// TODO: pagination
 	var blogs []dtos.Blog
-	if blogs, err = handlers.Handler.BlogGetMany(query.Limit, 0); err != nil {
+	if blogs, err = handlers.Handler.BlogGetMany(0, 0, query.Title, query.Category); err != nil {
 		c.JSON(http.StatusInternalServerError, dtos.Response{Error: err.Error()})
 		return
 	}

@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"fmt"
-	"math/rand"
 	"mime/multipart"
 	"path/filepath"
 	"time"
@@ -45,8 +44,7 @@ func (m *module) ProjectGetMany(skip int, limit int, name, field string) (projec
 		return
 	}
 	projects = make([]dtos.Project, len(projectsRaw))
-	for i, j := range rand.Perm(len(projectsRaw)) {
-		project := projectsRaw[j]
+	for i, project := range projectsRaw {
 		projects[i] = dtos.Project{
 			ID:          project.CourseworkID,
 			CourseID:    project.Coursework.CourseID,
@@ -150,8 +148,7 @@ func (m *module) ProjectGetManyByCourseID(courseID string, currentOnly bool) ([]
 		return nil, err
 	}
 	projects := make([]dtos.Project, len(projectsRaw))
-	for i, j := range rand.Perm(len(projectsRaw)) {
-		project := projectsRaw[j]
+	for i, project := range projectsRaw {
 		projects[i] = dtos.Project{
 			ID:          project.CourseworkID,
 			CourseID:    project.Coursework.CourseID,

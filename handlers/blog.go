@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"math/rand"
 	"time"
 
 	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/constants"
@@ -30,19 +29,18 @@ func (m *module) BlogInsert(blogInsert dtos.BlogInsert, classID string) (string,
 	return id, nil
 }
 
-func (m *module) BlogGetMany(skip int, limit int) (blogs []dtos.Blog, err error) {
+func (m *module) BlogGetMany(skip int, limit int, title, category string) (blogs []dtos.Blog, err error) {
 	var blogsRaw []models.Blog
-	if blogsRaw, err = m.db.blogOrmer.GetMany(skip, limit); err != nil {
+	if blogsRaw, err = m.db.blogOrmer.GetMany(skip, limit, title, category); err != nil {
 		return
 	}
 	blogs = make([]dtos.Blog, len(blogsRaw))
-	for i, j := range rand.Perm(len(blogsRaw)) {
-		blog := blogsRaw[j]
+	for i, blog := range blogsRaw {
 		blogs[i] = dtos.Blog{
 			ID:        blog.CourseworkID,
 			CourseID:  blog.Coursework.CourseID,
 			Title:     blog.Title,
-			Author:    blog.Author,
+			Author:    blog.Title,
 			Link:      blog.Link,
 			Category:  blog.Category,
 			CreatedAt: blog.CreatedAt,
@@ -83,8 +81,7 @@ func (m *module) BlogGetManyByCourseIDInCurrentTerm(courseID string, currentOnly
 		return nil, err
 	}
 	blogs := make([]dtos.Blog, len(blogsRaw))
-	for i, j := range rand.Perm(len(blogsRaw)) {
-		blog := blogsRaw[j]
+	for i, blog := range blogsRaw {
 		blogs[i] = dtos.Blog{
 			ID:        blog.CourseworkID,
 			CourseID:  blog.Coursework.CourseID,

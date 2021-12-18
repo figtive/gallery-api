@@ -59,8 +59,8 @@ func (o *projectOrm) GetOneByCourseworkID(courseworkID string) (project Project,
 
 func (o *projectOrm) GetMany(skip int, limit int, name, field string) (projects []Project, err error) {
 	result := o.db.Model(&Project{}).Offset(skip).Where(Project{Field: field}).Where("LOWER(projects.name) LIKE LOWER(?)", "%"+name+"%").Preload("Coursework")
-	if name != "" {
-		result.Where("LOWER(projects.name) LIKE LOWER(?)", "%"+name+"%")
+	if limit > 0 {
+		result = result.Limit(limit)
 	}
 	result = result.Find(&projects)
 	return projects, result.Error
