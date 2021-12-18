@@ -40,7 +40,7 @@ func (m *module) BlogGetMany(skip int, limit int, title, category string) (blogs
 			ID:        blog.CourseworkID,
 			CourseID:  blog.Coursework.CourseID,
 			Title:     blog.Title,
-			Author:    blog.Title,
+			Author:    blog.Author,
 			Link:      blog.Link,
 			Category:  blog.Category,
 			CreatedAt: blog.CreatedAt,
