@@ -54,3 +54,8 @@ type ProjectUpdate struct {
 	Active      bool   `json:"active"`
 	Metadata    string `json:"metadata"`
 }
+
+type ProjectQuery struct {
+	Name  string `form:"name"`
+	Field string `form:"field"`
+}

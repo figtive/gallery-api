@@ -34,7 +34,7 @@ type HandlerFunc interface {
 	AuthGenerateJWT(userInfo dtos.User) (token string, err error)
 
 	BlogDelete(id string) error
-	BlogGetMany(skip int, limit int) (blogs []dtos.Blog, err error)
+	BlogGetMany(skip int, limit int, title, category string) (blogs []dtos.Blog, err error)
 	BlogGetManyByCourseIDInCurrentTerm(courseID string, currentOnly bool) ([]dtos.Blog, error)
 	BlogGetOne(id string) (blog dtos.Blog, err error)
 	BlogInsert(blogInsert dtos.BlogInsert, courseID string) (id string, err error)
@@ -62,7 +62,7 @@ type HandlerFunc interface {
 	ProjectDelete(id string) error
 	ProjectDeleteThumbnail(id string, thumbnailPath string) error
 	ProjectGetOne(id string) (project dtos.Project, err error)
-	ProjectGetMany(skip int, limit int) (projects []dtos.Project, err error)
+	ProjectGetMany(skip int, limit int, name, field string) (projects []dtos.Project, err error)
 	ProjectGetManyByCourseID(courseID string, currentOnly bool) ([]dtos.Project, error)
 	ProjectInsert(projectInfo dtos.ProjectInsert, courseID string) (id string, err error)
 	ProjectInsertThumbnail(id string, header *multipart.FileHeader) error

@@ -28,3 +28,8 @@ type BlogUpdate struct {
 	Link     string `json:"link"`
 	Category string `json:"category"`
 }
+
+type BlogQuery struct {
+	Title    string `form:"title"`
+	Category string `form:"category"`
+}

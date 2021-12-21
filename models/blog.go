@@ -21,7 +21,7 @@ type Blog struct {
 
 type BlogOrmer interface {
 	DeleteByID(id string) error
-	GetMany(skip int, limit int) (blogs []Blog, err error)
+	GetMany(skip int, limit int, title, category string) (blogs []Blog, err error)
 	GetManyByCourseIDAndTerm(courseID string, term, maxTerm time.Time) ([]Blog, error)
 	GetManyByTermAndCourseIdSortByVotes(term time.Time, courseId string) ([]Blog, error)
 	GetManyByUserIDJoinVote(userID string) ([]Blog, error)
@@ -50,9 +50,8 @@ func (o *blogOrm) GetOneByCourseworkID(courseworkID string) (blog Blog, err erro
 	return blog, result.Error
 }
 
-// TODO: random ordering
-func (o *blogOrm) GetMany(skip int, limit int) (blogs []Blog, err error) {
-	result := o.db.Model(&Blog{}).Offset(skip).Preload("Coursework")
+func (o *blogOrm) GetMany(skip int, limit int, title, category string) (blogs []Blog, err error) {
+	result := o.db.Model(&Blog{}).Offset(skip).Where(Blog{Category: category}).Where("LOWER(blogs.title) LIKE LOWER(?)", title).Preload("Coursework")
 	if limit > 0 {
 		result = result.Limit(limit)
 	}
