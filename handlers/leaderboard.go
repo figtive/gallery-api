@@ -34,7 +34,7 @@ func (m *module) LeaderboardProject(term time.Time, courseID string) ([]dtos.Pro
 func (m *module) LeaderboardBlog(term time.Time, courseID string) ([]dtos.Blog, error) {
 	var err error
 	var rawBlogs []models.Blog
-	if rawBlogs, err = m.db.blogOrmer.GetManyByTermAndCourseIdSortByVotes(term, courseID); err != nil {
+	if rawBlogs, err = m.db.blogOrmer.GetManyByTermAndCourseIDSortByVotes(term, courseID); err != nil {
 		return nil, err
 	}
 	blogs := make([]dtos.Blog, len(rawBlogs))

@@ -4,9 +4,10 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
+
 	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/dtos"
 	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/handlers"
-	"gorm.io/gorm"
 )
 
 func POSTBlog(c *gin.Context) {
@@ -69,7 +70,7 @@ func GETBlogs(c *gin.Context) {
 	}
 
 	var blogs []dtos.Blog
-	if blogs, err = handlers.Handler.BlogGetMany(0, 0, query.Title, query.Category); err != nil {
+	if blogs, err = handlers.Handler.BlogGetMany(0, 0, "", query.Title, query.Category, false); err != nil {
 		c.JSON(http.StatusInternalServerError, dtos.Response{Error: err.Error()})
 		return
 	}
@@ -88,7 +89,7 @@ func GETBlogsInCurrentTermAndCourse(c *gin.Context) {
 
 	courseID := c.Param("course_id")
 	var blogs []dtos.Blog
-	if blogs, err = handlers.Handler.BlogGetManyByCourseIDInCurrentTerm(courseID, query.Current); err != nil {
+	if blogs, err = handlers.Handler.BlogGetMany(0, 0, courseID, "", "", query.Current); err != nil {
 		c.JSON(http.StatusInternalServerError, dtos.Response{Error: err.Error()})
 		return
 	}
