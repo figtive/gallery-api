@@ -47,27 +47,6 @@ func POSTProject(c *gin.Context) {
 	})
 }
 
-func GETProjects(c *gin.Context) {
-	var err error
-
-	var query dtos.ProjectQuery
-	if err = c.ShouldBindQuery(&query); err != nil {
-		c.JSON(http.StatusBadRequest, dtos.Response{Error: err.Error()})
-		return
-	}
-
-	var projects []dtos.Project
-	if projects, err = handlers.Handler.ProjectGetMany(0, 0, "", query.Name, query.Field, false); err != nil {
-		c.JSON(http.StatusInternalServerError, dtos.Response{Error: err.Error()})
-		return
-	}
-
-	c.JSON(http.StatusOK, dtos.Response{
-		Code: http.StatusOK,
-		Data: projects,
-	})
-}
-
 func GETProject(c *gin.Context) {
 	var err error
 
@@ -82,6 +61,23 @@ func GETProject(c *gin.Context) {
 		Code: http.StatusOK,
 		Data: projectInfo,
 	})
+}
+
+func GETProjects(c *gin.Context) {
+	var err error
+
+	var query dtos.ProjectQuery
+	if err = c.ShouldBindQuery(&query); err != nil {
+		c.JSON(http.StatusBadRequest, dtos.Response{Code: http.StatusBadRequest, Error: err.Error()})
+		return
+	}
+
+	var projects []dtos.Project
+	if projects, err = handlers.Handler.ProjectGetMany(query.Skip, query.Limit, query.CourseID, query.Name, query.Field, query.Current); err != nil {
+		c.JSON(http.StatusInternalServerError, dtos.Response{Error: err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, dtos.Response{Code: http.StatusOK, Data: projects})
 }
 
 func PUTThumbnail(c *gin.Context) {
@@ -116,24 +112,6 @@ func DELETEThumbnail(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, dtos.Response{Code: http.StatusOK})
-}
-
-func GETProjectsInCurrentTermAndCourse(c *gin.Context) {
-	var err error
-
-	var query dtos.Query
-	if err = c.ShouldBindQuery(&query); err != nil {
-		c.JSON(http.StatusBadRequest, dtos.Response{Code: http.StatusBadRequest, Error: err.Error()})
-		return
-	}
-
-	courseID := c.Param("course_id")
-	var projects []dtos.Project
-	if projects, err = handlers.Handler.ProjectGetMany(0, 0, courseID, "", "", query.Current); err != nil {
-		c.JSON(http.StatusInternalServerError, dtos.Response{Error: err.Error()})
-		return
-	}
-	c.JSON(http.StatusOK, dtos.Response{Code: http.StatusOK, Data: projects})
 }
 
 func PUTProject(c *gin.Context) {

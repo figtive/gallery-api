@@ -56,6 +56,7 @@ type ProjectUpdate struct {
 }
 
 type ProjectQuery struct {
+	CourseworkQuery
 	Name  string `form:"name"`
 	Field string `form:"field"`
 }
