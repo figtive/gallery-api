@@ -38,31 +38,6 @@ func (m *module) ProjectInsert(projectInfo dtos.ProjectInsert, classID string) (
 	return id, nil
 }
 
-func (m *module) ProjectGetMany(skip int, limit int, name, field string) (projects []dtos.Project, err error) {
-	var projectsRaw []models.Project
-	if projectsRaw, err = m.db.projectOrmer.GetMany(skip, limit, name, field); err != nil {
-		return
-	}
-	projects = make([]dtos.Project, len(projectsRaw))
-	for i, project := range projectsRaw {
-		projects[i] = dtos.Project{
-			ID:          project.CourseworkID,
-			CourseID:    project.Coursework.CourseID,
-			Name:        project.Name,
-			Team:        project.Team,
-			Description: project.Description,
-			Thumbnail:   project.Thumbnail,
-			Link:        project.Link,
-			Video:       project.Video,
-			Field:       project.Field,
-			Active:      project.Active,
-			Metadata:    project.Metadata,
-			CreatedAt:   project.CreatedAt,
-		}
-	}
-	return
-}
-
 func (m *module) ProjectGetOne(id string) (project dtos.Project, err error) {
 	var projectRaw models.Project
 	if projectRaw, err = m.db.projectOrmer.GetOneByCourseworkID(id); err != nil {
@@ -133,7 +108,7 @@ func (m *module) ProjectDeleteThumbnail(id string, thumbnailPath string) error {
 	return nil
 }
 
-func (m *module) ProjectGetManyByCourseID(courseID string, currentOnly bool) ([]dtos.Project, error) {
+func (m *module) ProjectGetMany(skip, limit int, courseID, name, field string, currentOnly bool) ([]dtos.Project, error) {
 	var err error
 	var startTime, endTime time.Time
 	if currentOnly {
@@ -144,7 +119,8 @@ func (m *module) ProjectGetManyByCourseID(courseID string, currentOnly bool) ([]
 		endTime = startTime.Add(1<<63 - 1)
 	}
 	var projectsRaw []models.Project
-	if projectsRaw, err = m.db.projectOrmer.GetManyByCourseIDAndTerm(courseID, startTime, endTime); err != nil {
+
+	if projectsRaw, err = m.db.projectOrmer.GetMany(skip, limit, courseID, name, field, startTime, endTime); err != nil {
 		return nil, err
 	}
 	projects := make([]dtos.Project, len(projectsRaw))

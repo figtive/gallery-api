@@ -10,7 +10,7 @@ import (
 func (m *module) LeaderboardProject(term time.Time, courseID string) ([]dtos.Project, error) {
 	var err error
 	var rawProjects []models.Project
-	if rawProjects, err = m.db.projectOrmer.GetManyByTermAndCourseIdSortByVotes(term, courseID); err != nil {
+	if rawProjects, err = m.db.projectOrmer.GetManyByTermAndCourseIDSortByVotes(term, courseID); err != nil {
 		return nil, err
 	}
 	projects := make([]dtos.Project, len(rawProjects))

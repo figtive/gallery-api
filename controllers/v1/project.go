@@ -57,7 +57,7 @@ func GETProjects(c *gin.Context) {
 	}
 
 	var projects []dtos.Project
-	if projects, err = handlers.Handler.ProjectGetMany(0, 0, query.Name, query.Field); err != nil {
+	if projects, err = handlers.Handler.ProjectGetMany(0, 0, "", query.Name, query.Field, false); err != nil {
 		c.JSON(http.StatusInternalServerError, dtos.Response{Error: err.Error()})
 		return
 	}
@@ -129,7 +129,7 @@ func GETProjectsInCurrentTermAndCourse(c *gin.Context) {
 
 	courseID := c.Param("course_id")
 	var projects []dtos.Project
-	if projects, err = handlers.Handler.ProjectGetManyByCourseID(courseID, query.Current); err != nil {
+	if projects, err = handlers.Handler.ProjectGetMany(0, 0, courseID, "", "", query.Current); err != nil {
 		c.JSON(http.StatusInternalServerError, dtos.Response{Error: err.Error()})
 		return
 	}

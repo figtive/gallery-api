@@ -62,8 +62,7 @@ type HandlerFunc interface {
 	ProjectDelete(id string) error
 	ProjectDeleteThumbnail(id string, thumbnailPath string) error
 	ProjectGetOne(id string) (project dtos.Project, err error)
-	ProjectGetMany(skip int, limit int, name, field string) (projects []dtos.Project, err error)
-	ProjectGetManyByCourseID(courseID string, currentOnly bool) ([]dtos.Project, error)
+	ProjectGetMany(skip, limit int, courseID, name, field string, currentOnly bool) ([]dtos.Project, error)
 	ProjectInsert(projectInfo dtos.ProjectInsert, courseID string) (id string, err error)
 	ProjectInsertThumbnail(id string, header *multipart.FileHeader) error
 	ProjectUpdate(projectInfo dtos.ProjectUpdate) error
