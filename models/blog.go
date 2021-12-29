@@ -20,15 +20,14 @@ type Blog struct {
 }
 
 type BlogOrmer interface {
-	DeleteByID(id string) error
-	GetMany(skip int, limit int, title, category string) (blogs []Blog, err error)
-	GetManyByCourseIDAndTerm(courseID string, term, maxTerm time.Time) ([]Blog, error)
-	GetManyByTermAndCourseIdSortByVotes(term time.Time, courseId string) ([]Blog, error)
+	Insert(blog Blog) (string, error)
+	GetMany(skip int, limit int, courseID, title, category string, startTerm, endTerm time.Time) ([]Blog, error)
+	GetManyByTermAndCourseIDSortByVotes(term time.Time, courseID string) ([]Blog, error)
 	GetManyByUserIDJoinVote(userID string) ([]Blog, error)
 	GetOneByCourseworkID(courseworkID string) (blog Blog, err error)
 	GetManyBookmarkByUserID(userID string) ([]Blog, error)
-	Insert(blog Blog) (id string, err error)
 	Update(blog Blog) error
+	DeleteByID(id string) error
 }
 
 type blogOrm struct {
@@ -50,44 +49,35 @@ func (o *blogOrm) GetOneByCourseworkID(courseworkID string) (blog Blog, err erro
 	return blog, result.Error
 }
 
-func (o *blogOrm) GetMany(skip int, limit int, title, category string) (blogs []Blog, err error) {
-	result := o.db.Model(&Blog{}).Offset(skip).Where(Blog{Category: category}).Where("LOWER(blogs.title) LIKE LOWER(?)", title).Preload("Coursework")
+func (o *blogOrm) GetMany(skip int, limit int, courseID, title, category string, startTerm, endTerm time.Time) (blogs []Blog, err error) {
+	result := o.db.Model(&Blog{}).
+		Where(Blog{Category: category}).
+		Joins("INNER JOIN courseworks ON blogs.coursework_id = courseworks.id").
+		Where("blogs.created_at >= ? AND blogs.created_at < ?", startTerm, endTerm)
+	if courseID != "" {
+		result = result.Where("courseworks.course_id = ?", courseID)
+	}
+	if title != "" {
+		result = result.Where("LOWER(blogs.title) LIKE LOWER(?)", "%"+title+"%")
+	}
+	if category != "" {
+		result = result.Where(Blog{Category: category})
+	}
 	if limit > 0 {
 		result = result.Limit(limit)
 	}
-	result = result.Find(&blogs)
+	result = result.Offset(skip).Preload("Coursework").Find(&blogs)
 	return blogs, result.Error
 }
 
-func (o *blogOrm) GetManyByTermAndCourseIdSortByVotes(term time.Time, courseId string) ([]Blog, error) {
+func (o *blogOrm) GetManyByTermAndCourseIDSortByVotes(term time.Time, courseID string) ([]Blog, error) {
 	var blogs []Blog
 	result := o.db.
 		Model(&Blog{}).
 		Joins("INNER JOIN courseworks ON blogs.coursework_id = courseworks.id LEFT JOIN votes ON courseworks.id = votes.coursework_id").
-		Where("blogs.created_at >= ? AND blogs.created_at < ? AND courseworks.course_id = ?", utils.TimeToTermTime(term), utils.NextTermTime(term), courseId).
+		Where("blogs.created_at >= ? AND blogs.created_at < ? AND courseworks.course_id = ?", utils.TimeToTermTime(term), utils.NextTermTime(term), courseID).
 		Order("Count(votes.id) DESC").
 		Group("blogs.coursework_id").
-		Preload("Coursework").
-		Find(&blogs)
-	return blogs, result.Error
-}
-
-func (o *blogOrm) GetManyBookmarkByUserID(userID string) ([]Blog, error) {
-	var blogs []Blog
-	result := o.db.
-		Model(&Blog{}).
-		Joins("INNER JOIN bookmarks ON blogs.coursework_id = bookmarks.coursework_id").
-		Where("bookmarks.user_id >= ?", userID).
-		Find(&blogs)
-	return blogs, result.Error
-}
-
-func (o *blogOrm) GetManyByCourseIDAndTerm(courseID string, term, maxTerm time.Time) ([]Blog, error) {
-	var blogs []Blog
-	result := o.db.
-		Model(&Blog{}).
-		Joins("INNER JOIN courseworks ON blogs.coursework_id = courseworks.id").
-		Where("courseworks.course_id = ? AND blogs.created_at >= ? AND blogs.created_at < ?", courseID, term, maxTerm).
 		Preload("Coursework").
 		Find(&blogs)
 	return blogs, result.Error
@@ -100,6 +90,16 @@ func (o *blogOrm) GetManyByUserIDJoinVote(userID string) ([]Blog, error) {
 		Joins("INNER JOIN votes ON blogs.coursework_id = votes.coursework_id").
 		Where("votes.user_id = ?", userID).
 		Preload("Coursework").
+		Find(&blogs)
+	return blogs, result.Error
+}
+
+func (o *blogOrm) GetManyBookmarkByUserID(userID string) ([]Blog, error) {
+	var blogs []Blog
+	result := o.db.
+		Model(&Blog{}).
+		Joins("INNER JOIN bookmarks ON blogs.coursework_id = bookmarks.coursework_id").
+		Where("bookmarks.user_id >= ?", userID).
 		Find(&blogs)
 	return blogs, result.Error
 }

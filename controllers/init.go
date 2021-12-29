@@ -41,21 +41,21 @@ func InitializeRouter() *gin.Engine {
 			{
 				project := coursework.Group("/project")
 				{
-					project.POST("", middlewares.AuthOnly(), middlewares.AdminOnly(), v1.POSTProject)
-					project.GET("", v1.GETProjects)
-					project.PUT("", middlewares.AuthOnly(), middlewares.AdminOnly(), v1.PUTProject)
 					project.PUT("/thumbnail", middlewares.AuthOnly(), middlewares.AdminOnly(), v1.PUTThumbnail)
 					project.DELETE("/thumbnail", middlewares.AuthOnly(), middlewares.AdminOnly(), v1.DELETEThumbnail)
-					project.GET("/:course_id", v1.GETProjectsInCurrentTermAndCourse)
+					project.POST("", middlewares.AuthOnly(), middlewares.AdminOnly(), v1.POSTProject)
+					project.PUT("", middlewares.AuthOnly(), middlewares.AdminOnly(), v1.PUTProject)
+					project.GET("", v1.GETProjects)
+					project.GET("/:course_id", v1.GETProjects)
 					project.GET("/:course_id/:coursework_id", v1.GETProject)
 					project.DELETE("/:course_id/:project_id", middlewares.AuthOnly(), middlewares.AdminOnly(), v1.DELETEProject)
 				}
 				blog := coursework.Group("/blog")
 				{
 					blog.POST("", middlewares.AuthOnly(), middlewares.AdminOnly(), v1.POSTBlog)
-					blog.GET("", v1.GETBlogs)
 					blog.PUT("", middlewares.AuthOnly(), middlewares.AdminOnly(), v1.PUTBlog)
-					blog.GET("/:course_id", v1.GETBlogsInCurrentTermAndCourse)
+					blog.GET("", v1.GETBlogs)
+					blog.GET("/:course_id", v1.GETBlogs)
 					blog.GET("/:course_id/:coursework_id", v1.GETBlog)
 					blog.DELETE("/:course_id/:blog_id", middlewares.AuthOnly(), middlewares.AdminOnly(), v1.DELETEBlog)
 				}

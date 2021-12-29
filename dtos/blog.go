@@ -30,6 +30,7 @@ type BlogUpdate struct {
 }
 
 type BlogQuery struct {
+	CourseworkQuery
 	Title    string `form:"title"`
 	Category string `form:"category"`
 }

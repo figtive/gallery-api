@@ -4,9 +4,10 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
+
 	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/dtos"
 	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/handlers"
-	"gorm.io/gorm"
 )
 
 func POSTBlog(c *gin.Context) {
@@ -69,7 +70,7 @@ func GETBlogs(c *gin.Context) {
 	}
 
 	var blogs []dtos.Blog
-	if blogs, err = handlers.Handler.BlogGetMany(0, 0, query.Title, query.Category); err != nil {
+	if blogs, err = handlers.Handler.BlogGetMany(0, 0, "", query.Title, query.Category, false); err != nil {
 		c.JSON(http.StatusInternalServerError, dtos.Response{Error: err.Error()})
 		return
 	}
@@ -80,15 +81,14 @@ func GETBlogs(c *gin.Context) {
 func GETBlogsInCurrentTermAndCourse(c *gin.Context) {
 	var err error
 
-	var query dtos.Query
+	var query dtos.BlogQuery
 	if err = c.ShouldBindQuery(&query); err != nil {
 		c.JSON(http.StatusBadRequest, dtos.Response{Code: http.StatusBadRequest, Error: err.Error()})
 		return
 	}
 
-	courseID := c.Param("course_id")
 	var blogs []dtos.Blog
-	if blogs, err = handlers.Handler.BlogGetManyByCourseIDInCurrentTerm(courseID, query.Current); err != nil {
+	if blogs, err = handlers.Handler.BlogGetMany(query.Skip, query.Limit, query.CourseID, query.Title, query.Category, query.Current); err != nil {
 		c.JSON(http.StatusInternalServerError, dtos.Response{Error: err.Error()})
 		return
 	}

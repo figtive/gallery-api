@@ -29,26 +29,6 @@ func (m *module) BlogInsert(blogInsert dtos.BlogInsert, classID string) (string,
 	return id, nil
 }
 
-func (m *module) BlogGetMany(skip int, limit int, title, category string) (blogs []dtos.Blog, err error) {
-	var blogsRaw []models.Blog
-	if blogsRaw, err = m.db.blogOrmer.GetMany(skip, limit, title, category); err != nil {
-		return
-	}
-	blogs = make([]dtos.Blog, len(blogsRaw))
-	for i, blog := range blogsRaw {
-		blogs[i] = dtos.Blog{
-			ID:        blog.CourseworkID,
-			CourseID:  blog.Coursework.CourseID,
-			Title:     blog.Title,
-			Author:    blog.Author,
-			Link:      blog.Link,
-			Category:  blog.Category,
-			CreatedAt: blog.CreatedAt,
-		}
-	}
-	return
-}
-
 func (m *module) BlogGetOne(id string) (blog dtos.Blog, err error) {
 	var blogRaw models.Blog
 	if blogRaw, err = m.db.blogOrmer.GetOneByCourseworkID(id); err != nil {
@@ -66,7 +46,7 @@ func (m *module) BlogGetOne(id string) (blog dtos.Blog, err error) {
 	return
 }
 
-func (m *module) BlogGetManyByCourseIDInCurrentTerm(courseID string, currentOnly bool) ([]dtos.Blog, error) {
+func (m *module) BlogGetMany(skip, limit int, courseID, title, category string, currentOnly bool) ([]dtos.Blog, error) {
 	var err error
 	var startTime, endTime time.Time
 	if currentOnly {
@@ -77,7 +57,7 @@ func (m *module) BlogGetManyByCourseIDInCurrentTerm(courseID string, currentOnly
 		endTime = startTime.Add(1<<63 - 1)
 	}
 	var blogsRaw []models.Blog
-	if blogsRaw, err = m.db.blogOrmer.GetManyByCourseIDAndTerm(courseID, startTime, endTime); err != nil {
+	if blogsRaw, err = m.db.blogOrmer.GetMany(skip, limit, courseID, title, category, startTime, endTime); err != nil {
 		return nil, err
 	}
 	blogs := make([]dtos.Blog, len(blogsRaw))
