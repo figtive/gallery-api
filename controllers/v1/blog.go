@@ -69,8 +69,9 @@ func GETBlogs(c *gin.Context) {
 		return
 	}
 
+	query.CourseID = c.Param("course_id")
 	var blogs []dtos.Blog
-	if blogs, err = handlers.Handler.BlogGetMany(0, 0, "", query.Title, query.Category, false); err != nil {
+	if blogs, err = handlers.Handler.BlogGetMany(query.Skip, query.Limit, query.CourseID, query.Title, query.Category, query.Current); err != nil {
 		c.JSON(http.StatusInternalServerError, dtos.Response{Error: err.Error()})
 		return
 	}

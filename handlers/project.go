@@ -160,7 +160,6 @@ func (m *module) ProjectUpdate(projectInfo dtos.ProjectUpdate) error {
 		Field:        projectInfo.Field,
 		Active:       projectInfo.Active,
 		Metadata:     projectInfo.Metadata,
-		UpdatedAt:    time.Now(),
 	}
 	if err = m.db.courseworkOrmer.Update(coursework); err != nil {
 		return err

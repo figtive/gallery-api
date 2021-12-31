@@ -11,7 +11,7 @@ import (
 type Blog struct {
 	CourseworkID string     `gorm:"primaryKey"`
 	Coursework   Coursework `gorm:"foreignKey:CourseworkID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
-	Title        string     `gorm:"not null;type:varchar(32)"`
+	Title        string     `gorm:"not null;type:varchar(128)"`
 	Author       string     `gorm:"not null"`
 	Link         string     `gorm:"not null"`
 	Category     string     `gorm:"column:category"`
