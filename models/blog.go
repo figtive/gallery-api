@@ -76,7 +76,8 @@ func (o *blogOrm) GetManyByTermAndCourseIDSortByVotes(term time.Time, courseID s
 		Model(&Blog{}).
 		Joins("INNER JOIN courseworks ON blogs.coursework_id = courseworks.id LEFT JOIN votes ON courseworks.id = votes.coursework_id").
 		Where("blogs.created_at >= ? AND blogs.created_at < ? AND courseworks.course_id = ?", utils.TimeToTermTime(term), utils.NextTermTime(term), courseID).
-		Order("Count(votes.id) DESC").
+		Having("COUNT(votes.id) > 1").
+		Order("COUNT(votes.id) DESC").
 		Group("blogs.coursework_id").
 		Preload("Coursework").
 		Find(&blogs)
