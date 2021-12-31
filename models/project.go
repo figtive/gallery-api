@@ -12,7 +12,7 @@ import (
 type Project struct {
 	CourseworkID string         `gorm:"primaryKey"`
 	Coursework   Coursework     `gorm:"foreignKey:CourseworkID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
-	Name         string         `gorm:"type:varchar(32);not null"`
+	Name         string         `gorm:"type:varchar(128);not null"`
 	Team         string         `gorm:"not null"`
 	Description  string         `gorm:"not null"`
 	Thumbnail    pq.StringArray `gorm:"type:text[]"`
