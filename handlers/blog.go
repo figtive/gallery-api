@@ -89,7 +89,6 @@ func (m *module) BlogUpdate(blogInfo dtos.BlogUpdate) error {
 		Author:       blogInfo.Author,
 		Link:         blogInfo.Link,
 		Category:     blogInfo.Category,
-		UpdatedAt:    time.Now(),
 	}
 	if err = m.db.courseworkOrmer.Update(coursework); err != nil {
 		return err
