@@ -108,7 +108,7 @@ func (o *projectOrm) GetManyBookmarkByUserID(userID string) ([]Project, error) {
 	result := o.db.
 		Model(&Project{}).
 		Joins("INNER JOIN bookmarks ON projects.coursework_id = bookmarks.coursework_id").
-		Where("bookmarks.user_id >= ?", userID).
+		Where("bookmarks.user_id = ?", userID).
 		Find(&projects)
 	return projects, result.Error
 }
