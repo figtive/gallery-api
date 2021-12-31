@@ -72,6 +72,7 @@ func GETProjects(c *gin.Context) {
 		return
 	}
 
+	query.CourseID = c.Param("course_id")
 	var projects []dtos.Project
 	if projects, err = handlers.Handler.ProjectGetMany(query.Skip, query.Limit, query.CourseID, query.Name, query.Field, query.Current); err != nil {
 		c.JSON(http.StatusInternalServerError, dtos.Response{Error: err.Error()})

@@ -3,9 +3,9 @@ package v1
 import (
 	"net/http"
 
+	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 
-	"github.com/gin-gonic/gin"
 	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/dtos"
 	"gitlab.cs.ui.ac.id/ppl-fasilkom-ui/galleryppl/gallery-api/handlers"
 )
