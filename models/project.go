@@ -84,7 +84,8 @@ func (o *projectOrm) GetManyByTermAndCourseIDSortByVotes(term time.Time, courseI
 		Model(&Project{}).
 		Joins("INNER JOIN courseworks ON projects.coursework_id = courseworks.id LEFT JOIN votes ON courseworks.id = votes.coursework_id").
 		Where("projects.created_at >= ? AND projects.created_at < ? AND courseworks.course_id = ?", utils.TimeToTermTime(term), utils.NextTermTime(term), courseID).
-		Order("Count(votes.id) DESC").
+		Having("COUNT(votes.id) > 1").
+		Order("COUNT(votes.id) DESC").
 		Group("projects.coursework_id").
 		Preload("Coursework").
 		Find(&projects)
@@ -107,7 +108,7 @@ func (o *projectOrm) GetManyBookmarkByUserID(userID string) ([]Project, error) {
 	result := o.db.
 		Model(&Project{}).
 		Joins("INNER JOIN bookmarks ON projects.coursework_id = bookmarks.coursework_id").
-		Where("bookmarks.user_id >= ?", userID).
+		Where("bookmarks.user_id = ?", userID).
 		Find(&projects)
 	return projects, result.Error
 }
