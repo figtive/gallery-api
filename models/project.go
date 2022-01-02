@@ -79,6 +79,7 @@ func (o *projectOrm) GetMany(skip, limit int, courseID, name, field string, star
 }
 
 func (o *projectOrm) GetManyByTermAndCourseIDSortByVotes(term time.Time, courseID string) ([]Project, error) {
+	term = term.AddDate(0, -3, 0) // show leaderboard in the term 3 months ago, allows showing voting results 3 months past the term
 	var projects []Project
 	result := o.db.
 		Model(&Project{}).
